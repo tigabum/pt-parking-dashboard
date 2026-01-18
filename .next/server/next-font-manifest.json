@@ -1,0 +1,97 @@
+{
+  "app": {
+    "[project]/app/_not-found/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/bookings/[id]/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/bookings/create/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/bookings/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/configurations/[id]/edit/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/configurations/[id]/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/configurations/new/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/configurations/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/customers/[id]/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/customers/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/forgot-password/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/parking-users/[id]/edit/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/parking-users/[id]/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/parking-users/create/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/parking-users/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/parkings/[id]/edit/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/parkings/[id]/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/parkings/create/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/parkings/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/settings/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/users/[id]/edit/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/users/[id]/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/users/create/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/users/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/vehicles/[id]/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/vehicles/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/dashboard/wallets/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ],
+    "[project]/app/portal/page": [
+      "static/media/1b99372b3eaef0c8-s.p.758e15a8.woff2"
+    ]
+  },
+  "appUsingSizeAdjust": true,
+  "pages": {},
+  "pagesUsingSizeAdjust": false
+}

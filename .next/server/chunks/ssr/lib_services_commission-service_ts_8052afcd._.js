@@ -1,0 +1,3 @@
+module.exports=[61819,a=>{"use strict";var b=a.i(71630);a.s(["commissionService",0,{getCommissions:async a=>(await b.default.get("/commissions",{params:a})).data,getCommission:async a=>(await b.default.get(`/commissions/${a}`)).data,createCommission:async a=>(await b.default.post("/commissions/create",a)).data,updateCommission:async(a,c)=>(await b.default.patch(`/commissions/${a}`,c)).data,deleteCommission:async a=>(await b.default.delete(`/commissions/${a}`)).data}])}];
+
+//# sourceMappingURL=lib_services_commission-service_ts_8052afcd._.js.map
