@@ -1,19 +1,6 @@
 {
-  "/dashboard/bookings/[id]/page": "app/dashboard/bookings/[id]/page.js",
-  "/dashboard/bookings/page": "app/dashboard/bookings/page.js",
-  "/dashboard/configurations/page": "app/dashboard/configurations/page.js",
-  "/dashboard/customers/page": "app/dashboard/customers/page.js",
-  "/dashboard/forgot-password/page": "app/dashboard/forgot-password/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/dashboard/parking-users/[id]/edit/page": "app/dashboard/parking-users/[id]/edit/page.js",
-  "/dashboard/parking-users/[id]/page": "app/dashboard/parking-users/[id]/page.js",
-  "/dashboard/parking-users/create/page": "app/dashboard/parking-users/create/page.js",
   "/dashboard/parking-users/page": "app/dashboard/parking-users/page.js",
-  "/dashboard/parkings/page": "app/dashboard/parkings/page.js",
-  "/dashboard/settings/page": "app/dashboard/settings/page.js",
   "/dashboard/users/page": "app/dashboard/users/page.js",
-  "/dashboard/vehicles/page": "app/dashboard/vehicles/page.js",
-  "/dashboard/wallets/page": "app/dashboard/wallets/page.js",
-  "/page": "app/page.js",
-  "/portal/page": "app/portal/page.js"
+  "/page": "app/page.js"
 }

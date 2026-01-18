@@ -112,7 +112,7 @@ __turbopack_context__.s([
 ]);
 const API_CONFIG = {
     // Force local backend if env var is missing or empty
-    BASE_URL: ("TURBOPACK compile-time value", "http://157.180.114.86:8081") || 'http://localhost:8081',
+    BASE_URL: ("TURBOPACK compile-time value", "http://157.180.114.86:5000/api") || 'http://localhost:8081',
     TIMEOUT: 30000
 };
 const API_ENDPOINTS = {
@@ -324,7 +324,9 @@ apiClient.interceptors.response.use((response)=>{
     if (data && data.success === false) {
         const message = data.message || 'An error occurred';
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error(message);
-        return Promise.reject(new Error(message));
+        return Promise.reject({
+            message
+        });
     }
     if (isMutation && data && data.message && data.success !== false) {
         if (!response.config.url?.includes('refresh')) {
