@@ -1,6 +1,6 @@
 export const API_CONFIG = {
     // Force local backend if env var is missing or empty
-    BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
+    BASE_URL: process.env.NEXT_PUBLIC_API_URL || 'http://157.180.114.86:5000',
     TIMEOUT: 30000,
 } as const;
 
