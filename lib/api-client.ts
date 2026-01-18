@@ -56,7 +56,7 @@ apiClient.interceptors.response.use(
         if (data && data.success === false) {
             const message = data.message || 'An error occurred';
             toast.error(message);
-            return Promise.reject(new Error(message));
+            return Promise.reject({ message });
         }
 
         if (isMutation && data && data.message && data.success !== false) {
