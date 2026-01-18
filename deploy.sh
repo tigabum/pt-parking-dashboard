@@ -20,4 +20,4 @@ docker-compose down
 docker-compose build --no-cache
 docker-compose up -d
 
-echo "Deployment complete! Dashboard running on port 3000."
+echo "Deployment complete! Dashboard running on port 8000."
