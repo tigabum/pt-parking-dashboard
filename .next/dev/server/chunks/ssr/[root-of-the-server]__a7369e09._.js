@@ -112,7 +112,7 @@ __turbopack_context__.s([
 ]);
 const API_CONFIG = {
     // Force local backend if env var is missing or empty
-    BASE_URL: ("TURBOPACK compile-time value", "http://157.180.114.86:5000/api") || 'http://localhost:5000/api',
+    BASE_URL: ("TURBOPACK compile-time value", "http://157.180.114.86:5000/api") || 'http://157.180.114.86:5000',
     TIMEOUT: 30000
 };
 const API_ENDPOINTS = {
