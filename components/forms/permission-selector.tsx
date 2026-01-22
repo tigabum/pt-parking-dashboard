@@ -141,7 +141,7 @@ export function PermissionSelector({
                             </span>
                             <button
                                 onClick={() => onPermissionsChange([])}
-                                className="text-[10px] font-black text-[#0066FF] hover:text-[#0052CC] uppercase tracking-widest transition-colors"
+                                className="text-[10px] font-black text-primary hover:text-primary/80 uppercase tracking-widest transition-colors"
                             >
                                 Clear All
                             </button>
@@ -164,7 +164,7 @@ export function PermissionSelector({
                                                 className={cn(
                                                     "flex items-center justify-between px-3 py-2 rounded-xl transition-colors cursor-pointer group",
                                                     allSelected
-                                                        ? "bg-[#0066FF]/5"
+                                                        ? "bg-primary/5"
                                                         : "hover:bg-white"
                                                 )}
                                                 onClick={() => toggleCategory(perms)}
@@ -184,13 +184,13 @@ export function PermissionSelector({
                                                         onClick={(e) =>
                                                             e.stopPropagation()
                                                         }
-                                                        className="h-4 w-4 rounded border-slate-300 data-[state=checked]:bg-[#0066FF] data-[state=checked]:border-[#0066FF]"
+                                                        className="h-4 w-4 rounded border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                                     />
-                                                    <span className="text-[10px] font-black text-[#0066FF] uppercase tracking-widest">
+                                                    <span className="text-[10px] font-black text-primary uppercase tracking-widest">
                                                         {category}
                                                     </span>
                                                 </div>
-                                                <span className="text-[10px] font-bold text-slate-400 group-hover:text-[#0066FF] transition-colors">
+                                                <span className="text-[10px] font-bold text-slate-400 group-hover:text-primary transition-colors">
                                                     {
                                                         perms.filter((p) =>
                                                             permissions.includes(p)
@@ -209,7 +209,7 @@ export function PermissionSelector({
                                                             className={cn(
                                                                 "flex items-center gap-2 p-2 rounded-lg transition-all cursor-pointer",
                                                                 isChecked
-                                                                    ? "bg-white shadow-sm text-[#0066FF]"
+                                                                    ? "bg-white shadow-sm text-primary"
                                                                     : "hover:bg-white text-slate-600"
                                                             )}
                                                             onClick={() =>
@@ -224,7 +224,7 @@ export function PermissionSelector({
                                                                 onClick={(e) =>
                                                                     e.stopPropagation()
                                                                 }
-                                                                className="h-3.5 w-3.5 rounded-sm border-slate-300 data-[state=checked]:bg-[#0066FF] data-[state=checked]:border-[#0066FF]"
+                                                                className="h-3.5 w-3.5 rounded-sm border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                                             />
                                                             <span className="text-[11px] font-bold truncate">
                                                                 {PERMISSION_LABELS[p] ||
@@ -240,7 +240,7 @@ export function PermissionSelector({
                             )}
                         </div>
                     </ScrollArea>
-                    <div className="p-4 bg-[#0066FF] border-t border-white/10 flex items-center gap-3 shrink-0">
+                    <div className="p-4 bg-primary border-t border-white/10 flex items-center gap-3 shrink-0">
                         <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0">
                             <Shield className="h-4 w-4" />
                         </div>
