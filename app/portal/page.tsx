@@ -41,7 +41,8 @@ import {
     Map,
     Landmark,
     AlertCircle,
-    Plus
+    Plus,
+    LogOut
 } from "lucide-react";
 import {
     Dialog,
@@ -460,26 +461,68 @@ function PortalContent() {
     if (activeBooking) {
         if (activeBooking.status === 'PAID') {
             return (
-                <div className="h-screen w-full bg-slate-50 flex items-center justify-center p-4">
-                    <Card className="w-full max-w-lg border-none shadow-2xl rounded-[2.5rem] overflow-hidden bg-white">
-                        <div className="bg-emerald-600 p-12 text-white text-center rounded-b-[3rem]">
-                            <div className="h-20 w-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 backdrop-blur-xl">
-                                <CheckCircle className="h-10 w-10 text-white" />
+                <div className="min-h-screen w-full bg-[#FAFAFA] flex items-center justify-center p-4 sm:p-6 antialiased">
+                    <Card className="w-full max-w-lg border-none shadow-[0_50px_100px_-20px_rgba(0,0,0,0.12)] rounded-[3rem] overflow-hidden bg-white animate-in zoom-in-95 duration-500">
+                        <div className="bg-[#00C853] p-10 sm:p-14 text-white text-center relative overflow-hidden">
+                            {/* Abstract Background patterns */}
+                            <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                                <div className="absolute top-[-10%] right-[-10%] w-40 h-40 rounded-full bg-white blur-3xl" />
+                                <div className="absolute bottom-[-10%] left-[-10%] w-40 h-40 rounded-full bg-white blur-3xl" />
                             </div>
-                            <h2 className="text-3xl font-black mb-1 leading-tight tracking-tight">Access Granted</h2>
-                            <p className="text-white/60 font-bold uppercase tracking-[0.2em] text-[8px]">Session Finalized Successfully</p>
+
+                            <div className="h-20 w-20 sm:h-24 sm:w-24 bg-white/20 rounded-[2rem] flex items-center justify-center mx-auto mb-8 backdrop-blur-md relative z-10 border border-white/30 shadow-2xl">
+                                <CheckCircle className="h-10 w-10 sm:h-12 sm:w-12 text-white drop-shadow-lg" />
+                            </div>
+                            <h2 className="text-3xl sm:text-4xl font-black mb-2 leading-tight tracking-tight relative z-10">Safe Travels!</h2>
+                            <p className="text-white/70 font-bold uppercase tracking-[0.3em] text-[9px] sm:text-[10px] relative z-10">Gate Authorization Active</p>
                         </div>
-                        <CardContent className="p-10 text-center space-y-6">
-                            <Button
-                                onClick={() => {
-                                    localStorage.removeItem("activeBookingId");
-                                    setActiveBooking(null);
-                                    setStep(0);
-                                }}
-                                className="w-full h-14 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-black uppercase tracking-widest transition-all active:scale-95 border-none shadow-none text-xs"
-                            >
-                                START NEW SESSION
-                            </Button>
+
+                        <CardContent className="p-8 sm:p-12 space-y-8 sm:space-y-10">
+                            <div className="space-y-6">
+                                <div className="p-6 sm:p-8 bg-slate-50/50 rounded-[2rem] border border-slate-100 flex flex-col items-center gap-4">
+                                    <div className="text-center">
+                                        <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-3">Vehicle Alignment</p>
+                                        <p className="text-2xl sm:text-3xl font-mono font-black text-slate-900 tracking-wider">
+                                            {activeBooking.plateNumber}
+                                        </p>
+                                    </div>
+                                    <div className="h-px w-full bg-slate-100" />
+                                    <div className="w-full grid grid-cols-2 gap-4">
+                                        <div className="text-left">
+                                            <p className="text-[8px] font-black text-slate-300 uppercase tracking-widest mb-1">Fee Settled</p>
+                                            <p className="font-bold text-slate-900 text-sm">{Number(activeBooking.totalAmount).toFixed(2)} <span className="text-[10px] font-medium opacity-30">ETB</span></p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-[8px] font-black text-slate-300 uppercase tracking-widest mb-1">Time Elapsed</p>
+                                            <p className="font-bold text-slate-900 text-sm">{activeBooking.totalDurationMinutes || "—"} <span className="text-[10px] font-medium opacity-30">MIN</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-4 bg-emerald-50 p-4 rounded-2xl border border-emerald-100/50">
+                                    <div className="h-10 w-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white shrink-0">
+                                        <ShieldCheck className="h-5 w-5" />
+                                    </div>
+                                    <p className="text-[#007E33] font-bold text-[11px] leading-relaxed">
+                                        Your payment has been reconciled. Scanning your plate will now trigger the automatic departure relay.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col gap-3">
+                                <Button
+                                    onClick={() => {
+                                        localStorage.removeItem("activeBookingId");
+                                        setActiveBooking(null);
+                                        setStep(0);
+                                    }}
+                                    className="w-full h-16 rounded-[1.5rem] bg-slate-900 hover:bg-black text-white font-black uppercase tracking-[0.2em] transition-all active:scale-95 border-none shadow-none text-[10px] flex items-center justify-center gap-3"
+                                >
+                                    <LogOut className="h-4 w-4" />
+                                    Leave Terminal
+                                </Button>
+                                <p className="text-[9px] text-slate-300 text-center font-bold uppercase tracking-[0.2em]">Session ID: {activeBooking.id.substring(0, 8)}</p>
+                            </div>
                         </CardContent>
                     </Card>
 

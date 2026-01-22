@@ -138,6 +138,26 @@
   body {
     @apply bg-background text-foreground font-sans;
   }
+
+  /* Universal Form Styling */
+  ::placeholder {
+    font-size: 11px;
+    opacity: 0.6;
+    font-style: italic;
+  }
+
+  label {
+    font-weight: 800 !important;
+    letter-spacing: 0.025em;
+  }
+
+  /* Bold secondary buttons (ghost/outline) */
+  button[variant="ghost"],
+  button[variant="outline"],
+  .btn-ghost,
+  .btn-outline {
+    font-weight: 800 !important;
+  }
 }
 
 @layer utilities {

@@ -14,6 +14,14 @@ export const metadata: Metadata = {
   title: "Gelagle Park",
   description: "Professional parking management system",
   generator: "v0.app",
+  manifest: "/manifest.json", // Add manifest
+  themeColor: "#0066FF",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0", // Mobile optimization
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Gelagle Park",
+  },
   icons: {
     icon: [
       {
@@ -34,6 +42,7 @@ export const metadata: Metadata = {
 }
 
 import { ClientProviders } from "@/components/providers/client-providers"
+import { PWARegistration } from "@/components/pwa-registration" // Import
 
 export default function RootLayout({
   children,
@@ -43,6 +52,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${outfit.variable} font-sans antialiased text-foreground bg-background`}>
+        <PWARegistration /> {/* Register SW */}
         <ClientProviders>
           {children}
         </ClientProviders>
