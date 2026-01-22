@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import {
   ParkingFormProps,
@@ -90,28 +91,39 @@ export function ParkingForm({
 }: ParkingFormProps) {
   const [locating, setLocating] = useState(false);
   const [commissions, setCommissions] = useState<Commission[]>([]);
+  const [availableAmenities, setAvailableAmenities] = useState<any[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const mapInstanceRef = useRef<any>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const mapRef = useRef<HTMLDivElement | null>(null);
   const markerRef = useRef<any>(null);
-  const { canAccess } = useAuth();
-  const isSuperAdmin = canAccess([UserRole.SYSTEM_SUPER_ADMIN]);
+  const { user } = useAuth();
+  const isSystemAdmin = user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.SYSTEM_ADMIN;
+  const isParkingAdmin = user?.role === UserRole.PARKING_SUPER_ADMIN;
 
   // Load commissions
   useEffect(() => {
-    const loadCommissions = async () => {
+    const loadData = async () => {
       try {
         const { commissionService } = await import("@/lib/services/commission-service");
-        const res = await commissionService.getCommissions({ limit: 1000 });
-        if (res && res.success && Array.isArray(res.data)) {
-          setCommissions(res.data);
+        const { amenityService } = await import("@/lib/services/amenity-service");
+
+        const [commRes, amenRes] = await Promise.all([
+          commissionService.getCommissions({ limit: 1000 }),
+          amenityService.getAmenities()
+        ]);
+
+        if (commRes && commRes.success && Array.isArray(commRes.data)) {
+          setCommissions(commRes.data);
+        }
+        if (amenRes && amenRes.success && Array.isArray(amenRes.data)) {
+          setAvailableAmenities(amenRes.data);
         }
       } catch (error) {
-        console.error("Failed to load commissions:", error);
+        console.error("Failed to load form data:", error);
       }
     };
-    loadCommissions();
+    loadData();
   }, []);
 
   const [form, setForm] = useState<any>(() => {
@@ -144,6 +156,7 @@ export function ParkingForm({
       agreementDocuments: [],
       tinNumber: "",
       amenities: [],
+      amenityIds: [],
       isIndoor: true,
       isVatIncluded: false,
       pricing: {
@@ -163,6 +176,7 @@ export function ParkingForm({
         galleryImages: initialData.galleryImages || [],
         agreementDocuments: initialData.agreementDocuments || [],
         commissionConfigId: initialData.commissionConfig?.id,
+        amenityIds: initialData.amenitiesList?.map((a: any) => a.id) || [],
       };
     }
     return defaults;
@@ -178,6 +192,7 @@ export function ParkingForm({
         galleryImages: initialData.galleryImages || [],
         agreementDocuments: initialData.agreementDocuments || [],
         commissionConfigId: initialData.commissionConfig?.id,
+        amenityIds: initialData.amenitiesList?.map((a: any) => a.id) || [],
       }));
     }
   }, [initialData]);
@@ -249,7 +264,7 @@ export function ParkingForm({
 
         const addListeners = (map: any) => {
           map.addListener("click", (e: any) => {
-            if (!e.latLng || (!isSuperAdmin && initialData)) return;
+            if (!e.latLng || (!isSystemAdmin && initialData)) return;
             markerRef.current.setPosition(e.latLng);
             setForm((f: any) => ({
               ...f,
@@ -259,7 +274,7 @@ export function ParkingForm({
           });
 
           markerRef.current.addListener("dragend", (e: any) => {
-            if (!isSuperAdmin && initialData) {
+            if (!isSystemAdmin && initialData) {
               markerRef.current.setPosition({ lat: Number(form.lat), lng: Number(form.lng) });
               return;
             }
@@ -381,46 +396,46 @@ export function ParkingForm({
             {/* SECTION 1: BASIC INFO */}
             <div className="space-y-6">
               <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <div className="w-1 h-6 bg-indigo-500 rounded-full" />
+                <div className="w-1 h-6 bg-[#0066FF] rounded-full" />
                 Basic Information
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label className="text-sm font-semibold">Parking Name *</Label>
                   <Input
-                    className={`h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all disabled:opacity-70 ${errors.name ? "border-red-500 bg-red-50" : ""}`}
-                    placeholder="e.g. Bole Medhanialem Parking"
+                    className={`h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white transition-all disabled:opacity-70 ${errors.name ? "border-red-500 bg-red-50" : ""}`}
+                    placeholder="Enter Parking Name"
                     value={form.name}
                     onChange={(e) => {
                       setForm({ ...form, name: e.target.value });
                       if (errors.name) setErrors({ ...errors, name: "" });
                     }}
-                    disabled={!isSuperAdmin && !!initialData}
+                    disabled={!isSystemAdmin && !!initialData}
                   />
                   {errors.name && <p className="text-xs text-red-500 font-medium mt-1">{errors.name}</p>}
                 </div>
                 <div className="space-y-2">
                   <Label className="text-sm font-semibold">License Number</Label>
                   <Input
-                    className="h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all disabled:opacity-70"
-                    placeholder="e.g. LIC-ADD-2321"
+                    className="h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white transition-all disabled:opacity-70"
+                    placeholder="Enter License Number"
                     value={form.licenseNumber}
                     onChange={(e) => setForm({ ...form, licenseNumber: e.target.value })}
-                    disabled={!isSuperAdmin && !!initialData}
+                    disabled={!isSystemAdmin && !!initialData}
                   />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-sm font-semibold">Total Spots *</Label>
                   <Input
                     type="number"
-                    className={`h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all disabled:opacity-70 ${errors.numberOfSpots ? "border-red-500 bg-red-50" : ""}`}
-                    placeholder="0"
+                    className={`h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white transition-all disabled:opacity-70 ${errors.numberOfSpots ? "border-red-500 bg-red-50" : ""}`}
+                    placeholder="Enter Total Spots"
                     value={form.numberOfSpots}
                     onChange={(e) => {
                       setForm({ ...form, numberOfSpots: +e.target.value, availableSpots: +e.target.value });
                       if (errors.numberOfSpots) setErrors({ ...errors, numberOfSpots: "" });
                     }}
-                    disabled={!isSuperAdmin && !!initialData}
+                    disabled={!isSystemAdmin && !!initialData}
                   />
                   {errors.numberOfSpots && <p className="text-xs text-red-500 font-medium mt-1">{errors.numberOfSpots}</p>}
                 </div>
@@ -429,9 +444,9 @@ export function ParkingForm({
                   <Select
                     value={form.parkingType}
                     onValueChange={(val) => setForm({ ...form, parkingType: val })}
-                    disabled={!isSuperAdmin && !!initialData}
+                    disabled={!isSystemAdmin && !!initialData}
                   >
-                    <SelectTrigger className="w-full h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all disabled:opacity-70">
+                    <SelectTrigger className="w-full h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white transition-all disabled:opacity-70">
                       <SelectValue placeholder="Select type" />
                     </SelectTrigger>
                     <SelectContent>
@@ -448,9 +463,9 @@ export function ParkingForm({
                     onValueChange={(val) =>
                       setForm({ ...form, commissionConfigId: val === "none" ? null : val })
                     }
-                    disabled={!isSuperAdmin && !!initialData}
+                    disabled={!isSystemAdmin && !!initialData}
                   >
-                    <SelectTrigger className="w-full h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all disabled:opacity-70">
+                    <SelectTrigger className="w-full h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white transition-all disabled:opacity-70">
                       <SelectValue placeholder="Select commission policy (optional)" />
                     </SelectTrigger>
                     <SelectContent>
@@ -466,25 +481,130 @@ export function ParkingForm({
                 <div className="col-span-1 space-y-2">
                   <Label className="text-sm font-semibold">Description</Label>
                   <Textarea
-                    className="rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all min-h-[140px] resize-none disabled:opacity-70"
-                    placeholder="Briefly describe the assigned parking..."
+                    className="rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white transition-all min-h-[140px] resize-none disabled:opacity-70"
+                    placeholder="Enter Description"
                     value={form.description}
                     onChange={(e) => setForm({ ...form, description: e.target.value })}
-                    disabled={!isSuperAdmin && !!initialData}
+                    disabled={!isSystemAdmin && !!initialData}
                   />
                 </div>
-                <div className="col-span-1 space-y-2">
-                  <Label className="text-sm font-semibold">Amenities (comma separated)</Label>
-                  <Textarea
-                    className="rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all min-h-[140px] resize-none disabled:opacity-70"
-                    placeholder="e.g. WiFi, CCTV, Security, 24/7"
-                    value={form.amenities?.map((a: any) => typeof a === 'string' ? a : a.name).join(", ") || ""}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      const arr = val.split(",").map((i) => i.trim()).filter((i) => i !== "");
-                      setForm({ ...form, amenities: arr.map(name => ({ name })) });
-                    }}
-                  />
+                <div className="col-span-full space-y-6">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-sm font-bold text-slate-900 uppercase tracking-widest">Facility Amenities</Label>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const current = form.amenities || [];
+                        setForm({ ...form, amenities: [...current, { name: "", value: "" }] });
+                      }}
+                      className="h-8 rounded-lg border-primary/20 text-primary font-bold text-[10px] uppercase tracking-widest hover:bg-primary/5"
+                    >
+                      <Plus className="h-3 w-3 mr-1" /> Add Custom
+                    </Button>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Quick Select From System</p>
+                      <div className="flex flex-wrap gap-2">
+                        {availableAmenities.map((amenity) => {
+                          const isAdded = form.amenities?.some((a: any) => a.name.toLowerCase() === amenity.name.toLowerCase());
+                          return (
+                            <button
+                              key={amenity.id}
+                              type="button"
+                              disabled={isAdded}
+                              onClick={() => {
+                                const currentAmenities = form.amenities || [];
+                                const currentIds = form.amenityIds || [];
+                                if (!isAdded) {
+                                  setForm({
+                                    ...form,
+                                    amenities: [...currentAmenities, { name: amenity.name, value: "Available" }],
+                                    amenityIds: [...currentIds, amenity.id]
+                                  });
+                                }
+                              }}
+                              className={cn(
+                                "px-4 py-2 rounded-xl text-[11px] font-black transition-all border flex items-center gap-2 uppercase tracking-tight",
+                                isAdded
+                                  ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed"
+                                  : "bg-white text-slate-600 border-slate-200 hover:border-primary hover:text-primary hover:bg-primary/5 shadow-sm"
+                              )}
+                            >
+                              {isAdded && <Check className="h-3 w-3" />}
+                              {amenity.name}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {form.amenities?.map((amenity: any, index: number) => (
+                        <div key={index} className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50 space-y-3 relative group">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const nextAmenities = [...form.amenities];
+                              const removed = nextAmenities.splice(index, 1)[0];
+
+                              // Check if this was a system amenity and remove its ID
+                              const systemAmenity = availableAmenities.find(a =>
+                                a.name.toLowerCase() === removed.name.toLowerCase()
+                              );
+
+                              let nextIds = form.amenityIds || [];
+                              if (systemAmenity) {
+                                nextIds = nextIds.filter((id: string) => id !== systemAmenity.id);
+                              }
+
+                              setForm({ ...form, amenities: nextAmenities, amenityIds: nextIds });
+                            }}
+                            className="absolute -top-2 -right-2 h-6 w-6 rounded-full bg-white border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-200 shadow-sm flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+
+                          <div className="space-y-1">
+                            <Label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Service Name</Label>
+                            <Input
+                              placeholder="e.g. WiFi"
+                              value={amenity.name}
+                              onChange={(e) => {
+                                const next = [...form.amenities];
+                                next[index].name = e.target.value;
+                                setForm({ ...form, amenities: next });
+                              }}
+                              className="h-9 rounded-lg bg-white border-transparent focus:border-primary/30 text-xs font-bold"
+                            />
+                          </div>
+
+                          <div className="space-y-1">
+                            <Label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Specs / Value</Label>
+                            <Input
+                              placeholder="e.g. High Speed"
+                              value={amenity.value}
+                              onChange={(e) => {
+                                const next = [...form.amenities];
+                                next[index].value = e.target.value;
+                                setForm({ ...form, amenities: next });
+                              }}
+                              className="h-9 rounded-lg bg-white border-transparent focus:border-primary/30 text-xs font-medium"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                      {(!form.amenities || form.amenities.length === 0) && (
+                        <div className="col-span-full py-8 border-2 border-dashed border-slate-100 rounded-3xl flex flex-col items-center justify-center text-slate-400 gap-2">
+                          <p className="text-xs font-bold uppercase tracking-widest">No amenities configured</p>
+                          <p className="text-[10px]">Select from quick list or add custom ones</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -494,7 +614,7 @@ export function ParkingForm({
             {/* SECTION 2: ADDRESS INFO */}
             <div className="space-y-6">
               <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <div className="w-1 h-6 bg-indigo-500 rounded-full" />
+                <div className="w-1 h-6 bg-[#0066FF] rounded-full" />
                 Address Details
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -503,8 +623,8 @@ export function ParkingForm({
                   <Input
                     value={form.country}
                     onChange={(e) => setForm({ ...form, country: e.target.value })}
-                    className="h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70"
-                    disabled={!isSuperAdmin && !!initialData}
+                    className="h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70"
+                    disabled={!isSystemAdmin && !!initialData}
                   />
                 </div>
                 <div className="space-y-2">
@@ -515,9 +635,9 @@ export function ParkingForm({
                       setForm({ ...form, region: e.target.value });
                       if (errors.region) setErrors({ ...errors, region: "" });
                     }}
-                    className={`h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70 ${errors.region ? "border-red-500 bg-red-50" : ""}`}
-                    placeholder="e.g. Addis Ababa"
-                    disabled={!isSuperAdmin && !!initialData}
+                    className={`h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70 ${errors.region ? "border-red-500 bg-red-50" : ""}`}
+                    placeholder="Enter Region"
+                    disabled={!isSystemAdmin && !!initialData}
                   />
                   {errors.region && <p className="text-xs text-red-500 font-medium mt-1">{errors.region}</p>}
                 </div>
@@ -529,8 +649,8 @@ export function ParkingForm({
                       setForm({ ...form, city: e.target.value });
                       if (errors.city) setErrors({ ...errors, city: "" });
                     }}
-                    className={`h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70 ${errors.city ? "border-red-500 bg-red-50" : ""}`}
-                    disabled={!isSuperAdmin && !!initialData}
+                    className={`h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70 ${errors.city ? "border-red-500 bg-red-50" : ""}`}
+                    disabled={!isSystemAdmin && !!initialData}
                   />
                   {errors.city && <p className="text-xs text-red-500 font-medium mt-1">{errors.city}</p>}
                 </div>
@@ -539,8 +659,8 @@ export function ParkingForm({
                   <Input
                     value={form.subCity}
                     onChange={(e) => setForm({ ...form, subCity: e.target.value })}
-                    className="h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70"
-                    disabled={!isSuperAdmin && !!initialData}
+                    className="h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70"
+                    disabled={!isSystemAdmin && !!initialData}
                   />
                 </div>
                 <div className="space-y-2">
@@ -548,9 +668,9 @@ export function ParkingForm({
                   <Input
                     value={form.woreda}
                     onChange={(e) => setForm({ ...form, woreda: e.target.value })}
-                    className="h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70"
-                    placeholder="e.g. 01"
-                    disabled={!isSuperAdmin && !!initialData}
+                    className="h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70"
+                    placeholder="Enter Woreda"
+                    disabled={!isSystemAdmin && !!initialData}
                   />
                 </div>
                 <div className="space-y-2">
@@ -558,9 +678,9 @@ export function ParkingForm({
                   <Input
                     value={form.kebele}
                     onChange={(e) => setForm({ ...form, kebele: e.target.value })}
-                    className="h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70"
-                    placeholder="e.g. 03"
-                    disabled={!isSuperAdmin && !!initialData}
+                    className="h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70"
+                    placeholder="Enter Kebele"
+                    disabled={!isSystemAdmin && !!initialData}
                   />
                 </div>
                 <div className="space-y-2">
@@ -568,8 +688,8 @@ export function ParkingForm({
                   <Input
                     value={form.streetName}
                     onChange={(e) => setForm({ ...form, streetName: e.target.value })}
-                    className="h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70"
-                    disabled={!isSuperAdmin && !!initialData}
+                    className="h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70"
+                    disabled={!isSystemAdmin && !!initialData}
                   />
                 </div>
               </div>
@@ -581,17 +701,17 @@ export function ParkingForm({
             <div className="space-y-6">
               <div className="px-1 flex items-center justify-between">
                 <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                  <div className="w-1 h-6 bg-indigo-500 rounded-full" />
+                  <div className="w-1 h-6 bg-[#0066FF] rounded-full" />
                   Exact Map Location
                 </h3>
                 <div className="flex gap-4 text-xs font-mono">
                   <div className="px-3 py-1 bg-slate-100 rounded-lg">
                     <span className="text-slate-400 mr-2">LAT:</span>
-                    <span className="font-bold text-indigo-600">{Number(form.lat).toFixed(6)}</span>
+                    <span className="font-bold text-[#0066FF]">{Number(form.lat).toFixed(6)}</span>
                   </div>
                   <div className="px-3 py-1 bg-slate-100 rounded-lg">
                     <span className="text-slate-400 mr-2">LNG:</span>
-                    <span className="font-bold text-indigo-600">{Number(form.lng).toFixed(6)}</span>
+                    <span className="font-bold text-[#0066FF]">{Number(form.lng).toFixed(6)}</span>
                   </div>
                 </div>
               </div>
@@ -599,7 +719,7 @@ export function ParkingForm({
               <div className={`relative w-full h-[300px] md:h-[500px] rounded-xl md:rounded-2xl overflow-hidden border ${errors.map ? "border-red-500 ring-2 ring-red-200" : "border-slate-200"} group`}>
                 <div ref={mapRef} className="w-full h-full bg-slate-100" />
 
-                {!isSuperAdmin && initialData && (
+                {!isSystemAdmin && initialData && (
                   <div className="absolute inset-0 bg-black/5 z-20 cursor-not-allowed items-center justify-center flex">
                     <div className="bg-white/80 backdrop-blur px-3 md:px-4 py-1.5 md:py-2 rounded-lg border shadow-sm font-bold text-[10px] md:text-xs text-slate-500 uppercase tracking-widest">
                       Location Lock (Superadmin Only)
@@ -613,9 +733,9 @@ export function ParkingForm({
                     <input
                       ref={searchInputRef}
                       type="text"
-                      placeholder="Search location..."
-                      className="w-full h-10 md:h-12 pl-10 md:pl-12 pr-4 rounded-xl border-none bg-white font-medium text-xs md:text-sm focus:ring-2 focus:ring-indigo-500 disabled:bg-slate-50 disabled:cursor-not-allowed"
-                      disabled={!isSuperAdmin && !!initialData}
+                      placeholder="Enter Location Search"
+                      className="w-full h-10 md:h-12 pl-10 md:pl-12 pr-4 rounded-xl border-none bg-white font-medium text-xs md:text-sm focus:ring-2 focus:ring-[#0066FF] disabled:bg-slate-50 disabled:cursor-not-allowed"
+                      disabled={!isSystemAdmin && !!initialData}
                     />
                   </div>
                 </div>
@@ -624,8 +744,8 @@ export function ParkingForm({
                   <Button
                     type="button"
                     onClick={handleLocateMe}
-                    disabled={!isSuperAdmin && !!initialData}
-                    className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-white text-indigo-600 shadow-xl hover:bg-slate-50 border border-slate-100 disabled:opacity-50"
+                    disabled={!isSystemAdmin && !!initialData}
+                    className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-white text-[#0066FF] shadow-xl hover:bg-slate-50 border border-slate-100 disabled:opacity-50"
                   >
                     {locating ? <Loader2 className="h-5 w-5 animate-spin" /> : <Crosshair className="h-5 w-5 md:h-6 md:w-6" />}
                   </Button>
@@ -638,7 +758,7 @@ export function ParkingForm({
             {/* SECTION 4: PRICING */}
             <div className="space-y-6">
               <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <div className="w-1 h-6 bg-indigo-500 rounded-full" />
+                <div className="w-1 h-6 bg-[#0066FF] rounded-full" />
                 Pricing Configuration
               </h3>
 
@@ -654,7 +774,7 @@ export function ParkingForm({
                       <Input
                         type="number"
                         className="h-10 bg-white"
-                        placeholder="0"
+                        placeholder="Enter Hourly Price"
                         value={form.pricing.hourly?.price}
                         onChange={(e) =>
                           setForm({
@@ -668,6 +788,7 @@ export function ParkingForm({
                             },
                           })
                         }
+                        disabled={!isSystemAdmin && !isParkingAdmin && !!initialData}
                       />
                     </div>
                     <div className="flex-1 space-y-1">
@@ -675,7 +796,7 @@ export function ParkingForm({
                       <Input
                         type="number"
                         className="h-10 bg-white"
-                        placeholder="0"
+                        placeholder="Enter Discount"
                         value={form.pricing.hourly?.discount}
                         onChange={(e) =>
                           setForm({
@@ -689,6 +810,7 @@ export function ParkingForm({
                             },
                           })
                         }
+                        disabled={!isSystemAdmin && !isParkingAdmin && !!initialData}
                       />
                     </div>
                   </div>
@@ -705,7 +827,7 @@ export function ParkingForm({
                       <Input
                         type="number"
                         className="h-10 bg-white"
-                        placeholder="0"
+                        placeholder="Enter Daily Price"
                         value={form.pricing.daily?.price}
                         onChange={(e) =>
                           setForm({
@@ -719,6 +841,7 @@ export function ParkingForm({
                             },
                           })
                         }
+                        disabled={!isSystemAdmin && !isParkingAdmin && !!initialData}
                       />
                     </div>
                     <div className="flex-1 space-y-1">
@@ -726,7 +849,7 @@ export function ParkingForm({
                       <Input
                         type="number"
                         className="h-10 bg-white"
-                        placeholder="0"
+                        placeholder="Enter Discount"
                         value={form.pricing.daily?.discount}
                         onChange={(e) =>
                           setForm({
@@ -740,6 +863,7 @@ export function ParkingForm({
                             },
                           })
                         }
+                        disabled={!isSystemAdmin && !isParkingAdmin && !!initialData}
                       />
                     </div>
                   </div>
@@ -756,7 +880,7 @@ export function ParkingForm({
                       <Input
                         type="number"
                         className="h-10 bg-white"
-                        placeholder="0"
+                        placeholder="Enter Monthly Price"
                         value={form.pricing.monthly?.price}
                         onChange={(e) =>
                           setForm({
@@ -770,6 +894,7 @@ export function ParkingForm({
                             },
                           })
                         }
+                        disabled={!isSystemAdmin && !isParkingAdmin && !!initialData}
                       />
                     </div>
                     <div className="flex-1 space-y-1">
@@ -777,7 +902,7 @@ export function ParkingForm({
                       <Input
                         type="number"
                         className="h-10 bg-white"
-                        placeholder="0"
+                        placeholder="Enter Discount"
                         value={form.pricing.monthly?.discount}
                         onChange={(e) =>
                           setForm({
@@ -791,6 +916,7 @@ export function ParkingForm({
                             },
                           })
                         }
+                        disabled={!isSystemAdmin && !isParkingAdmin && !!initialData}
                       />
                     </div>
                   </div>
@@ -798,7 +924,7 @@ export function ParkingForm({
 
                 {/* FLAT RATE */}
                 <div className="p-4 bg-indigo-50/30 rounded-2xl border border-indigo-100 space-y-3">
-                  <Label className="text-xs font-bold uppercase text-indigo-500 tracking-wider">
+                  <Label className="text-xs font-bold uppercase text-[#0066FF] tracking-wider">
                     Flat Rate (Single Charge)
                   </Label>
                   <div className="flex gap-2">
@@ -807,7 +933,7 @@ export function ParkingForm({
                       <Input
                         type="number"
                         className="h-10 bg-white"
-                        placeholder="0"
+                        placeholder="Enter Flat Price"
                         value={form.pricing.flat?.price}
                         onChange={(e) =>
                           setForm({
@@ -822,6 +948,7 @@ export function ParkingForm({
                             },
                           })
                         }
+                        disabled={!isSystemAdmin && !isParkingAdmin && !!initialData}
                       />
                     </div>
                     <div className="flex-1 space-y-1">
@@ -829,7 +956,7 @@ export function ParkingForm({
                       <Input
                         type="number"
                         className="h-10 bg-white"
-                        placeholder="0"
+                        placeholder="Enter Discount"
                         value={form.pricing.flat?.discount}
                         onChange={(e) =>
                           setForm({
@@ -843,6 +970,7 @@ export function ParkingForm({
                             },
                           })
                         }
+                        disabled={!isSystemAdmin && !isParkingAdmin && !!initialData}
                       />
                     </div>
                   </div>
@@ -868,7 +996,7 @@ export function ParkingForm({
                 <Switch
                   checked={form.isVatIncluded}
                   onCheckedChange={(c) => setForm({ ...form, isVatIncluded: c })}
-                  disabled={!isSuperAdmin && !!initialData}
+                  disabled={!isSystemAdmin && !!initialData}
                 />
               </div>
             </div>
@@ -878,7 +1006,7 @@ export function ParkingForm({
             {/* SECTION 5: MEDIA */}
             <div className="space-y-6">
               <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <div className="w-1 h-6 bg-indigo-500 rounded-full" />
+                <div className="w-1 h-6 bg-[#0066FF] rounded-full" />
                 Media & Verification
               </h3>
 
@@ -886,7 +1014,7 @@ export function ParkingForm({
                 {/* Feature Image */}
                 <div className="space-y-4">
                   <Label className="text-sm font-bold text-slate-700">Cover Image</Label>
-                  <div className="relative w-full h-64 rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-50/10 transition-all group flex flex-col items-center justify-center text-center cursor-pointer">
+                  <div className="relative w-full h-64 rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50 hover:border-[#0066FF] hover:bg-indigo-50/10 transition-all group flex flex-col items-center justify-center text-center cursor-pointer">
                     {form.featureImage ? (
                       <>
                         <img
@@ -911,7 +1039,7 @@ export function ParkingForm({
                       </>
                     ) : (
                       <div className="flex flex-col items-center justify-center p-6 text-slate-400">
-                        <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-indigo-500 group-hover:scale-110 transition-transform">
+                        <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-[#0066FF] group-hover:scale-110 transition-transform">
                           <ImageIcon className="h-8 w-8" />
                         </div>
                         <span className="text-sm font-bold text-slate-600">Upload Cover Photo</span>
@@ -933,15 +1061,15 @@ export function ParkingForm({
                 {/* Business License */}
                 <div className="space-y-4">
                   <Label className="text-sm font-bold text-slate-700">Business License Files</Label>
-                  <div className="relative w-full h-64 rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-50/10 transition-all group flex flex-col items-center justify-center text-center cursor-pointer">
+                  <div className="relative w-full h-64 rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50 hover:border-[#0066FF] hover:bg-indigo-50/10 transition-all group flex flex-col items-center justify-center text-center cursor-pointer">
                     {form.licenseFiles && form.licenseFiles.length > 0 ? (
                       <div className="flex flex-col items-center justify-center p-6 gap-3">
-                        <div className="h-20 w-20 rounded-[2rem] bg-indigo-50 flex items-center justify-center text-indigo-500">
+                        <div className="h-20 w-20 rounded-[2rem] bg-indigo-50 flex items-center justify-center text-[#0066FF]">
                           <Check className="h-10 w-10" />
                         </div>
                         <div className="space-y-1 text-center">
                           <p className="text-sm font-bold text-slate-700">{form.licenseFiles.length} File(s) Selected</p>
-                          <p className="text-xs text-indigo-500 font-bold uppercase tracking-widest">Verification Ready</p>
+                          <p className="text-xs text-[#0066FF] font-bold uppercase tracking-widest">Verification Ready</p>
                         </div>
                         <button
                           type="button"
@@ -956,7 +1084,7 @@ export function ParkingForm({
                       </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center p-6 text-slate-400">
-                        <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-indigo-500 group-hover:scale-110 transition-transform">
+                        <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-[#0066FF] group-hover:scale-110 transition-transform">
                           <FileText className="h-8 w-8" />
                         </div>
                         <span className="text-sm font-bold text-slate-600">Upload Licence Files</span>
@@ -989,17 +1117,17 @@ export function ParkingForm({
                         value={form.tinNumber}
                         onChange={(e) => setForm({ ...form, tinNumber: e.target.value })}
                         className="h-10 bg-slate-50 border-transparent focus:bg-white"
-                        disabled={!isSuperAdmin && !!initialData}
+                        disabled={!isSystemAdmin && !!initialData}
                       />
                     </div>
                     <div className="flex flex-col gap-1">
                       <Label className="text-sm font-bold text-slate-700">VAT Registration Number</Label>
                       <Input
-                        placeholder="Enter VAT Reg Number"
+                        placeholder="Enter VAT Registration Number"
                         value={form.vatRegistrationNumber}
                         onChange={(e) => setForm({ ...form, vatRegistrationNumber: e.target.value })}
                         className="h-10 bg-slate-50 border-transparent focus:bg-white"
-                        disabled={!isSuperAdmin && !!initialData}
+                        disabled={!isSystemAdmin && !!initialData}
                       />
                     </div>
                   </div>
@@ -1008,10 +1136,10 @@ export function ParkingForm({
                 {/* Agreement Document */}
                 <div className="space-y-4">
                   <Label className="text-sm font-bold text-slate-700">Agreement Documents</Label>
-                  <div className="relative w-full h-64 rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-50/10 transition-all group flex flex-col items-center justify-center text-center cursor-pointer">
+                  <div className="relative w-full h-64 rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50 hover:border-[#0066FF] hover:bg-indigo-50/10 transition-all group flex flex-col items-center justify-center text-center cursor-pointer">
                     {form.agreementDocuments && form.agreementDocuments.length > 0 ? (
                       <div className="flex flex-col items-center justify-center p-6 gap-3">
-                        <div className="h-20 w-20 rounded-[2rem] bg-indigo-50 flex items-center justify-center text-indigo-500">
+                        <div className="h-20 w-20 rounded-[2rem] bg-indigo-50 flex items-center justify-center text-[#0066FF]">
                           <Check className="h-10 w-10" />
                         </div>
                         <div className="space-y-1 text-center">
@@ -1030,7 +1158,7 @@ export function ParkingForm({
                       </div>
                     ) : (
                       <div className="flex flex-col items-center justify-center p-6 text-slate-400">
-                        <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-indigo-500 group-hover:scale-110 transition-transform">
+                        <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-[#0066FF] group-hover:scale-110 transition-transform">
                           <FileText className="h-8 w-8" />
                         </div>
                         <span className="text-sm font-bold text-slate-600">Upload Agreement Documents</span>
@@ -1056,8 +1184,8 @@ export function ParkingForm({
               {/* Gallery Uploader */}
               <div className="space-y-4">
                 <Label className="text-sm font-bold text-slate-700">Add to Gallery</Label>
-                <div className="relative w-full h-64 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center hover:border-indigo-500 hover:bg-indigo-50/10 transition-all cursor-pointer group">
-                  <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-indigo-500 group-hover:scale-110 transition-transform">
+                <div className="relative w-full h-64 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center hover:border-[#0066FF] hover:bg-indigo-50/10 transition-all cursor-pointer group">
+                  <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-[#0066FF] group-hover:scale-110 transition-transform">
                     <Plus className="h-8 w-8" />
                   </div>
                   <span className="text-sm font-bold text-slate-600">Add Photos</span>
@@ -1116,7 +1244,7 @@ export function ParkingForm({
           <Button
             onClick={submit}
             disabled={isLoading}
-            className="h-14 px-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-xl shadow-indigo-200 hover:shadow-2xl transition-all flex items-center gap-3"
+            className="h-14 px-12 rounded-xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-bold transition-all flex items-center gap-3"
           >
             {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Check className="h-5 w-5" />}
             {initialData ? "Save Changes" : "Create Parking"}

@@ -312,7 +312,7 @@ export default function BookingDetailPage() {
             subtitle={`Reference ID: ${booking.id.substring(0, 12).toUpperCase()}`}
             actions={
                 <div className="flex items-center gap-3">
-                    {canExtend && booking.status !== "CANCELLED" && (
+                    {canExtend && (booking.status === "PENDING" || booking.status === "ACTIVE") && (
                         <Button
                             onClick={() => setIsExtendOpen(true)}
                             className="h-10 px-4 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-[10px] uppercase tracking-widest transition-all"
@@ -339,13 +339,13 @@ export default function BookingDetailPage() {
                             Checkout
                         </Button>
                     )}
-                    {canExtend && booking.paymentMethod === "INCASH" && (booking.status === "PENDING" || booking.status === "COMPLETED") && (
+                    {canExtend && (booking.status === "PENDING" || booking.status === "COMPLETED") && (
                         <Button
                             onClick={handleConfirmPayment}
                             className="h-10 px-4 rounded-xl bg-green-600 hover:bg-green-500 text-white font-bold text-[10px] uppercase tracking-widest transition-all"
                         >
                             <CreditCard className="h-4 w-4 mr-2" />
-                            Confirm Payment
+                            {booking.status === "COMPLETED" ? "Confirm Payment Request" : "Confirm Payment"}
                         </Button>
                     )}
                     <Badge
@@ -441,7 +441,7 @@ export default function BookingDetailPage() {
             {/* Redesigned Extension Dialog */}
             <Dialog open={isExtendOpen} onOpenChange={setIsExtendOpen}>
                 <DialogContent className="sm:max-w-md rounded-[2rem] p-0 overflow-hidden border-none shadow-2xl">
-                    <div className="bg-slate-900 p-8 text-white">
+                    <div className="bg-primary p-8 text-white">
                         <DialogHeader>
                             <DialogTitle className="text-2xl font-black tracking-tight uppercase tracking-[0.1em]">Extend Session</DialogTitle>
                         </DialogHeader>

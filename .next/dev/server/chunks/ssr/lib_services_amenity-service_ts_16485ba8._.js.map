@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/elst/Documents/OTHERS/parking-fullstack/car-parking-dashboard/lib/services/amenity-service.ts"],"sourcesContent":["import api from \"../api-client\";\nimport { ServiceResponse } from \"../api-types\";\n\nexport interface Amenity {\n    id: string;\n    name: string;\n    icon?: string;\n    isActive: boolean;\n}\n\nexport const amenityService = {\n    getAmenities: async (): Promise<ServiceResponse<Amenity[]>> => {\n        try {\n            const response = await api.get(\"/amenities\");\n            return response.data;\n        } catch (error: any) {\n            return {\n                success: false,\n                message: error.response?.data?.message || \"Failed to fetch amenities\",\n                data: [],\n            };\n        }\n    },\n};\n"],"names":[],"mappings":";;;;AAAA;;AAUO,MAAM,iBAAiB;IAC1B,cAAc;QACV,IAAI;YACA,MAAM,WAAW,MAAM,+HAAG,CAAC,GAAG,CAAC;YAC/B,OAAO,SAAS,IAAI;QACxB,EAAE,OAAO,OAAY;YACjB,OAAO;gBACH,SAAS;gBACT,SAAS,MAAM,QAAQ,EAAE,MAAM,WAAW;gBAC1C,MAAM,EAAE;YACZ;QACJ;IACJ;AACJ"}}]
+}

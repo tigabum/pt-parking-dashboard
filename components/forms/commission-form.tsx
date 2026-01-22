@@ -197,7 +197,7 @@ export function CommissionForm({
                                 <Label className="text-sm font-bold text-slate-700 uppercase tracking-widest text-[10px]">Rule Name*</Label>
                                 <Input
                                     className={`h-12 rounded-xl border-slate-200 bg-slate-50/50 font-bold ${errors.name ? "border-red-500 bg-red-50" : ""}`}
-                                    placeholder="e.g. Standard 10% Fee"
+                                    placeholder="Enter Rule Name"
                                     value={form.name}
                                     onChange={(e) => {
                                         setForm({ ...form, name: e.target.value });
@@ -213,8 +213,8 @@ export function CommissionForm({
                                     value={form.type}
                                     onValueChange={(val) => setForm({ ...form, type: val as CommissionType })}
                                 >
-                                    <SelectTrigger className="h-12 w-full rounded-xl border-slate-200 bg-slate-50/50 font-bold focus:ring-primary">
-                                        <SelectValue placeholder="Select type" />
+                                    <SelectTrigger className="h-12 w-full rounded-xl border-slate-200 bg-slate-50/50 font-bold focus:ring-[#0066FF]">
+                                        <SelectValue placeholder="Enter Strategy Selection" />
                                     </SelectTrigger>
                                     <SelectContent className="rounded-xl">
                                         <SelectItem value={CommissionType.PERCENTAGE}>Percentage (%)</SelectItem>
@@ -263,7 +263,7 @@ export function CommissionForm({
                                                     <Input
                                                         type="number"
                                                         className="h-14 rounded-xl border-slate-200 bg-slate-50/50 font-bold text-lg"
-                                                        placeholder="Enter min"
+                                                        placeholder="Enter Min Amount"
                                                         value={tier.minAmount}
                                                         onChange={(e) => updateTier(i, "minAmount", +e.target.value)}
                                                     />
@@ -273,7 +273,7 @@ export function CommissionForm({
                                                     <Input
                                                         type="number"
                                                         className="h-14 rounded-xl border-slate-200 bg-slate-50/50 font-bold text-lg"
-                                                        placeholder="Enter max"
+                                                        placeholder="Enter Max Amount"
                                                         value={tier.maxAmount}
                                                         onChange={(e) => updateTier(i, "maxAmount", +e.target.value)}
                                                     />
@@ -284,7 +284,7 @@ export function CommissionForm({
                                                         <Input
                                                             type="number"
                                                             className="h-14 rounded-xl border-primary/20 bg-primary/5 font-black text-primary text-xl px-4"
-                                                            placeholder="Fee"
+                                                            placeholder="Enter Fee"
                                                             value={tier.commission}
                                                             onChange={(e) => updateTier(i, "commission", +e.target.value)}
                                                         />
@@ -310,7 +310,7 @@ export function CommissionForm({
                                             type="button"
                                             variant="outline"
                                             onClick={addTier}
-                                            className="h-12 px-8 rounded-xl border-primary text-primary font-black hover:bg-primary/5 border-2"
+                                            className="h-12 px-8 rounded-xl border-[#0066FF] text-[#0066FF] font-black hover:bg-[#0066FF]/5 border-2"
                                         >
                                             <Plus className="h-4 w-4 mr-2 stroke-[3]" /> Add Tier
                                         </Button>
@@ -362,7 +362,7 @@ export function CommissionForm({
                                             <Input
                                                 type="number"
                                                 className="h-16 rounded-2xl border-slate-200 bg-slate-50/50 font-black text-2xl px-6"
-                                                placeholder="50,000"
+                                                placeholder="Enter Threshold"
                                                 value={form.aboveThreshold}
                                                 onChange={(e) => setForm({ ...form, aboveThreshold: +e.target.value })}
                                             />
@@ -375,7 +375,7 @@ export function CommissionForm({
                                             <Input
                                                 type="number"
                                                 className="h-16 rounded-2xl border-slate-200 bg-slate-50/50 font-black text-2xl px-6 text-primary"
-                                                placeholder="2"
+                                                placeholder="Enter Fee"
                                                 value={form.aboveCommission}
                                                 onChange={(e) => setForm({ ...form, aboveCommission: +e.target.value })}
                                             />
@@ -402,7 +402,7 @@ export function CommissionForm({
                             <Button
                                 type="submit"
                                 disabled={isLoading}
-                                className="h-14 px-12 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold shadow-xl shadow-primary/20 transition-all flex items-center justify-center gap-3 min-w-[180px]"
+                                className="h-14 px-12 rounded-xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-bold transition-all flex items-center justify-center gap-3 min-w-[180px] shadow-none border-none"
                             >
                                 {isLoading ? (
                                     <Loader2 className="h-5 w-5 animate-spin" />

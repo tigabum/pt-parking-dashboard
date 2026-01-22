@@ -75,6 +75,9 @@ export default function CreateParkingPage() {
             if (data.amenities && Array.isArray(data.amenities)) {
                 formData.append("amenities", JSON.stringify(data.amenities));
             }
+            if (data.amenityIds && Array.isArray(data.amenityIds)) {
+                formData.append("amenityIds", JSON.stringify(data.amenityIds));
+            }
 
             formData.append("isVatIncluded", String(data.isVatIncluded));
 

@@ -191,7 +191,8 @@ export interface CreateParking {
   featureImage?: File | string | null;
   galleryImages?: (File | string)[];
   licenseFiles?: (File | string)[];
-  amenities?: { name: string }[];
+  amenities?: { name: string; value?: string }[];
+  amenityIds?: string[];
 
   // Business
   commissionConfigId?: string;
@@ -240,7 +241,8 @@ export interface ParkingResponse {
   featureImage?: string;
   galleryImages?: string[];
   description?: string;
-  amenities: { name: string }[];
+  amenities: { name: string; value?: string }[];
+  amenitiesList?: { id: string; name: string; icon?: string }[];
   createdBy?: UserResponse;
   approvedBy?: UserResponse;
   vatRegistrationNumber?: string;
@@ -538,4 +540,17 @@ export interface Commission {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface BookingCommission {
+  id: string;
+  bookingId: string;
+  parkingId: string;
+  totalAmount: number;
+  commissionAmount: number;
+  referenceNo: string;
+  createdAt: string;
+  updatedAt: string;
+  booking?: Booking;
+  parking?: Parking;
 }

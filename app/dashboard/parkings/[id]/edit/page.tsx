@@ -43,8 +43,13 @@ export default function EditParkingPage() {
     }
   };
 
-  if (!canAccess([UserRole.SYSTEM_SUPER_ADMIN, UserRole.PARKING_MANAGER])) {
-    return <div className="p-6 text-center">Access Denied</div>;
+  if (!canAccess([UserRole.SYSTEM_SUPER_ADMIN, UserRole.SYSTEM_ADMIN, UserRole.PARKING_SUPER_ADMIN])) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen text-center space-y-4">
+        <h1 className="text-2xl font-bold text-red-500">Access Denied</h1>
+        <p className="text-slate-500">You do not have permission to edit this parking.</p>
+      </div>
+    );
   }
 
   if (loading) {
@@ -101,6 +106,9 @@ export default function EditParkingPage() {
 
       if (data.amenities && Array.isArray(data.amenities)) {
         formData.append("amenities", JSON.stringify(data.amenities));
+      }
+      if (data.amenityIds && Array.isArray(data.amenityIds)) {
+        formData.append("amenityIds", JSON.stringify(data.amenityIds));
       }
 
       formData.append("isVatIncluded", String(data.isVatIncluded));

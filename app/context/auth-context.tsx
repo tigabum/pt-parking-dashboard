@@ -156,7 +156,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return true;
     }
 
-    // Check specific permissions array
+    // Explicitly allow core items for Parking Managers even if permissions array is missing
+    if (user.role === "PARKING-MANAGER") {
+      const basicPermissions = [
+        "DASHBOARD_VIEW",
+        "DASHBOARD_TOTAL_BOOKINGS",
+        "DASHBOARD_DAILY_STATS",
+        "REVENUE_VIEW",
+        "BOOKING_VIEW",
+        "SETTINGS_VIEW",
+        "SETTINGS_CHANGE_PASSWORD"
+      ];
+      if (basicPermissions.includes(permission)) return true;
+    }
+
+    // Check specific permissions array from backend
     if (user.permissions && Array.isArray(user.permissions)) {
       return user.permissions.includes(permission);
     }

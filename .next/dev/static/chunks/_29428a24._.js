@@ -403,6 +403,7 @@ const statusColorMap = {
     EXPIRED: "bg-slate-100 text-slate-700",
     REFUNDED: "bg-indigo-100 text-indigo-700",
     DISABLED: "bg-gray-100 text-gray-700",
+    COMPLETED: "bg-orange-100 text-orange-700",
     // Legacy values for backward compatibility
     Active: "bg-primary/10 text-primary",
     Pending: "bg-amber-100 text-amber-700",
@@ -416,7 +417,7 @@ const statusColumn = ()=>({
                 children: row.status || "InActive"
             }, void 0, false, {
                 fileName: "[project]/components/tables/columns/status-column.tsx",
-                lineNumber: 21,
+                lineNumber: 22,
                 columnNumber: 5
             }, ("TURBOPACK compile-time value", void 0))
     });

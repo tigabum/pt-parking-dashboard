@@ -56,7 +56,7 @@ import dayjs from "dayjs";
 import { CircularSessionCounter } from "@/components/ui/circular-session-counter";
 import { RatingDialog } from "@/components/parkings/rating-dialog";
 
-const SYSTEM_PRIMARY = "#2409c7";
+const SYSTEM_PRIMARY = "#0066FF";
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
 function PortalContent() {
@@ -128,9 +128,11 @@ function PortalContent() {
                             setActiveBooking(existingBooking);
                             setPlateNumber(existingBooking.plateNumber || "");
                             setFullName(existingBooking.customerName || "");
-                            // If payment method already exists on booking, sync it
-                            if (existingBooking.paymentMethod === "INCASH") setSelectedPaymentMethod("CASH");
-                            if (existingBooking.paymentMethod === "TRANSFER") setSelectedPaymentMethod("TELEBIRR");
+                            localStorage.setItem("guestPlate", existingBooking.plateNumber || "");
+                        } else {
+                            // Pre-fill fields from storage even if no active booking found
+                            const savedPlate = localStorage.getItem("guestPlate");
+                            if (savedPlate) setPlateNumber(savedPlate);
                         }
                     } catch (err) {
                         console.error("Error checking active booking", err);
@@ -193,6 +195,7 @@ function PortalContent() {
                 if (active) {
                     setActiveBooking(active);
                     localStorage.setItem("guestPhone", phoneNumber);
+                    localStorage.setItem("guestPlate", plateNumber);
                     toast.success("Welcome back! Active session resumed.");
                     setSearching(false);
                     return;
@@ -305,6 +308,7 @@ function PortalContent() {
             if (response.success && response.data?.booking) {
                 setActiveBooking(response.data.booking);
                 localStorage.setItem("guestPhone", phoneNumber);
+                localStorage.setItem("guestPlate", plateNumber);
                 toast.success(response.message || "Parking Session Started!");
                 return;
             }
@@ -435,11 +439,13 @@ function PortalContent() {
                         </div>
                         <CardContent className="p-10 text-center space-y-6">
                             <Button
-                                onClick={() => window.location.reload()}
-                                style={{ backgroundColor: SYSTEM_PRIMARY }}
-                                className="w-full h-14 rounded-2xl text-white font-bold transition-all shadow-lg active:scale-95 border-none"
+                                onClick={() => {
+                                    localStorage.removeItem("activeBookingId"); // In case we added it
+                                    window.location.reload();
+                                }}
+                                className="w-full h-14 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-black uppercase tracking-widest transition-all active:scale-95 border-none shadow-none text-xs"
                             >
-                                FINISH
+                                START NEW SESSION
                             </Button>
                         </CardContent>
                     </Card>
@@ -449,6 +455,7 @@ function PortalContent() {
                         onOpenChange={setIsRatingOpen}
                         parkingId={parking!.id}
                         parkingName={parking!.name}
+                        customerPhone={normalizePhone(phoneNumber)}
                     />
                 </div>
             );
@@ -490,6 +497,7 @@ function PortalContent() {
                     onOpenChange={setIsRatingOpen}
                     parkingId={parking!.id}
                     parkingName={parking!.name}
+                    customerPhone={normalizePhone(phoneNumber)}
                 />
             </div>
         );
@@ -497,143 +505,100 @@ function PortalContent() {
 
     return (
         <div className="w-full min-h-screen flex flex-col bg-slate-50 overflow-x-hidden">
-            {/* Top Header */}
-            <div className="flex items-center justify-between px-4 md:px-8 py-5 shrink-0 bg-white border-b shadow-sm z-20">
-                <h2 className="text-xl font-bold text-slate-900 uppercase tracking-widest">
-                    Parking Portal
-                </h2>
+            {/* Premium Sticky Header */}
+            <div className="sticky top-0 w-full flex items-center justify-between px-6 md:px-10 py-5 shrink-0 bg-white/80 backdrop-blur-md border-b shadow-sm z-30">
                 <div className="flex items-center gap-3">
-                    <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-primary/5 rounded-xl border border-primary/10">
-                        <ShieldCheck className="h-4 w-4 text-primary" />
-                        <span className="text-[10px] font-black text-primary uppercase tracking-widest">Secure Guest Session</span>
+                    <div className="h-9 w-9 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
+                        <ParkingCircle className="h-5 w-5" />
+                    </div>
+                    <h2 className="text-lg font-black text-slate-900 uppercase tracking-tight">
+                        Client Hub
+                    </h2>
+                </div>
+                <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-50 rounded-full border border-slate-100">
+                        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest hidden sm:inline">Active Portal</span>
+                        <ShieldCheck className="h-3 w-3 text-slate-400 sm:ml-1" />
                     </div>
                 </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 md:p-8 pt-12 md:pt-24">
-                <div className="max-w-[1000px] mx-auto pb-20">
-                    <div className="bg-white p-6 md:p-10 rounded-[2rem] border shadow-sm space-y-10">
+            <div className="flex-1 overflow-y-auto px-4 py-8 sm:px-6 md:p-8 pt-6 md:pt-20">
+                <div className="max-w-[800px] mx-auto pb-20">
+                    <div className="bg-white p-5 sm:p-8 md:p-10 rounded-[1.5rem] sm:rounded-[2.5rem] border shadow-sm space-y-8 md:space-y-10">
 
                         {step === 0 && (
-                            <div className="space-y-10 min-h-[550px] flex flex-col justify-center animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <div className="w-full space-y-12">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10 font-bold">
-                                        {/* Assigned Parking Section */}
-                                        <div className="space-y-4">
-                                            <Label className="text-[11px] uppercase font-black text-slate-400 tracking-[0.2em]">Assigned Parking</Label>
-                                            <Input
-                                                readOnly
-                                                value={parking?.name || "Premium Terminal"}
-                                                className="h-14 rounded-2xl bg-slate-50 border-none font-bold text-slate-900 text-lg px-6"
-                                            />
+                            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                                <div className="space-y-10">
+                                    <div className="grid grid-cols-1 gap-8">
+                                        {/* Core Identification & Available Status */}
+                                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-slate-50 pb-8">
+                                            <div className="space-y-1.5 flex-1">
+                                                <Label className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Selected Location</Label>
+                                                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                                                    {parking?.name || "Premium Station"}
+                                                </h1>
+                                            </div>
+
+                                            <div className="space-y-1.5 bg-slate-50 px-5 py-3 rounded-2xl border border-slate-100/50 w-fit">
+                                                <Label className="text-[9px] uppercase font-bold text-slate-400 tracking-widest">Real-time Status</Label>
+                                                <div className="flex items-center gap-2">
+                                                    <div className={cn("h-2 w-2 rounded-full", (parking?.availableSpots ?? 0) > 0 ? "bg-emerald-500 animate-pulse" : "bg-red-500")} />
+                                                    <p className={cn(
+                                                        "text-lg font-black tracking-tight",
+                                                        (parking?.availableSpots ?? 0) > 0 ? "text-emerald-700" : "text-red-600"
+                                                    )}>
+                                                        {parking?.availableSpots ?? 0} Vacant Spots
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
 
-                                        <div className="space-y-4">
-                                            <Label className="text-[11px] uppercase font-black text-slate-400 tracking-[0.2em]">Current Availability</Label>
-                                            <Input
-                                                readOnly
-                                                value={`${parking?.availableSpots ?? 0} Vacant Slots`}
-                                                className={cn(
-                                                    "h-14 rounded-2xl bg-slate-50 border-none font-bold text-lg px-6",
-                                                    (parking?.availableSpots ?? 0) > 0 ? "text-emerald-600" : "text-red-500"
-                                                )}
-                                            />
-                                            {(parking?.availableSpots ?? 0) === 0 && (
-                                                <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
-                                                    <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-                                                    <div>
-                                                        <p className="text-sm font-bold text-red-900">No Available Spots</p>
-                                                        <p className="text-xs text-red-600 mt-1">This parking facility is currently full. Please try again later or choose another location.</p>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </div>
+                                        {/* REMOVED: Map, Address, Amenities, Entry Rates as per user request */}
 
-                                        {/* Map / Address integrated */}
-                                        <div className="space-y-4 md:col-span-2">
-                                            <Label className="text-[11px] uppercase font-black text-slate-400 tracking-[0.2em]">Location Details</Label>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                <div className="h-40 bg-slate-50 rounded-2xl overflow-hidden border border-slate-100 flex items-center justify-center relative">
-                                                    {parking?.lat && parking?.lng ? (
-                                                        <iframe
-                                                            width="100%"
-                                                            height="100%"
-                                                            frameBorder="0"
-                                                            style={{ border: 0 }}
-                                                            src={`https://www.google.com/maps/embed/v1/view?key=${GOOGLE_MAPS_API_KEY}&center=${parking.lat},${parking.lng}&zoom=16&maptype=roadmap`}
-                                                            allowFullScreen
-                                                        ></iframe>
-                                                    ) : (
-                                                        <MapPin className="h-8 w-8 text-slate-200" />
-                                                    )}
-                                                </div>
-                                                <div className="flex flex-col justify-center space-y-6">
-                                                    <div className="space-y-2">
-                                                        <p className="text-[10px] uppercase font-black text-slate-300 tracking-widest">Pricing Schedule</p>
-                                                        <div className="flex items-center gap-4">
-                                                            <div className="flex-1 bg-slate-50 p-3 rounded-xl">
-                                                                <p className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Hourly</p>
-                                                                <p className="font-black text-slate-800 text-sm">{parking?.pricing?.hourly?.price || 0} {parking?.pricing?.hourly?.currency}</p>
-                                                            </div>
-                                                            <div className="flex-1 bg-slate-50 p-3 rounded-xl">
-                                                                <p className="text-[8px] font-black text-slate-400 uppercase tracking-tighter">Daily</p>
-                                                                <p className="font-black text-slate-800 text-sm">{parking?.pricing?.daily?.price || 0} {parking?.pricing?.daily?.currency}</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                        <div className="h-px bg-slate-100 my-2" />
+
+                                        {/* Primary Inputs */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                            <div className="space-y-3 px-1">
+                                                <Label className="text-[10px] uppercase font-black text-primary tracking-[0.2em] ml-1">Customer Phone *</Label>
+                                                <div className="relative group">
+                                                    <Phone className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                                     <Input
-                                                        readOnly
-                                                        value={[
-                                                            parking?.city,
-                                                            parking?.subCity,
-                                                            parking?.woreda ? `Woreda ${parking.woreda}` : null,
-                                                            parking?.kebele ? `Kebele ${parking.kebele}` : null,
-                                                            parking?.streetName
-                                                        ].filter(Boolean).join(", ") || [parking?.city, parking?.region].filter(Boolean).join(", ") || "Addis Ababa, Ethiopia"}
-                                                        className="h-12 rounded-xl bg-slate-50 border-none font-bold text-slate-500 text-[10px] px-4"
+                                                        value={phoneNumber}
+                                                        onChange={(e) => setPhoneNumber(e.target.value)}
+                                                        placeholder="Enter Phone Number"
+                                                        className="h-16 pl-14 rounded-2xl bg-slate-50/50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-xl px-6"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="space-y-3 px-1">
+                                                <Label className="text-[10px] uppercase font-black text-primary tracking-[0.2em] ml-1">Vehicle Plate *</Label>
+                                                <div className="relative group">
+                                                    <Car className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
+                                                    <Input
+                                                        value={plateNumber}
+                                                        onChange={(e) => setPlateNumber(e.target.value.toUpperCase())}
+                                                        placeholder="Enter Plate Number"
+                                                        className="h-16 pl-14 rounded-2xl bg-slate-50/50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 font-mono font-black uppercase tracking-widest text-2xl px-6"
                                                     />
                                                 </div>
                                             </div>
                                         </div>
-
-                                        {/* Inputs */}
-                                        <div className="space-y-4">
-                                            <Label className="text-[11px] uppercase font-black text-primary tracking-[0.2em]">Customer Phone *</Label>
-                                            <div className="relative">
-                                                <Phone className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/20" />
-                                                <Input
-                                                    value={phoneNumber}
-                                                    onChange={(e) => setPhoneNumber(e.target.value)}
-                                                    placeholder="09..."
-                                                    className="h-16 pl-14 rounded-2xl bg-white border-2 border-primary/5 focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all font-bold text-xl px-6 shadow-sm"
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-4">
-                                            <Label className="text-[11px] uppercase font-black text-primary tracking-[0.2em]">Vehicle Plate No *</Label>
-                                            <div className="relative">
-                                                <Car className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-primary/20" />
-                                                <Input
-                                                    value={plateNumber}
-                                                    onChange={(e) => setPlateNumber(e.target.value.toUpperCase())}
-                                                    placeholder="A 12345"
-                                                    className="h-16 pl-14 rounded-2xl bg-white border-2 border-primary/5 focus:border-primary/50 focus:ring-4 focus:ring-primary/5 font-mono font-black uppercase tracking-widest text-2xl px-6 shadow-sm"
-                                                />
-                                            </div>
-                                        </div>
                                     </div>
+                                </div>
 
-                                    <div className="flex justify-center pt-8">
-                                        <Button
-                                            onClick={handleLookup}
-                                            disabled={searching}
-                                            className="h-12 px-12 rounded-xl bg-primary hover:opacity-90 text-white font-black shadow-xl shadow-primary/10 flex items-center gap-3 active:scale-95 transition-all text-sm uppercase tracking-widest border-none"
-                                        >
-                                            {searching ? <Loader2 className="h-5 w-5 animate-spin" /> : <Search className="h-5 w-5" />}
-                                            Search Profile
-                                        </Button>
-                                    </div>
+                                <div className="flex justify-center pt-6">
+                                    <Button
+                                        onClick={handleLookup}
+                                        disabled={searching}
+                                        className="h-16 w-full sm:w-auto sm:px-16 rounded-[1.5rem] bg-[#0066FF] hover:bg-[#0052CC] text-white font-black flex items-center justify-center gap-3 active:scale-95 transition-all text-xs uppercase tracking-[0.3em] border-none shadow-none"
+                                    >
+                                        {searching ? <Loader2 className="h-5 w-5 animate-spin" /> : <Search className="h-5 w-5" />}
+                                        Initialize Entrance
+                                    </Button>
                                 </div>
                             </div>
                         )}
@@ -643,39 +608,39 @@ function PortalContent() {
                                 <div className="space-y-10">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
                                         <div className="space-y-3 col-span-1 md:col-span-2">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Legal Full Name *</Label>
+                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Legal Full Name *</Label>
                                             <Input
                                                 value={fullName}
                                                 onChange={(e) => setFullName(e.target.value)}
-                                                placeholder="Enter your name"
-                                                className="h-14 rounded-2xl bg-slate-50 border-none font-bold text-lg px-6"
+                                                placeholder="Enter Full Name"
+                                                className="h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-lg px-6"
                                             />
                                         </div>
 
                                         <div className="space-y-3">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Vehicle Brand</Label>
+                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Vehicle Brand</Label>
                                             <Input
                                                 value={brand}
                                                 onChange={(e) => setBrand(e.target.value)}
-                                                placeholder="Toyota"
-                                                className="h-14 rounded-2xl bg-slate-50 border-none font-bold text-lg px-6"
+                                                placeholder="Enter Vehicle Brand"
+                                                className="h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-lg px-6"
                                             />
                                         </div>
 
                                         <div className="space-y-3">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Model</Label>
+                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Model</Label>
                                             <Input
                                                 value={model}
                                                 onChange={(e) => setModel(e.target.value)}
-                                                placeholder="Corolla"
-                                                className="h-14 rounded-2xl bg-slate-50 border-none font-bold text-lg px-6"
+                                                placeholder="Enter Model"
+                                                className="h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-lg px-6"
                                             />
                                         </div>
 
                                         <div className="space-y-3">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Billing Tier</Label>
+                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Billing Tier</Label>
                                             <Select value={bookingType} onValueChange={(v: any) => setBookingType(v)}>
-                                                <SelectTrigger className="w-full h-14 rounded-2xl bg-slate-50 border-none font-bold text-lg px-6">
+                                                <SelectTrigger className="w-full h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-lg px-6">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent className="rounded-2xl border-none shadow-2xl">
@@ -687,34 +652,34 @@ function PortalContent() {
                                         </div>
 
                                         <div className="space-y-3">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Scheduled Start *</Label>
-                                            <div className="relative">
-                                                <CalendarClock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 pointer-events-none" />
+                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Scheduled Start *</Label>
+                                            <div className="relative group">
+                                                <CalendarClock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors pointer-events-none" />
                                                 <Input
                                                     type="datetime-local"
                                                     value={startTime}
                                                     onChange={(e) => setStartTime(e.target.value)}
-                                                    className="h-14 pl-14 rounded-2xl bg-slate-50 border-none font-bold text-lg px-6 block w-full"
+                                                    className="h-16 pl-14 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-lg px-6 block w-full"
                                                 />
                                             </div>
                                         </div>
 
                                         <div className="space-y-3">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Expected End *</Label>
-                                            <div className="relative">
-                                                <Clock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 pointer-events-none" />
+                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Expected End *</Label>
+                                            <div className="relative group">
+                                                <Clock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors pointer-events-none" />
                                                 <Input
                                                     type="datetime-local"
                                                     value={endTime}
                                                     onChange={(e) => setEndTime(e.target.value)}
-                                                    className="h-14 pl-14 rounded-2xl bg-slate-50 border-none font-bold text-lg px-6 block w-full"
+                                                    className="h-16 pl-14 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-lg px-6 block w-full"
                                                 />
                                             </div>
                                         </div>
                                         <div className="space-y-3">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Payment Method</Label>
+                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Payment Method</Label>
                                             <Select value={paymentCategory} onValueChange={(v: any) => setPaymentCategory(v)}>
-                                                <SelectTrigger className="w-full h-14 rounded-2xl bg-slate-50 border-none font-bold text-lg px-6">
+                                                <SelectTrigger className="w-full h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-lg px-6">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent className="rounded-2xl border-none shadow-2xl">
@@ -726,15 +691,15 @@ function PortalContent() {
                                     </div>
                                 </div>
 
-                                <div className="flex justify-between items-center gap-6 pt-10 border-t border-slate-50">
+                                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6 pt-10 border-t border-slate-50">
                                     <Button
                                         variant="ghost"
                                         onClick={() => setStep(0)}
-                                        className="h-14 px-8 rounded-2xl font-bold text-slate-400 flex items-center gap-2 hover:bg-primary/10 hover:text-primary transition-all"
+                                        className="w-full sm:w-auto h-14 px-8 rounded-2xl font-bold text-slate-400 flex items-center justify-center gap-2 hover:bg-primary/10 hover:text-primary transition-all order-2 sm:order-1"
                                     >
                                         <ChevronLeft className="h-5 w-5" /> Back
                                     </Button>
-                                    <div className="flex gap-4">
+                                    <div className="w-full sm:w-auto order-1 sm:order-2">
                                         <Button
                                             onClick={() => {
                                                 if ((parking?.availableSpots ?? 0) === 0) {
@@ -745,10 +710,10 @@ function PortalContent() {
                                             }}
                                             disabled={(parking?.availableSpots ?? 0) === 0}
                                             className={cn(
-                                                "h-12 px-10 rounded-xl text-white font-black shadow-lg flex items-center gap-2.5 transition-all active:scale-95 uppercase tracking-widest border-none text-xs",
+                                                "w-full h-14 px-10 rounded-2xl text-white font-black flex items-center justify-center gap-2.5 transition-all active:scale-95 uppercase tracking-widest border-none text-xs shadow-none",
                                                 (parking?.availableSpots ?? 0) === 0
                                                     ? "bg-slate-300 cursor-not-allowed"
-                                                    : "bg-primary hover:opacity-90 shadow-primary/10"
+                                                    : "bg-[#0066FF] hover:bg-[#0052CC]"
                                             )}
                                         >
                                             Review Details
@@ -760,54 +725,54 @@ function PortalContent() {
                         )}
 
                         {step === 2 && (
-                            <div className="space-y-10 min-h-[550px] flex flex-col justify-between animate-in fade-in slide-in-from-right-4 duration-500 font-bold">
-                                <div className="space-y-8">
-                                    <div className="text-center space-y-2">
-                                        <div className="h-16 w-16 bg-primary/5 rounded-2xl flex items-center justify-center mx-auto text-primary mb-4">
+                            <div className="space-y-8 min-h-[550px] flex flex-col justify-between animate-in fade-in slide-in-from-right-4 duration-500 font-bold">
+                                <div className="space-y-10">
+                                    <div className="text-center space-y-3">
+                                        <div className="h-16 w-16 bg-primary/5 rounded-[1.5rem] flex items-center justify-center mx-auto text-primary mb-2 shadow-sm border border-primary/5">
                                             <BadgeCheck className="h-8 w-8" />
                                         </div>
-                                        <h3 className="text-2xl font-black text-slate-900 tracking-tight">Confirm Booking</h3>
-                                        <p className="text-slate-400 text-xs font-medium max-w-xs mx-auto">Please review your session details before initiation.</p>
+                                        <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Verify Session</h3>
+                                        <p className="text-slate-400 text-xs font-medium max-w-[240px] mx-auto leading-relaxed">Review your allocation details before initiating the digital parking lock.</p>
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div className="p-4 bg-slate-50 rounded-2xl space-y-1">
-                                            <p className="text-[8px] uppercase font-black text-slate-400 tracking-[0.2em]">Vehicle</p>
-                                            <p className="text-slate-900 font-black">{plateNumber} - {brand} {model}</p>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div className="p-5 bg-slate-50 rounded-2xl space-y-1 border border-transparent hover:border-slate-100 transition-all">
+                                            <p className="text-[8px] uppercase font-bold text-slate-400 tracking-[0.2em]">Registered Vehicle</p>
+                                            <p className="text-slate-900 font-black text-sm">{plateNumber} • {brand}</p>
                                         </div>
-                                        <div className="p-4 bg-slate-50 rounded-2xl space-y-1">
-                                            <p className="text-[8px] uppercase font-black text-slate-400 tracking-[0.2em]">Duration Plan</p>
-                                            <p className="text-slate-900 font-black">{bookingType} Plan</p>
+                                        <div className="p-5 bg-slate-50 rounded-2xl space-y-1 border border-transparent hover:border-slate-100 transition-all">
+                                            <p className="text-[8px] uppercase font-bold text-slate-400 tracking-[0.2em]">Selected Billing</p>
+                                            <p className="text-slate-900 font-black text-sm">{bookingType} Plan</p>
                                         </div>
-                                        <div className="p-4 bg-slate-50 rounded-2xl space-y-1">
-                                            <p className="text-[8px] uppercase font-black text-slate-400 tracking-[0.2em]">Scheduled Window</p>
+                                        <div className="p-5 bg-slate-50 rounded-2xl space-y-1 border border-transparent hover:border-slate-100 transition-all sm:col-span-2">
+                                            <p className="text-[8px] uppercase font-bold text-slate-400 tracking-[0.2em]">Time Window Allocation</p>
                                             <p className="text-slate-900 font-black text-xs">
-                                                {dayjs(startTime).format("MMM D, HH:mm")} → {dayjs(endTime).format("HH:mm")}
+                                                {dayjs(startTime).format("MMM D, HH:mm")} — {dayjs(endTime).format("MMM D, HH:mm")}
                                             </p>
                                         </div>
-                                        <div className="p-4 bg-primary/5 border border-primary/10 rounded-2xl space-y-1">
-                                            <p className="text-[8px] uppercase font-black text-primary tracking-[0.2em]">Estimated Total</p>
-                                            <p className="text-primary font-black text-xl tabular-nums">
-                                                {calculateEstimate().toFixed(2)} <span className="text-[10px]">ETB</span>
+                                        <div className="p-6 bg-primary/[0.03] border border-primary/10 rounded-2xl space-y-1 sm:col-span-2 shadow-sm">
+                                            <p className="text-[8px] uppercase font-black text-primary tracking-[0.2em]">Estimated Calculation</p>
+                                            <p className="text-primary font-black text-3xl tabular-nums tracking-tighter">
+                                                {calculateEstimate().toFixed(2)} <span className="text-xs ml-1">ETB</span>
                                             </p>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="flex justify-between items-center gap-6 pt-10 border-t border-slate-50">
+                                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6 pt-10 border-t border-slate-50">
                                     <Button
                                         variant="ghost"
                                         onClick={() => setStep(1)}
-                                        className="h-14 px-8 rounded-2xl font-bold text-slate-400 flex items-center gap-2 hover:bg-primary/10 hover:text-primary transition-all"
+                                        className="w-full sm:w-auto h-14 px-8 rounded-2xl font-bold text-slate-400 flex items-center justify-center gap-2 hover:bg-primary/10 hover:text-primary transition-all order-2 sm:order-1"
                                     >
-                                        <ChevronLeft className="h-5 w-5" /> Back
+                                        <ChevronLeft className="h-5 w-5" /> Refine Form
                                     </Button>
-                                    <div className="flex gap-4">
+                                    <div className="w-full sm:w-auto order-1 sm:order-2">
                                         <Button
                                             onClick={handleStartParking}
-                                            className="h-16 px-12 rounded-[1.5rem] bg-primary hover:bg-primary/90 text-white font-black shadow-2xl shadow-primary/20 transition-all active:scale-95 uppercase tracking-[0.2em] border-none text-xs flex items-center gap-3"
+                                            className="w-full h-16 sm:px-12 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-black transition-all active:scale-95 uppercase tracking-[0.2em] border-none text-[10px] flex items-center justify-center gap-3 shadow-none"
                                         >
-                                            Confirm & Start Session
+                                            Secure & Start Session
                                             <Zap className="h-4 w-4 fill-white animate-pulse" />
                                         </Button>
                                     </div>
@@ -822,7 +787,7 @@ function PortalContent() {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 
@@ -854,16 +819,16 @@ function ActiveSessionView({ booking, onEnd, onOpenExtend }: { booking: Booking;
     const remainingMinutes = Math.max(0, MIN_PARKING_MINUTES - elapsedMinutes);
 
     return (
-        <Card className="w-full max-w-lg border-none shadow-[0_40px_100px_rgba(0,0,0,0.1)] rounded-[3rem] overflow-hidden bg-white">
-            <div className="p-10 text-center border-b border-slate-50 relative overflow-hidden">
-                <div className="h-20 w-20 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-slate-900 relative z-10">
-                    <Clock className="h-10 w-10 animate-pulse" />
+        <Card className="w-full max-w-lg border-none shadow-[0_40px_100px_rgba(0,0,0,0.1)] rounded-[2rem] sm:rounded-[3rem] overflow-hidden bg-white">
+            <div className="p-6 sm:p-10 text-center border-b border-slate-50 relative overflow-hidden">
+                <div className="h-16 w-16 sm:h-20 sm:w-20 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 text-slate-900 relative z-10">
+                    <Clock className="h-8 w-8 sm:h-10 sm:w-10 animate-pulse" />
                 </div>
-                <h2 className="text-3xl font-black text-slate-900 mb-1 tracking-tight relative z-10">Live Tracking</h2>
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-1 tracking-tight relative z-10">Live Tracking</h2>
                 <p className="text-slate-300 font-bold uppercase tracking-[0.3em] text-[8px] relative z-10">Session Monitored In Real-Time</p>
             </div>
-            <CardContent className="p-10 text-center space-y-12">
-                <div className="relative py-12">
+            <CardContent className="p-6 sm:p-10 text-center space-y-8 sm:space-y-12">
+                <div className="relative py-8 sm:py-12">
                     <CircularSessionCounter
                         startTime={booking.startTime}
                         endTime={booking.endTime || new Date().toISOString()}
@@ -871,18 +836,18 @@ function ActiveSessionView({ booking, onEnd, onOpenExtend }: { booking: Booking;
                     />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
                     <div className="space-y-2 text-left">
                         <Label className="text-[8px] uppercase font-black text-slate-300 tracking-widest ml-1">Plate</Label>
-                        <Input disabled value={booking.plateNumber} className="h-11 bg-slate-50 border-none font-black text-slate-900 opacity-100" />
+                        <Input disabled value={booking.plateNumber} className="h-12 bg-slate-50 border-none font-black text-slate-900 opacity-100 rounded-xl" />
                     </div>
                     <div className="space-y-2 text-left">
                         <Label className="text-[8px] uppercase font-black text-slate-300 tracking-widest ml-1">Started At</Label>
-                        <Input disabled value={new Date(booking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} className="h-11 bg-slate-50 border-none font-bold text-slate-400 opacity-100" />
+                        <Input disabled value={new Date(booking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} className="h-12 bg-slate-50 border-none font-bold text-slate-400 opacity-100 rounded-xl" />
                     </div>
                 </div>
 
-                <div className="space-y-4 pt-4">
+                <div className="space-y-4 pt-2">
                     {!canCheckout && (
                         <div className="bg-slate-50 text-slate-400 p-4 rounded-xl text-[9px] font-bold flex items-center justify-center gap-2.5">
                             <Info className="h-3.5 w-3.5" />
@@ -900,10 +865,10 @@ function ActiveSessionView({ booking, onEnd, onOpenExtend }: { booking: Booking;
                         </Button>
                         <Button
                             className={cn(
-                                "h-16 rounded-2xl font-black text-xs shadow-xl transition-all active:scale-95 border-none uppercase tracking-[0.2em]",
+                                "h-16 rounded-2xl font-black text-xs transition-all active:scale-95 border-none uppercase tracking-[0.2em] shadow-none",
                                 canCheckout
-                                    ? "bg-primary hover:bg-black text-white group"
-                                    : "bg-slate-50 text-slate-200 cursor-not-allowed shadow-none"
+                                    ? "bg-[#0066FF] hover:bg-[#0052CC] text-white group"
+                                    : "bg-slate-50 text-slate-200 cursor-not-allowed"
                             )}
                             onClick={onEnd}
                             disabled={!canCheckout}
@@ -953,7 +918,7 @@ function ExtendDialog({
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-md rounded-[2.5rem] p-0 overflow-hidden border-none shadow-2xl bg-white">
-                <div className="bg-slate-900 p-10 text-white relative">
+                <div className="bg-primary p-10 text-white relative">
                     <DialogHeader>
                         <DialogTitle className="text-2xl font-black tracking-tight uppercase tracking-widest leading-tight">Extend session</DialogTitle>
                         <DialogDescription className="text-white/40 font-bold uppercase tracking-widest text-[9px] mt-2">
@@ -999,7 +964,7 @@ function ExtendDialog({
                         <Button
                             onClick={onConfirm}
                             disabled={isLoading || !newEndTime}
-                            className="h-14 rounded-2xl bg-primary hover:bg-black text-white font-black uppercase text-xs tracking-[0.2em] shadow-xl shadow-primary/20 transition-all active:scale-95 border-none"
+                            className="h-14 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-black uppercase text-xs tracking-[0.2em] transition-all active:scale-95 border-none shadow-none"
                         >
                             {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Authorize Extension"}
                         </Button>
@@ -1034,7 +999,7 @@ function CheckoutView({
 
     // Transfer methods configuration (Disabled for now)
     const transferMethods = [
-        { id: 'telebirr', name: 'Telebirr', icon: <Smartphone className="h-5 w-5" />, color: '#0089cf', active: false },
+        { id: 'telebirr', name: 'Telebirr', icon: <Smartphone className="h-5 w-5" />, color: '#0089cf', active: true },
         { id: 'cbebirr', name: 'CBE Birr', icon: <Landmark className="h-5 w-5" />, color: '#7c2d82', active: false },
         { id: 'awash', name: 'Awash Birr', icon: <Layers className="h-5 w-5" />, color: '#ffd700', active: false },
     ];
@@ -1105,7 +1070,7 @@ function CheckoutView({
                     <div className="flex flex-col gap-3">
                         <Button
                             onClick={() => onTelebirrPayment()}
-                            className="w-full h-16 bg-[#0089cf] hover:bg-black text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] shadow-xl shadow-blue-100 transition-all active:scale-95 border-none"
+                            className="w-full h-16 bg-[#0066FF] hover:bg-[#0052CC] text-white rounded-2xl font-black text-xs uppercase tracking-[0.2em] transition-all active:scale-95 border-none shadow-none"
                         >
                             PROCEED TO PAYMENT
                         </Button>
@@ -1123,20 +1088,20 @@ function CheckoutView({
     }
 
     return (
-        <Card className="w-full max-w-lg border-none shadow-[0_40px_120px_-20px_rgba(0,0,0,0.1)] rounded-[3.5rem] overflow-hidden bg-white animate-in fade-in duration-700">
+        <Card className="w-full max-w-lg border-none shadow-[0_40px_120px_-20px_rgba(0,0,0,0.1)] rounded-[2rem] sm:rounded-[3.5rem] overflow-hidden bg-white animate-in fade-in duration-700">
             {/* Header Area */}
-            <div className="p-12 pb-8 text-center relative overflow-hidden">
+            <div className="p-8 sm:p-12 pb-6 sm:pb-8 text-center relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-                <div className="h-20 w-20 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-8 text-slate-900 group shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-default">
+                <div className="h-16 w-16 sm:h-20 sm:w-20 bg-slate-50 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-center mx-auto mb-6 sm:mb-8 text-slate-900 group shadow-sm transition-transform hover:scale-105 active:scale-95 cursor-default">
                     {checkoutStep === 'summary' ? (
-                        <Receipt className="h-10 w-10 text-primary" />
+                        <Receipt className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
                     ) : checkoutStep === 'categories' ? (
-                        <Wallet className="h-10 w-10 text-primary" />
+                        <Wallet className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
                     ) : (
-                        <Smartphone className="h-10 w-10 text-primary" />
+                        <Smartphone className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
                     )}
                 </div>
-                <h2 className="text-3xl font-black text-slate-900 tracking-tight uppercase tracking-[0.05em] leading-tight">
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight uppercase tracking-[0.05em] leading-tight">
                     {checkoutStep === 'summary' ? 'Summary View' : checkoutStep === 'categories' ? 'Payment Portal' : 'Transfer Hub'}
                 </h2>
                 <div className="flex items-center justify-center gap-2 mt-3">
@@ -1146,9 +1111,9 @@ function CheckoutView({
                 </div>
             </div>
 
-            <CardContent className="p-12 pt-4">
+            <CardContent className="p-8 sm:p-12 pt-2 sm:pt-4">
                 {checkoutStep === 'summary' && (
-                    <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="space-y-8 sm:space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <div className="space-y-8">
                             <div className="space-y-3">
                                 <Label className="text-[8px] uppercase font-black text-slate-300 tracking-[0.4em] ml-1 flex items-center gap-2 pt-2">
@@ -1176,8 +1141,7 @@ function CheckoutView({
 
                         <Button
                             onClick={() => setCheckoutStep('categories')}
-                            style={{ backgroundColor: SYSTEM_PRIMARY }}
-                            className="w-full h-16 rounded-[1.5rem] font-black text-white shadow-2xl shadow-slate-200 transition-all active:scale-95 group border-none"
+                            className="w-full h-16 rounded-[1.5rem] bg-[#0066FF] hover:bg-[#0052CC] font-black text-white transition-all active:scale-95 group border-none shadow-none"
                         >
                             <span className="flex items-center gap-3 uppercase tracking-[0.2em] text-xs antialiased">
                                 PROCEED TO CHECKOUT
@@ -1209,17 +1173,17 @@ function CheckoutView({
                             </button>
 
                             <button
-                                disabled={true}
-                                className="group h-24 rounded-3xl bg-slate-50 border-2 border-transparent transition-all flex items-center px-8 gap-6 text-left opacity-60 cursor-not-allowed"
+                                onClick={() => setCheckoutStep('transfer_methods')}
+                                className="group h-24 rounded-3xl bg-white border-2 border-slate-50 hover:border-primary/30 transition-all flex items-center px-8 gap-6 text-left hover:bg-slate-50/50"
                             >
-                                <div className="h-12 w-12 bg-slate-200 rounded-2xl flex items-center justify-center text-slate-400 transition-transform group-hover:scale-110">
+                                <div className="h-12 w-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 transition-transform group-hover:scale-110">
                                     <Smartphone className="h-6 w-6" />
                                 </div>
                                 <div className="flex-1">
-                                    <h4 className="font-black text-slate-400 uppercase tracking-widest text-[11px]">Digital Transfer</h4>
-                                    <p className="text-[9px] text-slate-300 font-bold uppercase tracking-[0.15em] mt-1">Coming Soon</p>
+                                    <h4 className="font-black text-slate-900 uppercase tracking-widest text-[11px]">Digital Transfer</h4>
+                                    <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.15em] mt-1">Telebirr & CBE Birr</p>
                                 </div>
-                                <Clock className="h-5 w-5 text-slate-200" />
+                                <ChevronRight className="h-5 w-5 text-slate-100 group-hover:text-primary transition-all" />
                             </button>
                         </div>
 

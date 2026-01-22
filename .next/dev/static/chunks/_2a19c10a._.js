@@ -674,8 +674,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$down$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronDown$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/chevron-down.js [app-client] (ecmascript) <export default as ChevronDown>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$search$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Search$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/search.js [app-client] (ecmascript) <export default as Search>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$shield$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Shield$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/shield.js [app-client] (ecmascript) <export default as Shield>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/x.js [app-client] (ecmascript) <export default as X>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$info$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Info$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/info.js [app-client] (ecmascript) <export default as Info>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/button.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/popover.tsx [app-client] (ecmascript)");
@@ -815,11 +815,11 @@ function PermissionSelector({ permissions, onPermissionsChange, categories, plac
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$popover$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PopoverContent"], {
-                    className: "w-[var(--radix-popover-trigger-width)] p-0 rounded-2xl shadow-2xl border-primary/20 overflow-hidden z-[9999]",
+                    className: "w-[var(--radix-popover-trigger-width)] min-w-[320px] md:min-w-[480px] p-0 rounded-2xl shadow-2xl border-primary/20 overflow-hidden z-[9999]",
                     align: "start",
                     side: "bottom",
                     sideOffset: 8,
-                    avoidCollisions: false,
+                    avoidCollisions: true,
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "p-4 border-b bg-slate-50/50 space-y-3",
@@ -836,7 +836,7 @@ function PermissionSelector({ permissions, onPermissionsChange, categories, plac
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                                             placeholder: "Search capabilities...",
-                                            className: "pl-10 h-10 rounded-xl border-slate-200 bg-white focus:ring-primary/20 font-bold text-sm",
+                                            className: "pl-10 h-11 rounded-xl border-slate-200 bg-white focus:ring-primary/20 font-bold text-sm",
                                             value: search,
                                             onChange: (e)=>setSearch(e.target.value)
                                         }, void 0, false, {
@@ -866,7 +866,7 @@ function PermissionSelector({ permissions, onPermissionsChange, categories, plac
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                             onClick: ()=>onPermissionsChange([]),
-                                            className: "text-[10px] font-black text-primary hover:text-primary/80 uppercase tracking-widest transition-colors",
+                                            className: "text-[10px] font-black text-[#0066FF] hover:text-[#0052CC] uppercase tracking-widest transition-colors",
                                             children: "Clear All"
                                         }, void 0, false, {
                                             fileName: "[project]/components/forms/permission-selector.tsx",
@@ -886,17 +886,17 @@ function PermissionSelector({ permissions, onPermissionsChange, categories, plac
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$scroll$2d$area$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ScrollArea"], {
-                            className: "max-h-[320px] overflow-y-auto",
+                            className: "max-h-[480px]",
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "p-2 space-y-4",
                                 children: Object.entries(filteredCategories).map(([category, perms])=>{
                                     const allSelected = perms.every((p)=>permissions.includes(p));
                                     const someSelected = perms.some((p)=>permissions.includes(p));
                                     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "space-y-2",
+                                        className: "space-y-2 bg-slate-50/50 p-2 rounded-2xl border border-slate-100",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex items-center justify-between px-3 py-2 rounded-xl transition-colors cursor-pointer group", allSelected ? "bg-primary/5" : "hover:bg-slate-50"),
+                                                className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex items-center justify-between px-3 py-2 rounded-xl transition-colors cursor-pointer group", allSelected ? "bg-[#0066FF]/5" : "hover:bg-white"),
                                                 onClick: ()=>toggleCategory(perms),
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -906,14 +906,14 @@ function PermissionSelector({ permissions, onPermissionsChange, categories, plac
                                                                 checked: allSelected ? true : someSelected ? "indeterminate" : false,
                                                                 onCheckedChange: ()=>toggleCategory(perms),
                                                                 onClick: (e)=>e.stopPropagation(),
-                                                                className: "h-4 w-4 rounded border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                                                className: "h-4 w-4 rounded border-slate-300 data-[state=checked]:bg-[#0066FF] data-[state=checked]:border-[#0066FF]"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/permission-selector.tsx",
                                                                 lineNumber: 173,
                                                                 columnNumber: 53
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                className: "text-xs font-black text-primary uppercase tracking-tight",
+                                                                className: "text-[10px] font-black text-[#0066FF] uppercase tracking-widest",
                                                                 children: category
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/permission-selector.tsx",
@@ -927,7 +927,7 @@ function PermissionSelector({ permissions, onPermissionsChange, categories, plac
                                                         columnNumber: 49
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                        className: "text-[10px] font-bold text-slate-400 group-hover:text-primary transition-colors",
+                                                        className: "text-[10px] font-bold text-slate-400 group-hover:text-[#0066FF] transition-colors",
                                                         children: [
                                                             perms.filter((p)=>permissions.includes(p)).length,
                                                             " ",
@@ -946,18 +946,18 @@ function PermissionSelector({ permissions, onPermissionsChange, categories, plac
                                                 columnNumber: 45
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "grid grid-cols-1 sm:grid-cols-2 gap-1 px-3 pl-10",
+                                                className: "grid grid-cols-1 sm:grid-cols-2 gap-1 px-1",
                                                 children: perms.map((p)=>{
                                                     const isChecked = permissions.includes(p);
                                                     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex items-center gap-2 p-2 rounded-lg transition-all cursor-pointer", isChecked ? "bg-primary/5 text-primary" : "hover:bg-slate-50 text-slate-600"),
+                                                        className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("flex items-center gap-2 p-2 rounded-lg transition-all cursor-pointer", isChecked ? "bg-white shadow-sm text-[#0066FF]" : "hover:bg-white text-slate-600"),
                                                         onClick: ()=>togglePermission(p),
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$checkbox$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Checkbox"], {
                                                                 checked: isChecked,
                                                                 onCheckedChange: ()=>togglePermission(p),
                                                                 onClick: (e)=>e.stopPropagation(),
-                                                                className: "h-3.5 w-3.5 rounded-sm border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                                                className: "h-3.5 w-3.5 rounded-sm border-slate-300 data-[state=checked]:bg-[#0066FF] data-[state=checked]:border-[#0066FF]"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/permission-selector.tsx",
                                                                 lineNumber: 219,
@@ -1001,11 +1001,11 @@ function PermissionSelector({ permissions, onPermissionsChange, categories, plac
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "p-4 bg-primary border-t border-white/10 flex items-center gap-3 shrink-0",
+                            className: "p-4 bg-[#0066FF] border-t border-white/10 flex items-center gap-3 shrink-0",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center text-amber-400 shrink-0",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$info$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Info$3e$__["Info"], {
+                                    className: "h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$shield$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Shield$3e$__["Shield"], {
                                         className: "h-4 w-4"
                                     }, void 0, false, {
                                         fileName: "[project]/components/forms/permission-selector.tsx",
@@ -1018,8 +1018,8 @@ function PermissionSelector({ permissions, onPermissionsChange, categories, plac
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                    className: "text-[9px] text-white/50 font-bold leading-tight",
-                                    children: "Permissions define granular access. Changes take effect on next login."
+                                    className: "text-[9px] text-white/70 font-bold leading-tight uppercase tracking-widest",
+                                    children: "Capabilities define operational access scope."
                                 }, void 0, false, {
                                     fileName: "[project]/components/forms/permission-selector.tsx",
                                     lineNumber: 247,
@@ -1133,20 +1133,35 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
     const [expandedCategories, setExpandedCategories] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "UserForm.useEffect": ()=>{
-            if (!initialData) return;
-            setFullName(initialData.fullName || "");
-            setEmail(initialData.email || "");
-            setPhoneNumber(initialData.phoneNumber || "");
-            setRole(initialData.role || __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["UserRole"].SYSTEM_ADMIN);
-            if (initialData.profileImage && typeof initialData.profileImage === "string") {
-                setPreview(initialData.profileImage);
-            }
-            // Handle permissions if backend returns it as array
-            if (initialData.permissions && Array.isArray(initialData.permissions)) {
-                setPermissions(initialData.permissions);
+            if (initialData) {
+                setFullName(initialData.fullName || "");
+                setEmail(initialData.email || "");
+                setPhoneNumber(initialData.phoneNumber || "");
+                setRole(initialData.role || __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["UserRole"].SYSTEM_ADMIN);
+                if (initialData.profileImage && typeof initialData.profileImage === "string") {
+                    setPreview(initialData.profileImage);
+                }
+                // Handle permissions if backend returns it as array
+                if (initialData.permissions && Array.isArray(initialData.permissions)) {
+                    setPermissions(initialData.permissions);
+                }
+            } else {
+                // Pre-fill for new users
+                setPermissions(__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$permissions$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DEFAULT_PERMISSIONS_BY_ROLE"][role] || []);
             }
         }
     }["UserForm.useEffect"], [
+        initialData
+    ]);
+    // Handle role change pre-filling for new users
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "UserForm.useEffect": ()=>{
+            if (!initialData && role) {
+                setPermissions(__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$permissions$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DEFAULT_PERMISSIONS_BY_ROLE"][role] || []);
+            }
+        }
+    }["UserForm.useEffect"], [
+        role,
         initialData
     ]);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
@@ -1231,7 +1246,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 173,
+                    lineNumber: 184,
                     columnNumber: 41
                 }, this);
             case "Booking Management":
@@ -1239,7 +1254,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 174,
+                    lineNumber: 185,
                     columnNumber: 41
                 }, this);
             case "User Management":
@@ -1247,7 +1262,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 175,
+                    lineNumber: 186,
                     columnNumber: 38
                 }, this);
             case "Customer Management":
@@ -1255,7 +1270,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 176,
+                    lineNumber: 187,
                     columnNumber: 42
                 }, this);
             case "Vehicle Management":
@@ -1263,7 +1278,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 177,
+                    lineNumber: 188,
                     columnNumber: 41
                 }, this);
             case "Wallet & Transactions":
@@ -1271,7 +1286,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 178,
+                    lineNumber: 189,
                     columnNumber: 44
                 }, this);
             case "Reviews & Ratings":
@@ -1279,7 +1294,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 179,
+                    lineNumber: 190,
                     columnNumber: 40
                 }, this);
             case "Configuration Management":
@@ -1287,7 +1302,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 180,
+                    lineNumber: 191,
                     columnNumber: 47
                 }, this);
             case "Dashboard & Analytics":
@@ -1295,7 +1310,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 181,
+                    lineNumber: 192,
                     columnNumber: 44
                 }, this);
             case "Financial Access":
@@ -1303,7 +1318,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 182,
+                    lineNumber: 193,
                     columnNumber: 39
                 }, this);
             case "System Settings & Security":
@@ -1311,7 +1326,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 183,
+                    lineNumber: 194,
                     columnNumber: 49
                 }, this);
             default:
@@ -1319,7 +1334,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                     className: "h-4 w-4"
                 }, void 0, false, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 184,
+                    lineNumber: 195,
                     columnNumber: 23
                 }, this);
         }
@@ -1337,7 +1352,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                 children: isNew ? "Create System User" : "Update User Account"
                             }, void 0, false, {
                                 fileName: "[project]/components/forms/user-form.tsx",
-                                lineNumber: 193,
+                                lineNumber: 204,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1345,13 +1360,13 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                 children: "Manage staff access and permissions for the dashboard"
                             }, void 0, false, {
                                 fileName: "[project]/components/forms/user-form.tsx",
-                                lineNumber: 196,
+                                lineNumber: 207,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/forms/user-form.tsx",
-                        lineNumber: 192,
+                        lineNumber: 203,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -1362,31 +1377,31 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                             className: "h-5 w-5"
                         }, void 0, false, {
                             fileName: "[project]/components/forms/user-form.tsx",
-                            lineNumber: 205,
+                            lineNumber: 216,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/components/forms/user-form.tsx",
-                        lineNumber: 200,
+                        lineNumber: 211,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/forms/user-form.tsx",
-                lineNumber: 191,
+                lineNumber: 202,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "flex-1 overflow-y-auto px-4 md:px-10 pb-6 bg-slate-50/30",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "max-w-7xl mx-auto h-full pt-10",
+                    className: "max-w-7xl mx-auto h-full pt-6 md:pt-10",
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "bg-white rounded-[2.5rem] border border-slate-200 shadow-2xl shadow-slate-200/50 overflow-hidden",
+                        className: "bg-white rounded-3xl md:rounded-[2.5rem] border border-slate-200 shadow-2xl shadow-slate-200/50 overflow-hidden",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "grid grid-cols-1 lg:grid-cols-3",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "lg:col-span-1 p-8 md:p-10 border-b lg:border-b-0 lg:border-r border-slate-100 bg-slate-50/30 space-y-10",
+                                    className: "lg:col-span-1 p-6 md:p-10 border-b lg:border-b-0 lg:border-r border-slate-100 bg-slate-50/30 space-y-8 md:space-y-10",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "space-y-6",
@@ -1398,14 +1413,14 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                             className: "h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                            lineNumber: 219,
+                                                            lineNumber: 230,
                                                             columnNumber: 21
                                                         }, this),
                                                         "Profile Identity"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                    lineNumber: 218,
+                                                    lineNumber: 229,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1420,13 +1435,13 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                     className: "h-full w-full object-cover"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 225,
+                                                                    lineNumber: 236,
                                                                     columnNumber: 25
                                                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__["User"], {
                                                                     className: "h-20 w-20 text-slate-400"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 231,
+                                                                    lineNumber: 242,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -1436,18 +1451,18 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                         className: "h-10 w-10 text-white"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/user-form.tsx",
-                                                                        lineNumber: 237,
+                                                                        lineNumber: 248,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 233,
+                                                                    lineNumber: 244,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                            lineNumber: 223,
+                                                            lineNumber: 234,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1458,19 +1473,19 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                             onChange: (e)=>setProfileImage(e.target.files?.[0] || null)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                            lineNumber: 241,
+                                                            lineNumber: 252,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                    lineNumber: 222,
+                                                    lineNumber: 233,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/forms/user-form.tsx",
-                                            lineNumber: 217,
+                                            lineNumber: 228,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1483,14 +1498,14 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                             className: "h-4 w-4"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                            lineNumber: 256,
+                                                            lineNumber: 267,
                                                             columnNumber: 21
                                                         }, this),
                                                         "Access Level"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                    lineNumber: 255,
+                                                    lineNumber: 266,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1504,7 +1519,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                     children: "Defined Role *"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 261,
+                                                                    lineNumber: 272,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -1512,17 +1527,17 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                     onValueChange: (val)=>setRole(val),
                                                                     children: [
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectTrigger"], {
-                                                                            className: "h-12 w-full rounded-xl border-slate-200 bg-white font-bold transition-all hover:border-primary/50",
+                                                                            className: "h-12 w-full rounded-xl border-slate-200 bg-white font-bold transition-all hover:border-[#0066FF]/50",
                                                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectValue"], {
-                                                                                placeholder: "Choose Role"
+                                                                                placeholder: "Enter Role Selection"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/forms/user-form.tsx",
-                                                                                lineNumber: 269,
+                                                                                lineNumber: 280,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                                            lineNumber: 268,
+                                                                            lineNumber: 279,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -1534,7 +1549,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                                     children: "System Super Admin"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                                    lineNumber: 272,
+                                                                                    lineNumber: 283,
                                                                                     columnNumber: 27
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -1543,25 +1558,25 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                                     children: "System Admin"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                                    lineNumber: 278,
+                                                                                    lineNumber: 289,
                                                                                     columnNumber: 27
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                                            lineNumber: 271,
+                                                                            lineNumber: 282,
                                                                             columnNumber: 25
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 264,
+                                                                    lineNumber: 275,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                            lineNumber: 260,
+                                                            lineNumber: 271,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1572,7 +1587,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                     children: "Organization Registry"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 289,
+                                                                    lineNumber: 300,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1582,7 +1597,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                             className: "h-4 w-4 text-primary"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                                            lineNumber: 293,
+                                                                            lineNumber: 304,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1590,71 +1605,94 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                             children: "PossibleTech"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                                            lineNumber: 294,
+                                                                            lineNumber: 305,
                                                                             columnNumber: 25
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 292,
+                                                                    lineNumber: 303,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                            lineNumber: 288,
+                                                            lineNumber: 299,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                    lineNumber: 259,
+                                                    lineNumber: 270,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/forms/user-form.tsx",
-                                            lineNumber: 254,
+                                            lineNumber: 265,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/forms/user-form.tsx",
-                                    lineNumber: 215,
+                                    lineNumber: 226,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "lg:col-span-2 p-8 md:p-12 space-y-12 bg-white",
+                                    className: "lg:col-span-2 p-6 md:p-12 space-y-10 md:space-y-12 bg-white",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "space-y-8",
+                                            className: "space-y-6 md:space-y-8",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "flex items-center gap-4",
+                                                    className: "flex items-center gap-3 border-b border-slate-50 pb-4",
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                            className: "h-1 w-12 rounded-full bg-primary/20"
+                                                            className: "p-2.5 bg-primary/10 text-primary rounded-xl",
+                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$mail$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Mail$3e$__["Mail"], {
+                                                                className: "w-5 h-5"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/forms/user-form.tsx",
+                                                                lineNumber: 318,
+                                                                columnNumber: 23
+                                                            }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                            lineNumber: 306,
+                                                            lineNumber: 317,
                                                             columnNumber: 21
                                                         }, this),
-                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                                            className: "text-sm font-black text-slate-400 uppercase tracking-widest",
-                                                            children: "Personal Information"
-                                                        }, void 0, false, {
+                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                                    className: "text-sm font-black text-slate-900 uppercase tracking-widest",
+                                                                    children: "Personal Information"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/forms/user-form.tsx",
+                                                                    lineNumber: 321,
+                                                                    columnNumber: 23
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                    className: "text-[10px] text-slate-400 font-bold uppercase tracking-tight",
+                                                                    children: "System access & contact details"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/forms/user-form.tsx",
+                                                                    lineNumber: 322,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                            lineNumber: 307,
+                                                            lineNumber: 320,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                    lineNumber: 305,
+                                                    lineNumber: 316,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "grid grid-cols-1 md:grid-cols-2 gap-8",
+                                                    className: "grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8",
                                                     children: [
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                             className: "space-y-3 md:col-span-2",
@@ -1664,12 +1702,12 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                     children: "Full Legal Name *"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 314,
+                                                                    lineNumber: 328,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                                                                     className: `h-12 w-full rounded-xl border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.fullName ? "border-red-500 bg-red-50" : ""}`,
-                                                                    placeholder: "e.g. Samuel Ayele",
+                                                                    placeholder: "Enter Full Legal Name",
                                                                     value: fullName,
                                                                     onChange: (e)=>{
                                                                         setFullName(e.target.value);
@@ -1680,7 +1718,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                     }
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 317,
+                                                                    lineNumber: 331,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 errors.fullName && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1688,13 +1726,13 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                     children: errors.fullName
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 326,
+                                                                    lineNumber: 340,
                                                                     columnNumber: 43
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                            lineNumber: 313,
+                                                            lineNumber: 327,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1707,20 +1745,20 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                             className: "h-3.5 w-3.5 text-primary"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                                            lineNumber: 331,
+                                                                            lineNumber: 345,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         "Official Email *"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 330,
+                                                                    lineNumber: 344,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                                                                     className: `h-12 w-full rounded-xl border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.email ? "border-red-500 bg-red-50" : ""}`,
                                                                     type: "email",
-                                                                    placeholder: "name@organization.com",
+                                                                    placeholder: "Enter Official Email",
                                                                     value: email,
                                                                     onChange: (e)=>{
                                                                         setEmail(e.target.value);
@@ -1731,7 +1769,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                     }
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 334,
+                                                                    lineNumber: 348,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 errors.email && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1739,13 +1777,13 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                     children: errors.email
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 344,
+                                                                    lineNumber: 358,
                                                                     columnNumber: 40
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                            lineNumber: 329,
+                                                            lineNumber: 343,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1758,19 +1796,19 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                             className: "h-3.5 w-3.5 text-primary"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                                            lineNumber: 349,
+                                                                            lineNumber: 363,
                                                                             columnNumber: 25
                                                                         }, this),
                                                                         "Primary Contact *"
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 348,
+                                                                    lineNumber: 362,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                                                                     className: `h-12 w-full rounded-xl border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.phoneNumber ? "border-red-500 bg-red-50" : ""}`,
-                                                                    placeholder: "+251 9...",
+                                                                    placeholder: "Enter Primary Contact",
                                                                     value: phoneNumber,
                                                                     onChange: (e)=>{
                                                                         setPhoneNumber(e.target.value);
@@ -1781,7 +1819,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                     }
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 352,
+                                                                    lineNumber: 366,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 errors.phoneNumber && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1789,25 +1827,25 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                     children: errors.phoneNumber
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                                    lineNumber: 361,
+                                                                    lineNumber: 375,
                                                                     columnNumber: 46
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                            lineNumber: 347,
+                                                            lineNumber: 361,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                    lineNumber: 312,
+                                                    lineNumber: 326,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/forms/user-form.tsx",
-                                            lineNumber: 304,
+                                            lineNumber: 315,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1820,7 +1858,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                             className: "h-1 w-12 rounded-full bg-primary/20"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                            lineNumber: 369,
+                                                            lineNumber: 383,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1828,13 +1866,13 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                             children: "System Capabilities"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                            lineNumber: 370,
+                                                            lineNumber: 384,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                    lineNumber: 368,
+                                                    lineNumber: 382,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1847,17 +1885,17 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                 children: "Custom Permission Registry"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/user-form.tsx",
-                                                                lineNumber: 377,
+                                                                lineNumber: 391,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$forms$2f$permission$2d$selector$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PermissionSelector"], {
                                                                 permissions: permissions,
                                                                 onPermissionsChange: setPermissions,
                                                                 categories: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$permissions$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getPermissionsByContext"])(role === __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["UserRole"].PARKING_SUPER_ADMIN || role === __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["UserRole"].PARKING_MANAGER),
-                                                                placeholder: "Search and assign capabilities..."
+                                                                placeholder: "Enter Site Permissions"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/user-form.tsx",
-                                                                lineNumber: 380,
+                                                                lineNumber: 394,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1869,12 +1907,12 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                             className: "h-5 w-5"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/forms/user-form.tsx",
-                                                                            lineNumber: 388,
+                                                                            lineNumber: 402,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/user-form.tsx",
-                                                                        lineNumber: 387,
+                                                                        lineNumber: 401,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1884,7 +1922,7 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                                 children: permissions.length === 0 ? "Default Access Protocol" : `${permissions.length} Advanced Capabilities`
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/forms/user-form.tsx",
-                                                                                lineNumber: 391,
+                                                                                lineNumber: 405,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1892,63 +1930,63 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                                                                 children: permissions.length === 0 ? "This user will operate under standard role restrictions." : "Selected permissions will override standard role defaults."
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/forms/user-form.tsx",
-                                                                                lineNumber: 396,
+                                                                                lineNumber: 410,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/components/forms/user-form.tsx",
-                                                                        lineNumber: 390,
+                                                                        lineNumber: 404,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/user-form.tsx",
-                                                                lineNumber: 386,
+                                                                lineNumber: 400,
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/forms/user-form.tsx",
-                                                        lineNumber: 376,
+                                                        lineNumber: 390,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/forms/user-form.tsx",
-                                                    lineNumber: 375,
+                                                    lineNumber: 389,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/components/forms/user-form.tsx",
-                                            lineNumber: 367,
+                                            lineNumber: 381,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/forms/user-form.tsx",
-                                    lineNumber: 302,
+                                    lineNumber: 313,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/forms/user-form.tsx",
-                            lineNumber: 213,
+                            lineNumber: 224,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/components/forms/user-form.tsx",
-                        lineNumber: 212,
+                        lineNumber: 223,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 211,
+                    lineNumber: 222,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/forms/user-form.tsx",
-                lineNumber: 210,
+                lineNumber: 221,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1967,14 +2005,14 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/forms/user-form.tsx",
-                                    lineNumber: 417,
+                                    lineNumber: 431,
                                     columnNumber: 15
                                 }, this),
                                 " selected"
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/forms/user-form.tsx",
-                            lineNumber: 415,
+                            lineNumber: 429,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1987,53 +2025,53 @@ function UserForm({ onOpenChange, onSave, initialData, isNew = true, isLoading =
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/components/forms/user-form.tsx",
-                                    lineNumber: 421,
+                                    lineNumber: 435,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                     onClick: handleSubmit,
                                     disabled: isLoading,
-                                    className: "h-14 px-16 rounded-xl bg-primary hover:opacity-90 text-white font-bold transition-all min-w-[160px] shadow-lg shadow-primary/10",
+                                    className: "h-14 px-16 rounded-xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-bold transition-all min-w-[160px] shadow-none border-none",
                                     children: [
                                         isLoading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
                                             className: "mr-2 h-4 w-4 animate-spin"
                                         }, void 0, false, {
                                             fileName: "[project]/components/forms/user-form.tsx",
-                                            lineNumber: 434,
+                                            lineNumber: 448,
                                             columnNumber: 29
                                         }, this),
                                         isNew ? "Create User" : "Update User"
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/forms/user-form.tsx",
-                                    lineNumber: 429,
+                                    lineNumber: 443,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/forms/user-form.tsx",
-                            lineNumber: 420,
+                            lineNumber: 434,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/forms/user-form.tsx",
-                    lineNumber: 414,
+                    lineNumber: 428,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/forms/user-form.tsx",
-                lineNumber: 413,
+                lineNumber: 427,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/forms/user-form.tsx",
-        lineNumber: 189,
+        lineNumber: 200,
         columnNumber: 5
     }, this);
 }
-_s(UserForm, "3iKDZ0COOiogUUntD/l0Zq5XqWE=");
+_s(UserForm, "DuMczuSV+o1i64j7IJvv/O6eGqo=");
 _c = UserForm;
 var _c;
 __turbopack_context__.k.register(_c, "UserForm");

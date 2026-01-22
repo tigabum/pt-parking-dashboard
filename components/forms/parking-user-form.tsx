@@ -34,6 +34,7 @@ import { cn } from "@/lib/utils";
 import {
     PERMISSION_LABELS,
     PARKING_DASHBOARD_PERMISSIONS,
+    DEFAULT_PERMISSIONS_BY_ROLE,
     getPermissionsByContext
 } from "@/lib/permissions";
 import {
@@ -106,8 +107,18 @@ export function ParkingUserForm({
             if (initialData.permissions && Array.isArray(initialData.permissions)) {
                 setPermissions(initialData.permissions);
             }
+        } else {
+            // Pre-fill for new users based on default role
+            setPermissions(DEFAULT_PERMISSIONS_BY_ROLE[role] || []);
         }
     }, [initialData]);
+
+    // Handle role change pre-filling for new users
+    useEffect(() => {
+        if (!initialData && role) {
+            setPermissions(DEFAULT_PERMISSIONS_BY_ROLE[role] || []);
+        }
+    }, [role, initialData]);
 
     const loadParkings = async () => {
         try {
@@ -292,14 +303,14 @@ export function ParkingUserForm({
                                                 if (errors.parkingId) setErrors({ ...errors, parkingId: "" });
                                             }}>
                                                 <SelectTrigger className={`h-12 w-full rounded-xl border-slate-200 bg-white font-bold transition-all hover:border-primary/50 ${errors.parkingId ? "border-red-500 bg-red-50" : ""}`}>
-                                                    <SelectValue placeholder="Choose parking..." />
+                                                    <SelectValue placeholder="Enter Parking Selection" />
                                                 </SelectTrigger>
                                                 <SelectContent className="rounded-xl shadow-2xl border-slate-100">
                                                     <div className="p-2 border-b">
                                                         <div className="relative">
                                                             <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
                                                             <Input
-                                                                placeholder="Search..."
+                                                                placeholder="Enter Search Query"
                                                                 className="pl-9 h-9 w-full border-none bg-slate-100 rounded-lg text-xs focus:outline-none"
                                                                 value={searchTerm}
                                                                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -372,7 +383,7 @@ export function ParkingUserForm({
                                             </Label>
                                             <Input
                                                 className={`h-12 w-full rounded-xl border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.name ? "border-red-500 bg-red-50" : ""}`}
-                                                placeholder="e.g. Samuel Ayele"
+                                                placeholder="Enter Manager Full Name"
                                                 value={name}
                                                 onChange={(e) => {
                                                     setName(e.target.value);
@@ -389,7 +400,7 @@ export function ParkingUserForm({
                                             <Input
                                                 className={`h-12 w-full rounded-xl border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.email ? "border-red-500 bg-red-50" : ""}`}
                                                 type="email"
-                                                placeholder="manager@example.com"
+                                                placeholder="Enter Direct Email"
                                                 value={email}
                                                 onChange={(e) => {
                                                     setEmail(e.target.value);
@@ -405,7 +416,7 @@ export function ParkingUserForm({
                                             </Label>
                                             <Input
                                                 className={`h-12 w-full rounded-xl border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.phoneNumber ? "border-red-500 bg-red-50" : ""}`}
-                                                placeholder="+251 9..."
+                                                placeholder="Enter Phone Contact"
                                                 value={phoneNumber}
                                                 onChange={(e) => {
                                                     setPhoneNumber(e.target.value);
@@ -434,7 +445,7 @@ export function ParkingUserForm({
                                                 permissions={permissions}
                                                 onPermissionsChange={setPermissions}
                                                 categories={PARKING_DASHBOARD_PERMISSIONS}
-                                                placeholder="Search and assign site permissions..."
+                                                placeholder="Enter Site Permissions"
                                             />
                                             <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center gap-4 transition-all hover:bg-white hover:shadow-sm group">
                                                 <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm transition-transform group-hover:scale-110">
@@ -482,7 +493,7 @@ export function ParkingUserForm({
                         <Button
                             onClick={handleSubmit}
                             disabled={isLoading}
-                            className="h-14 px-16 rounded-xl bg-primary hover:opacity-90 text-white font-bold transition-all min-w-[160px] shadow-lg shadow-primary/10"
+                            className="h-14 px-16 rounded-xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-bold transition-all min-w-[160px] shadow-none border-none"
                         >
                             {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {isNew ? "Create User" : "Update User"}

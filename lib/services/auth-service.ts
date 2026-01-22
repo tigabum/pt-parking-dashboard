@@ -113,6 +113,8 @@ class AuthService {
       role,
       phoneNumber: backendUser.phoneNumber,
       profileImage: backendUser.profileImage,
+      orgId: backendUser.orgId,
+      permissions: backendUser.permissions || [],
       createdAt: backendUser.createdAt || new Date().toISOString(),
       isPasswordSet: backendUser.isPasswordSet,
       isPhoneVerified: backendUser.isPhoneVerified,

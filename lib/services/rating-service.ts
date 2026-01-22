@@ -25,6 +25,7 @@ export interface RateParkingDto {
     parkingId: string;
     rating: number;
     comment?: string;
+    customerPhone?: string;
 }
 
 export const ratingService = {

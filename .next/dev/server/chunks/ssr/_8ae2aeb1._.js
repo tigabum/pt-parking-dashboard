@@ -540,6 +540,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/button.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/input.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/textarea.tsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/label.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$types$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/types.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/x.js [app-ssr] (ecmascript) <export default as X>");
@@ -553,7 +554,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/sonner/dist/index.mjs [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$context$2f$auth$2d$context$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/app/context/auth-context.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/auth.ts [app-ssr] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/select.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$switch$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/switch.tsx [app-ssr] (ecmascript)");
 "use client";
@@ -571,10 +571,11 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$switch$2
 ;
 ;
 ;
+;
 let googleMapsPromise = null;
 function loadGoogleMaps() {
     if (googleMapsPromise) return googleMapsPromise;
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+    const apiKey = ("TURBOPACK compile-time value", "AIzaSyCs08QJJNus03eKg9CYlCX5wS_LJNUOnyI");
     googleMapsPromise = new Promise((resolve, reject)=>{
         if ("TURBOPACK compile-time truthy", 1) return resolve();
         //TURBOPACK unreachable
@@ -588,31 +589,38 @@ function loadGoogleMaps() {
 function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
     const [locating, setLocating] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [commissions, setCommissions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [availableAmenities, setAvailableAmenities] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])([]);
     const [errors, setErrors] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])({});
     const mapInstanceRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
     const searchInputRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
     const mapRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
     const markerRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
-    const { canAccess } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$context$2f$auth$2d$context$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useAuth"])();
-    const isSuperAdmin = canAccess([
-        __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserRole"].SYSTEM_SUPER_ADMIN
-    ]);
+    const { user } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$app$2f$context$2f$auth$2d$context$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useAuth"])();
+    const isSystemAdmin = user?.role === __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserRole"].SYSTEM_SUPER_ADMIN || user?.role === __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserRole"].SYSTEM_ADMIN;
+    const isParkingAdmin = user?.role === __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserRole"].PARKING_SUPER_ADMIN;
     // Load commissions
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
-        const loadCommissions = async ()=>{
+        const loadData = async ()=>{
             try {
                 const { commissionService } = await __turbopack_context__.A("[project]/lib/services/commission-service.ts [app-ssr] (ecmascript, async loader)");
-                const res = await commissionService.getCommissions({
-                    limit: 1000
-                });
-                if (res && res.success && Array.isArray(res.data)) {
-                    setCommissions(res.data);
+                const { amenityService } = await __turbopack_context__.A("[project]/lib/services/amenity-service.ts [app-ssr] (ecmascript, async loader)");
+                const [commRes, amenRes] = await Promise.all([
+                    commissionService.getCommissions({
+                        limit: 1000
+                    }),
+                    amenityService.getAmenities()
+                ]);
+                if (commRes && commRes.success && Array.isArray(commRes.data)) {
+                    setCommissions(commRes.data);
+                }
+                if (amenRes && amenRes.success && Array.isArray(amenRes.data)) {
+                    setAvailableAmenities(amenRes.data);
                 }
             } catch (error) {
-                console.error("Failed to load commissions:", error);
+                console.error("Failed to load form data:", error);
             }
         };
-        loadCommissions();
+        loadData();
     }, []);
     const [form, setForm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(()=>{
         const defaults = {
@@ -642,6 +650,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
             agreementDocuments: [],
             tinNumber: "",
             amenities: [],
+            amenityIds: [],
             isIndoor: true,
             isVatIncluded: false,
             pricing: {
@@ -675,7 +684,8 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                 licenseFiles: initialData.licenseFiles || [],
                 galleryImages: initialData.galleryImages || [],
                 agreementDocuments: initialData.agreementDocuments || [],
-                commissionConfigId: initialData.commissionConfig?.id
+                commissionConfigId: initialData.commissionConfig?.id,
+                amenityIds: initialData.amenitiesList?.map((a)=>a.id) || []
             };
         }
         return defaults;
@@ -689,7 +699,8 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                     licenseFiles: initialData.licenseFiles || [],
                     galleryImages: initialData.galleryImages || [],
                     agreementDocuments: initialData.agreementDocuments || [],
-                    commissionConfigId: initialData.commissionConfig?.id
+                    commissionConfigId: initialData.commissionConfig?.id,
+                    amenityIds: initialData.amenitiesList?.map((a)=>a.id) || []
                 }));
         }
     }, [
@@ -758,7 +769,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                 });
                 const addListeners = (map)=>{
                     map.addListener("click", (e)=>{
-                        if (!e.latLng || !isSuperAdmin && initialData) return;
+                        if (!e.latLng || !isSystemAdmin && initialData) return;
                         markerRef.current.setPosition(e.latLng);
                         setForm((f)=>({
                                 ...f,
@@ -767,7 +778,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                             }));
                     });
                     markerRef.current.addListener("dragend", (e)=>{
-                        if (!isSuperAdmin && initialData) {
+                        if (!isSystemAdmin && initialData) {
                             markerRef.current.setPosition({
                                 lat: Number(form.lat),
                                 lng: Number(form.lng)
@@ -858,7 +869,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                 children: initialData ? "Update Parking" : "Create New Parking"
                             }, void 0, false, {
                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                lineNumber: 364,
+                                lineNumber: 379,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -866,26 +877,26 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                 children: "Fill in the details to register a location."
                             }, void 0, false, {
                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                lineNumber: 367,
+                                lineNumber: 382,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/forms/parking-form.tsx",
-                        lineNumber: 363,
+                        lineNumber: 378,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "flex items-center gap-3"
                     }, void 0, false, {
                         fileName: "[project]/components/forms/parking-form.tsx",
-                        lineNumber: 371,
+                        lineNumber: 386,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/forms/parking-form.tsx",
-                lineNumber: 362,
+                lineNumber: 377,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -902,17 +913,17 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                         className: "text-lg font-bold text-slate-900 flex items-center gap-2",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "w-1 h-6 bg-indigo-500 rounded-full"
+                                                className: "w-1 h-6 bg-[#0066FF] rounded-full"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 384,
+                                                lineNumber: 399,
                                                 columnNumber: 17
                                             }, this),
                                             "Basic Information"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 383,
+                                        lineNumber: 398,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -926,12 +937,12 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Parking Name *"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 389,
+                                                        lineNumber: 404,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
-                                                        className: `h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all disabled:opacity-70 ${errors.name ? "border-red-500 bg-red-50" : ""}`,
-                                                        placeholder: "e.g. Bole Medhanialem Parking",
+                                                        className: `h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white transition-all disabled:opacity-70 ${errors.name ? "border-red-500 bg-red-50" : ""}`,
+                                                        placeholder: "Enter Parking Name",
                                                         value: form.name,
                                                         onChange: (e)=>{
                                                             setForm({
@@ -943,10 +954,10 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 name: ""
                                                             });
                                                         },
-                                                        disabled: !isSuperAdmin && !!initialData
+                                                        disabled: !isSystemAdmin && !!initialData
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 390,
+                                                        lineNumber: 405,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.name && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -954,13 +965,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: errors.name
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 400,
+                                                        lineNumber: 415,
                                                         columnNumber: 35
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 388,
+                                                lineNumber: 403,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -971,27 +982,27 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "License Number"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 403,
+                                                        lineNumber: 418,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
-                                                        className: "h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all disabled:opacity-70",
-                                                        placeholder: "e.g. LIC-ADD-2321",
+                                                        className: "h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white transition-all disabled:opacity-70",
+                                                        placeholder: "Enter License Number",
                                                         value: form.licenseNumber,
                                                         onChange: (e)=>setForm({
                                                                 ...form,
                                                                 licenseNumber: e.target.value
                                                             }),
-                                                        disabled: !isSuperAdmin && !!initialData
+                                                        disabled: !isSystemAdmin && !!initialData
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 404,
+                                                        lineNumber: 419,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 402,
+                                                lineNumber: 417,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1002,13 +1013,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Total Spots *"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 413,
+                                                        lineNumber: 428,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
                                                         type: "number",
-                                                        className: `h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all disabled:opacity-70 ${errors.numberOfSpots ? "border-red-500 bg-red-50" : ""}`,
-                                                        placeholder: "0",
+                                                        className: `h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white transition-all disabled:opacity-70 ${errors.numberOfSpots ? "border-red-500 bg-red-50" : ""}`,
+                                                        placeholder: "Enter Total Spots",
                                                         value: form.numberOfSpots,
                                                         onChange: (e)=>{
                                                             setForm({
@@ -1021,10 +1032,10 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 numberOfSpots: ""
                                                             });
                                                         },
-                                                        disabled: !isSuperAdmin && !!initialData
+                                                        disabled: !isSystemAdmin && !!initialData
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 414,
+                                                        lineNumber: 429,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.numberOfSpots && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1032,67 +1043,8 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: errors.numberOfSpots
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 425,
+                                                        lineNumber: 440,
                                                         columnNumber: 44
-                                                    }, this)
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 412,
-                                                columnNumber: 17
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "space-y-2",
-                                                children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
-                                                        className: "text-sm font-semibold",
-                                                        children: "Parking Type"
-                                                    }, void 0, false, {
-                                                        fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 428,
-                                                        columnNumber: 19
-                                                    }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Select"], {
-                                                        value: form.parkingType,
-                                                        onValueChange: (val)=>setForm({
-                                                                ...form,
-                                                                parkingType: val
-                                                            }),
-                                                        disabled: !isSuperAdmin && !!initialData,
-                                                        children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectTrigger"], {
-                                                                className: "w-full h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all disabled:opacity-70",
-                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectValue"], {
-                                                                    placeholder: "Select type"
-                                                                }, void 0, false, {
-                                                                    fileName: "[project]/components/forms/parking-form.tsx",
-                                                                    lineNumber: 435,
-                                                                    columnNumber: 23
-                                                                }, this)
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 434,
-                                                                columnNumber: 21
-                                                            }, this),
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectContent"], {
-                                                                children: Object.values(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$types$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ParkingType"]).map((t)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
-                                                                        value: t,
-                                                                        children: t
-                                                                    }, t, false, {
-                                                                        fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 439,
-                                                                        columnNumber: 25
-                                                                    }, this))
-                                                            }, void 0, false, {
-                                                                fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 437,
-                                                                columnNumber: 21
-                                                            }, this)
-                                                        ]
-                                                    }, void 0, true, {
-                                                        fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 429,
-                                                        columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
@@ -1105,10 +1057,69 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
                                                         className: "text-sm font-semibold",
+                                                        children: "Parking Type"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/components/forms/parking-form.tsx",
+                                                        lineNumber: 443,
+                                                        columnNumber: 19
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Select"], {
+                                                        value: form.parkingType,
+                                                        onValueChange: (val)=>setForm({
+                                                                ...form,
+                                                                parkingType: val
+                                                            }),
+                                                        disabled: !isSystemAdmin && !!initialData,
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectTrigger"], {
+                                                                className: "w-full h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white transition-all disabled:opacity-70",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectValue"], {
+                                                                    placeholder: "Select type"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/components/forms/parking-form.tsx",
+                                                                    lineNumber: 450,
+                                                                    columnNumber: 23
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/forms/parking-form.tsx",
+                                                                lineNumber: 449,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectContent"], {
+                                                                children: Object.values(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$types$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["ParkingType"]).map((t)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
+                                                                        value: t,
+                                                                        children: t
+                                                                    }, t, false, {
+                                                                        fileName: "[project]/components/forms/parking-form.tsx",
+                                                                        lineNumber: 454,
+                                                                        columnNumber: 25
+                                                                    }, this))
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/forms/parking-form.tsx",
+                                                                lineNumber: 452,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/components/forms/parking-form.tsx",
+                                                        lineNumber: 444,
+                                                        columnNumber: 19
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/components/forms/parking-form.tsx",
+                                                lineNumber: 442,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "space-y-2",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
+                                                        className: "text-sm font-semibold",
                                                         children: "Commission Configuration"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 445,
+                                                        lineNumber: 460,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Select"], {
@@ -1117,20 +1128,20 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 ...form,
                                                                 commissionConfigId: val === "none" ? null : val
                                                             }),
-                                                        disabled: !isSuperAdmin && !!initialData,
+                                                        disabled: !isSystemAdmin && !!initialData,
                                                         children: [
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectTrigger"], {
-                                                                className: "w-full h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all disabled:opacity-70",
+                                                                className: "w-full h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white transition-all disabled:opacity-70",
                                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectValue"], {
                                                                     placeholder: "Select commission policy (optional)"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/parking-form.tsx",
-                                                                    lineNumber: 454,
+                                                                    lineNumber: 469,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 453,
+                                                                lineNumber: 468,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -1140,7 +1151,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "None"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 457,
+                                                                        lineNumber: 472,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     commissions.map((c)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -1153,25 +1164,25 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                             ]
                                                                         }, c.id, true, {
                                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                                            lineNumber: 459,
+                                                                            lineNumber: 474,
                                                                             columnNumber: 25
                                                                         }, this))
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 456,
+                                                                lineNumber: 471,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 446,
+                                                        lineNumber: 461,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 444,
+                                                lineNumber: 459,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1182,82 +1193,327 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Description"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 467,
+                                                        lineNumber: 482,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Textarea"], {
-                                                        className: "rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all min-h-[140px] resize-none disabled:opacity-70",
-                                                        placeholder: "Briefly describe the assigned parking...",
+                                                        className: "rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white transition-all min-h-[140px] resize-none disabled:opacity-70",
+                                                        placeholder: "Enter Description",
                                                         value: form.description,
                                                         onChange: (e)=>setForm({
                                                                 ...form,
                                                                 description: e.target.value
                                                             }),
-                                                        disabled: !isSuperAdmin && !!initialData
+                                                        disabled: !isSystemAdmin && !!initialData
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 468,
+                                                        lineNumber: 483,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 466,
+                                                lineNumber: 481,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "col-span-1 space-y-2",
+                                                className: "col-span-full space-y-6",
                                                 children: [
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
-                                                        className: "text-sm font-semibold",
-                                                        children: "Amenities (comma separated)"
-                                                    }, void 0, false, {
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "flex items-center justify-between",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
+                                                                className: "text-sm font-bold text-slate-900 uppercase tracking-widest",
+                                                                children: "Facility Amenities"
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/components/forms/parking-form.tsx",
+                                                                lineNumber: 493,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                                                type: "button",
+                                                                variant: "outline",
+                                                                size: "sm",
+                                                                onClick: ()=>{
+                                                                    const current = form.amenities || [];
+                                                                    setForm({
+                                                                        ...form,
+                                                                        amenities: [
+                                                                            ...current,
+                                                                            {
+                                                                                name: "",
+                                                                                value: ""
+                                                                            }
+                                                                        ]
+                                                                    });
+                                                                },
+                                                                className: "h-8 rounded-lg border-primary/20 text-primary font-bold text-[10px] uppercase tracking-widest hover:bg-primary/5",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
+                                                                        className: "h-3 w-3 mr-1"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/components/forms/parking-form.tsx",
+                                                                        lineNumber: 504,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    " Add Custom"
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/components/forms/parking-form.tsx",
+                                                                lineNumber: 494,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 477,
+                                                        lineNumber: 492,
                                                         columnNumber: 19
                                                     }, this),
-                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$textarea$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Textarea"], {
-                                                        className: "rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white transition-all min-h-[140px] resize-none disabled:opacity-70",
-                                                        placeholder: "e.g. WiFi, CCTV, Security, 24/7",
-                                                        value: form.amenities?.map((a)=>typeof a === 'string' ? a : a.name).join(", ") || "",
-                                                        onChange: (e)=>{
-                                                            const val = e.target.value;
-                                                            const arr = val.split(",").map((i)=>i.trim()).filter((i)=>i !== "");
-                                                            setForm({
-                                                                ...form,
-                                                                amenities: arr.map((name)=>({
-                                                                        name
-                                                                    }))
-                                                            });
-                                                        }
-                                                    }, void 0, false, {
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "space-y-4",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "space-y-2",
+                                                                children: [
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                        className: "text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1",
+                                                                        children: "Quick Select From System"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/components/forms/parking-form.tsx",
+                                                                        lineNumber: 510,
+                                                                        columnNumber: 23
+                                                                    }, this),
+                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "flex flex-wrap gap-2",
+                                                                        children: availableAmenities.map((amenity)=>{
+                                                                            const isAdded = form.amenities?.some((a)=>a.name.toLowerCase() === amenity.name.toLowerCase());
+                                                                            return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                                type: "button",
+                                                                                disabled: isAdded,
+                                                                                onClick: ()=>{
+                                                                                    const currentAmenities = form.amenities || [];
+                                                                                    const currentIds = form.amenityIds || [];
+                                                                                    if (!isAdded) {
+                                                                                        setForm({
+                                                                                            ...form,
+                                                                                            amenities: [
+                                                                                                ...currentAmenities,
+                                                                                                {
+                                                                                                    name: amenity.name,
+                                                                                                    value: "Available"
+                                                                                                }
+                                                                                            ],
+                                                                                            amenityIds: [
+                                                                                                ...currentIds,
+                                                                                                amenity.id
+                                                                                            ]
+                                                                                        });
+                                                                                    }
+                                                                                },
+                                                                                className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["cn"])("px-4 py-2 rounded-xl text-[11px] font-black transition-all border flex items-center gap-2 uppercase tracking-tight", isAdded ? "bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed" : "bg-white text-slate-600 border-slate-200 hover:border-primary hover:text-primary hover:bg-primary/5 shadow-sm"),
+                                                                                children: [
+                                                                                    isAdded && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__["Check"], {
+                                                                                        className: "h-3 w-3"
+                                                                                    }, void 0, false, {
+                                                                                        fileName: "[project]/components/forms/parking-form.tsx",
+                                                                                        lineNumber: 537,
+                                                                                        columnNumber: 43
+                                                                                    }, this),
+                                                                                    amenity.name
+                                                                                ]
+                                                                            }, amenity.id, true, {
+                                                                                fileName: "[project]/components/forms/parking-form.tsx",
+                                                                                lineNumber: 515,
+                                                                                columnNumber: 29
+                                                                            }, this);
+                                                                        })
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/components/forms/parking-form.tsx",
+                                                                        lineNumber: 511,
+                                                                        columnNumber: 23
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/components/forms/parking-form.tsx",
+                                                                lineNumber: 509,
+                                                                columnNumber: 21
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
+                                                                children: [
+                                                                    form.amenities?.map((amenity, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "p-4 rounded-2xl border border-slate-100 bg-slate-50/50 space-y-3 relative group",
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                                    type: "button",
+                                                                                    onClick: ()=>{
+                                                                                        const nextAmenities = [
+                                                                                            ...form.amenities
+                                                                                        ];
+                                                                                        const removed = nextAmenities.splice(index, 1)[0];
+                                                                                        // Check if this was a system amenity and remove its ID
+                                                                                        const systemAmenity = availableAmenities.find((a)=>a.name.toLowerCase() === removed.name.toLowerCase());
+                                                                                        let nextIds = form.amenityIds || [];
+                                                                                        if (systemAmenity) {
+                                                                                            nextIds = nextIds.filter((id)=>id !== systemAmenity.id);
+                                                                                        }
+                                                                                        setForm({
+                                                                                            ...form,
+                                                                                            amenities: nextAmenities,
+                                                                                            amenityIds: nextIds
+                                                                                        });
+                                                                                    },
+                                                                                    className: "absolute -top-2 -right-2 h-6 w-6 rounded-full bg-white border border-slate-200 text-slate-400 hover:text-red-500 hover:border-red-200 shadow-sm flex items-center justify-center transition-all opacity-0 group-hover:opacity-100",
+                                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__["X"], {
+                                                                                        className: "h-3 w-3"
+                                                                                    }, void 0, false, {
+                                                                                        fileName: "[project]/components/forms/parking-form.tsx",
+                                                                                        lineNumber: 568,
+                                                                                        columnNumber: 29
+                                                                                    }, this)
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/components/forms/parking-form.tsx",
+                                                                                    lineNumber: 548,
+                                                                                    columnNumber: 27
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                    className: "space-y-1",
+                                                                                    children: [
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
+                                                                                            className: "text-[9px] font-black text-slate-400 uppercase tracking-widest",
+                                                                                            children: "Service Name"
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/components/forms/parking-form.tsx",
+                                                                                            lineNumber: 572,
+                                                                                            columnNumber: 29
+                                                                                        }, this),
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
+                                                                                            placeholder: "e.g. WiFi",
+                                                                                            value: amenity.name,
+                                                                                            onChange: (e)=>{
+                                                                                                const next = [
+                                                                                                    ...form.amenities
+                                                                                                ];
+                                                                                                next[index].name = e.target.value;
+                                                                                                setForm({
+                                                                                                    ...form,
+                                                                                                    amenities: next
+                                                                                                });
+                                                                                            },
+                                                                                            className: "h-9 rounded-lg bg-white border-transparent focus:border-primary/30 text-xs font-bold"
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/components/forms/parking-form.tsx",
+                                                                                            lineNumber: 573,
+                                                                                            columnNumber: 29
+                                                                                        }, this)
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/components/forms/parking-form.tsx",
+                                                                                    lineNumber: 571,
+                                                                                    columnNumber: 27
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                    className: "space-y-1",
+                                                                                    children: [
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
+                                                                                            className: "text-[9px] font-black text-slate-400 uppercase tracking-widest",
+                                                                                            children: "Specs / Value"
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/components/forms/parking-form.tsx",
+                                                                                            lineNumber: 586,
+                                                                                            columnNumber: 29
+                                                                                        }, this),
+                                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
+                                                                                            placeholder: "e.g. High Speed",
+                                                                                            value: amenity.value,
+                                                                                            onChange: (e)=>{
+                                                                                                const next = [
+                                                                                                    ...form.amenities
+                                                                                                ];
+                                                                                                next[index].value = e.target.value;
+                                                                                                setForm({
+                                                                                                    ...form,
+                                                                                                    amenities: next
+                                                                                                });
+                                                                                            },
+                                                                                            className: "h-9 rounded-lg bg-white border-transparent focus:border-primary/30 text-xs font-medium"
+                                                                                        }, void 0, false, {
+                                                                                            fileName: "[project]/components/forms/parking-form.tsx",
+                                                                                            lineNumber: 587,
+                                                                                            columnNumber: 29
+                                                                                        }, this)
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/components/forms/parking-form.tsx",
+                                                                                    lineNumber: 585,
+                                                                                    columnNumber: 27
+                                                                                }, this)
+                                                                            ]
+                                                                        }, index, true, {
+                                                                            fileName: "[project]/components/forms/parking-form.tsx",
+                                                                            lineNumber: 547,
+                                                                            columnNumber: 25
+                                                                        }, this)),
+                                                                    (!form.amenities || form.amenities.length === 0) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: "col-span-full py-8 border-2 border-dashed border-slate-100 rounded-3xl flex flex-col items-center justify-center text-slate-400 gap-2",
+                                                                        children: [
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                                className: "text-xs font-bold uppercase tracking-widest",
+                                                                                children: "No amenities configured"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/components/forms/parking-form.tsx",
+                                                                                lineNumber: 602,
+                                                                                columnNumber: 27
+                                                                            }, this),
+                                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                                                className: "text-[10px]",
+                                                                                children: "Select from quick list or add custom ones"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/components/forms/parking-form.tsx",
+                                                                                lineNumber: 603,
+                                                                                columnNumber: 27
+                                                                            }, this)
+                                                                        ]
+                                                                    }, void 0, true, {
+                                                                        fileName: "[project]/components/forms/parking-form.tsx",
+                                                                        lineNumber: 601,
+                                                                        columnNumber: 25
+                                                                    }, this)
+                                                                ]
+                                                            }, void 0, true, {
+                                                                fileName: "[project]/components/forms/parking-form.tsx",
+                                                                lineNumber: 545,
+                                                                columnNumber: 21
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 478,
+                                                        lineNumber: 508,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 476,
+                                                lineNumber: 491,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 387,
+                                        lineNumber: 402,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                lineNumber: 382,
+                                lineNumber: 397,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "h-px bg-slate-100"
                             }, void 0, false, {
                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                lineNumber: 492,
+                                lineNumber: 612,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1267,17 +1523,17 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                         className: "text-lg font-bold text-slate-900 flex items-center gap-2",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "w-1 h-6 bg-indigo-500 rounded-full"
+                                                className: "w-1 h-6 bg-[#0066FF] rounded-full"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 497,
+                                                lineNumber: 617,
                                                 columnNumber: 17
                                             }, this),
                                             "Address Details"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 496,
+                                        lineNumber: 616,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1291,7 +1547,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Country"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 502,
+                                                        lineNumber: 622,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -1300,17 +1556,17 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 ...form,
                                                                 country: e.target.value
                                                             }),
-                                                        className: "h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70",
-                                                        disabled: !isSuperAdmin && !!initialData
+                                                        className: "h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70",
+                                                        disabled: !isSystemAdmin && !!initialData
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 503,
+                                                        lineNumber: 623,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 501,
+                                                lineNumber: 621,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1321,7 +1577,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Region *"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 511,
+                                                        lineNumber: 631,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -1336,12 +1592,12 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 region: ""
                                                             });
                                                         },
-                                                        className: `h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70 ${errors.region ? "border-red-500 bg-red-50" : ""}`,
-                                                        placeholder: "e.g. Addis Ababa",
-                                                        disabled: !isSuperAdmin && !!initialData
+                                                        className: `h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70 ${errors.region ? "border-red-500 bg-red-50" : ""}`,
+                                                        placeholder: "Enter Region",
+                                                        disabled: !isSystemAdmin && !!initialData
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 512,
+                                                        lineNumber: 632,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.region && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1349,13 +1605,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: errors.region
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 522,
+                                                        lineNumber: 642,
                                                         columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 510,
+                                                lineNumber: 630,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1366,7 +1622,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "City *"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 525,
+                                                        lineNumber: 645,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -1381,11 +1637,11 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 city: ""
                                                             });
                                                         },
-                                                        className: `h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70 ${errors.city ? "border-red-500 bg-red-50" : ""}`,
-                                                        disabled: !isSuperAdmin && !!initialData
+                                                        className: `h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70 ${errors.city ? "border-red-500 bg-red-50" : ""}`,
+                                                        disabled: !isSystemAdmin && !!initialData
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 526,
+                                                        lineNumber: 646,
                                                         columnNumber: 19
                                                     }, this),
                                                     errors.city && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1393,13 +1649,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: errors.city
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 535,
+                                                        lineNumber: 655,
                                                         columnNumber: 35
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 524,
+                                                lineNumber: 644,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1410,7 +1666,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Sub-city"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 538,
+                                                        lineNumber: 658,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -1419,17 +1675,17 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 ...form,
                                                                 subCity: e.target.value
                                                             }),
-                                                        className: "h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70",
-                                                        disabled: !isSuperAdmin && !!initialData
+                                                        className: "h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70",
+                                                        disabled: !isSystemAdmin && !!initialData
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 539,
+                                                        lineNumber: 659,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 537,
+                                                lineNumber: 657,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1440,7 +1696,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Woreda"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 547,
+                                                        lineNumber: 667,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -1449,18 +1705,18 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 ...form,
                                                                 woreda: e.target.value
                                                             }),
-                                                        className: "h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70",
-                                                        placeholder: "e.g. 01",
-                                                        disabled: !isSuperAdmin && !!initialData
+                                                        className: "h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70",
+                                                        placeholder: "Enter Woreda",
+                                                        disabled: !isSystemAdmin && !!initialData
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 548,
+                                                        lineNumber: 668,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 546,
+                                                lineNumber: 666,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1471,7 +1727,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Kebele"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 557,
+                                                        lineNumber: 677,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -1480,18 +1736,18 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 ...form,
                                                                 kebele: e.target.value
                                                             }),
-                                                        className: "h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70",
-                                                        placeholder: "e.g. 03",
-                                                        disabled: !isSuperAdmin && !!initialData
+                                                        className: "h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70",
+                                                        placeholder: "Enter Kebele",
+                                                        disabled: !isSystemAdmin && !!initialData
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 558,
+                                                        lineNumber: 678,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 556,
+                                                lineNumber: 676,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1502,7 +1758,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Street Name"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 567,
+                                                        lineNumber: 687,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -1511,36 +1767,36 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 ...form,
                                                                 streetName: e.target.value
                                                             }),
-                                                        className: "h-12 rounded-xl bg-slate-50 border-transparent focus:border-indigo-500 focus:bg-white disabled:opacity-70",
-                                                        disabled: !isSuperAdmin && !!initialData
+                                                        className: "h-12 rounded-xl bg-slate-50 border-transparent focus:border-[#0066FF] focus:bg-white disabled:opacity-70",
+                                                        disabled: !isSystemAdmin && !!initialData
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 568,
+                                                        lineNumber: 688,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 566,
+                                                lineNumber: 686,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 500,
+                                        lineNumber: 620,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                lineNumber: 495,
+                                lineNumber: 615,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "h-px bg-slate-100"
                             }, void 0, false, {
                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                lineNumber: 578,
+                                lineNumber: 698,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1553,17 +1809,17 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                 className: "text-lg font-bold text-slate-900 flex items-center gap-2",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "w-1 h-6 bg-indigo-500 rounded-full"
+                                                        className: "w-1 h-6 bg-[#0066FF] rounded-full"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 584,
+                                                        lineNumber: 704,
                                                         columnNumber: 19
                                                     }, this),
                                                     "Exact Map Location"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 583,
+                                                lineNumber: 703,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1577,21 +1833,21 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 children: "LAT:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 589,
+                                                                lineNumber: 709,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                className: "font-bold text-indigo-600",
+                                                                className: "font-bold text-[#0066FF]",
                                                                 children: Number(form.lat).toFixed(6)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 590,
+                                                                lineNumber: 710,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 588,
+                                                        lineNumber: 708,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1602,33 +1858,33 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 children: "LNG:"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 593,
+                                                                lineNumber: 713,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                                className: "font-bold text-indigo-600",
+                                                                className: "font-bold text-[#0066FF]",
                                                                 children: Number(form.lng).toFixed(6)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 594,
+                                                                lineNumber: 714,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 592,
+                                                        lineNumber: 712,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 587,
+                                                lineNumber: 707,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 582,
+                                        lineNumber: 702,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1639,22 +1895,22 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                 className: "w-full h-full bg-slate-100"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 600,
+                                                lineNumber: 720,
                                                 columnNumber: 17
                                             }, this),
-                                            !isSuperAdmin && initialData && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            !isSystemAdmin && initialData && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "absolute inset-0 bg-black/5 z-20 cursor-not-allowed items-center justify-center flex",
                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "bg-white/80 backdrop-blur px-3 md:px-4 py-1.5 md:py-2 rounded-lg border shadow-sm font-bold text-[10px] md:text-xs text-slate-500 uppercase tracking-widest",
                                                     children: "Location Lock (Superadmin Only)"
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/forms/parking-form.tsx",
-                                                    lineNumber: 604,
+                                                    lineNumber: 724,
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 603,
+                                                lineNumber: 723,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1666,29 +1922,29 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                             className: "absolute left-3 md:left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                            lineNumber: 612,
+                                                            lineNumber: 732,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                                             ref: searchInputRef,
                                                             type: "text",
-                                                            placeholder: "Search location...",
-                                                            className: "w-full h-10 md:h-12 pl-10 md:pl-12 pr-4 rounded-xl border-none bg-white font-medium text-xs md:text-sm focus:ring-2 focus:ring-indigo-500 disabled:bg-slate-50 disabled:cursor-not-allowed",
-                                                            disabled: !isSuperAdmin && !!initialData
+                                                            placeholder: "Enter Location Search",
+                                                            className: "w-full h-10 md:h-12 pl-10 md:pl-12 pr-4 rounded-xl border-none bg-white font-medium text-xs md:text-sm focus:ring-2 focus:ring-[#0066FF] disabled:bg-slate-50 disabled:cursor-not-allowed",
+                                                            disabled: !isSystemAdmin && !!initialData
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                            lineNumber: 613,
+                                                            lineNumber: 733,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/forms/parking-form.tsx",
-                                                    lineNumber: 611,
+                                                    lineNumber: 731,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 610,
+                                                lineNumber: 730,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1696,48 +1952,48 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                                                     type: "button",
                                                     onClick: handleLocateMe,
-                                                    disabled: !isSuperAdmin && !!initialData,
-                                                    className: "h-10 w-10 md:h-12 md:w-12 rounded-full bg-white text-indigo-600 shadow-xl hover:bg-slate-50 border border-slate-100 disabled:opacity-50",
+                                                    disabled: !isSystemAdmin && !!initialData,
+                                                    className: "h-10 w-10 md:h-12 md:w-12 rounded-full bg-white text-[#0066FF] shadow-xl hover:bg-slate-50 border border-slate-100 disabled:opacity-50",
                                                     children: locating ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
                                                         className: "h-5 w-5 animate-spin"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 630,
+                                                        lineNumber: 750,
                                                         columnNumber: 33
                                                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$crosshair$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Crosshair$3e$__["Crosshair"], {
                                                         className: "h-5 w-5 md:h-6 md:w-6"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 630,
+                                                        lineNumber: 750,
                                                         columnNumber: 80
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/components/forms/parking-form.tsx",
-                                                    lineNumber: 624,
+                                                    lineNumber: 744,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 623,
+                                                lineNumber: 743,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 599,
+                                        lineNumber: 719,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                lineNumber: 581,
+                                lineNumber: 701,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "h-px bg-slate-100"
                             }, void 0, false, {
                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                lineNumber: 636,
+                                lineNumber: 756,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1747,17 +2003,17 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                         className: "text-lg font-bold text-slate-900 flex items-center gap-2",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "w-1 h-6 bg-indigo-500 rounded-full"
+                                                className: "w-1 h-6 bg-[#0066FF] rounded-full"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 641,
+                                                lineNumber: 761,
                                                 columnNumber: 17
                                             }, this),
                                             "Pricing Configuration"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 640,
+                                        lineNumber: 760,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1771,7 +2027,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Hourly Rate"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 648,
+                                                        lineNumber: 768,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1785,13 +2041,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Price (ETB)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 653,
+                                                                        lineNumber: 773,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
                                                                         type: "number",
                                                                         className: "h-10 bg-white",
-                                                                        placeholder: "0",
+                                                                        placeholder: "Enter Hourly Price",
                                                                         value: form.pricing.hourly?.price,
                                                                         onChange: (e)=>setForm({
                                                                                 ...form,
@@ -1802,16 +2058,17 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                                         price: +e.target.value
                                                                                     }
                                                                                 }
-                                                                            })
+                                                                            }),
+                                                                        disabled: !isSystemAdmin && !isParkingAdmin && !!initialData
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 654,
+                                                                        lineNumber: 774,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 652,
+                                                                lineNumber: 772,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1822,13 +2079,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Discount (%)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 674,
+                                                                        lineNumber: 795,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
                                                                         type: "number",
                                                                         className: "h-10 bg-white",
-                                                                        placeholder: "0",
+                                                                        placeholder: "Enter Discount",
                                                                         value: form.pricing.hourly?.discount,
                                                                         onChange: (e)=>setForm({
                                                                                 ...form,
@@ -1839,28 +2096,29 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                                         discount: +e.target.value
                                                                                     }
                                                                                 }
-                                                                            })
+                                                                            }),
+                                                                        disabled: !isSystemAdmin && !isParkingAdmin && !!initialData
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 675,
+                                                                        lineNumber: 796,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 673,
+                                                                lineNumber: 794,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 651,
+                                                        lineNumber: 771,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 647,
+                                                lineNumber: 767,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1871,7 +2129,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Daily Rate"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 699,
+                                                        lineNumber: 821,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1885,13 +2143,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Price (ETB)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 704,
+                                                                        lineNumber: 826,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
                                                                         type: "number",
                                                                         className: "h-10 bg-white",
-                                                                        placeholder: "0",
+                                                                        placeholder: "Enter Daily Price",
                                                                         value: form.pricing.daily?.price,
                                                                         onChange: (e)=>setForm({
                                                                                 ...form,
@@ -1902,16 +2160,17 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                                         price: +e.target.value
                                                                                     }
                                                                                 }
-                                                                            })
+                                                                            }),
+                                                                        disabled: !isSystemAdmin && !isParkingAdmin && !!initialData
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 705,
+                                                                        lineNumber: 827,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 703,
+                                                                lineNumber: 825,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1922,13 +2181,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Discount (%)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 725,
+                                                                        lineNumber: 848,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
                                                                         type: "number",
                                                                         className: "h-10 bg-white",
-                                                                        placeholder: "0",
+                                                                        placeholder: "Enter Discount",
                                                                         value: form.pricing.daily?.discount,
                                                                         onChange: (e)=>setForm({
                                                                                 ...form,
@@ -1939,28 +2198,29 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                                         discount: +e.target.value
                                                                                     }
                                                                                 }
-                                                                            })
+                                                                            }),
+                                                                        disabled: !isSystemAdmin && !isParkingAdmin && !!initialData
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 726,
+                                                                        lineNumber: 849,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 724,
+                                                                lineNumber: 847,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 702,
+                                                        lineNumber: 824,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 698,
+                                                lineNumber: 820,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1971,7 +2231,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Monthly Rate"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 750,
+                                                        lineNumber: 874,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1985,13 +2245,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Price (ETB)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 755,
+                                                                        lineNumber: 879,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
                                                                         type: "number",
                                                                         className: "h-10 bg-white",
-                                                                        placeholder: "0",
+                                                                        placeholder: "Enter Monthly Price",
                                                                         value: form.pricing.monthly?.price,
                                                                         onChange: (e)=>setForm({
                                                                                 ...form,
@@ -2002,16 +2262,17 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                                         price: +e.target.value
                                                                                     }
                                                                                 }
-                                                                            })
+                                                                            }),
+                                                                        disabled: !isSystemAdmin && !isParkingAdmin && !!initialData
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 756,
+                                                                        lineNumber: 880,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 754,
+                                                                lineNumber: 878,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2022,13 +2283,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Discount (%)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 776,
+                                                                        lineNumber: 901,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
                                                                         type: "number",
                                                                         className: "h-10 bg-white",
-                                                                        placeholder: "0",
+                                                                        placeholder: "Enter Discount",
                                                                         value: form.pricing.monthly?.discount,
                                                                         onChange: (e)=>setForm({
                                                                                 ...form,
@@ -2039,39 +2300,40 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                                         discount: +e.target.value
                                                                                     }
                                                                                 }
-                                                                            })
+                                                                            }),
+                                                                        disabled: !isSystemAdmin && !isParkingAdmin && !!initialData
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 777,
+                                                                        lineNumber: 902,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 775,
+                                                                lineNumber: 900,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 753,
+                                                        lineNumber: 877,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 749,
+                                                lineNumber: 873,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "p-4 bg-indigo-50/30 rounded-2xl border border-indigo-100 space-y-3",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Label"], {
-                                                        className: "text-xs font-bold uppercase text-indigo-500 tracking-wider",
+                                                        className: "text-xs font-bold uppercase text-[#0066FF] tracking-wider",
                                                         children: "Flat Rate (Single Charge)"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 801,
+                                                        lineNumber: 927,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2085,13 +2347,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Price (ETB)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 806,
+                                                                        lineNumber: 932,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
                                                                         type: "number",
                                                                         className: "h-10 bg-white",
-                                                                        placeholder: "0",
+                                                                        placeholder: "Enter Flat Price",
                                                                         value: form.pricing.flat?.price,
                                                                         onChange: (e)=>setForm({
                                                                                 ...form,
@@ -2103,16 +2365,17 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                                         currency: "ETB"
                                                                                     }
                                                                                 }
-                                                                            })
+                                                                            }),
+                                                                        disabled: !isSystemAdmin && !isParkingAdmin && !!initialData
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 807,
+                                                                        lineNumber: 933,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 805,
+                                                                lineNumber: 931,
                                                                 columnNumber: 21
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2123,13 +2386,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Discount (%)"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 828,
+                                                                        lineNumber: 955,
                                                                         columnNumber: 23
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
                                                                         type: "number",
                                                                         className: "h-10 bg-white",
-                                                                        placeholder: "0",
+                                                                        placeholder: "Enter Discount",
                                                                         value: form.pricing.flat?.discount,
                                                                         onChange: (e)=>setForm({
                                                                                 ...form,
@@ -2140,34 +2403,35 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                                         discount: +e.target.value
                                                                                     }
                                                                                 }
-                                                                            })
+                                                                            }),
+                                                                        disabled: !isSystemAdmin && !isParkingAdmin && !!initialData
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 829,
+                                                                        lineNumber: 956,
                                                                         columnNumber: 23
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 827,
+                                                                lineNumber: 954,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 804,
+                                                        lineNumber: 930,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 800,
+                                                lineNumber: 926,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 645,
+                                        lineNumber: 765,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2181,7 +2445,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Indoor Parking"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 854,
+                                                        lineNumber: 982,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2189,13 +2453,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Is this an indoor assigned parking?"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 855,
+                                                        lineNumber: 983,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 853,
+                                                lineNumber: 981,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$switch$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Switch"], {
@@ -2206,13 +2470,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                     })
                                             }, void 0, false, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 857,
+                                                lineNumber: 985,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 852,
+                                        lineNumber: 980,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2226,7 +2490,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "VAT Included"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 865,
+                                                        lineNumber: 993,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2234,13 +2498,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Are prices inclusive of VAT (15%)?"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 866,
+                                                        lineNumber: 994,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 864,
+                                                lineNumber: 992,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$switch$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Switch"], {
@@ -2249,29 +2513,29 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         ...form,
                                                         isVatIncluded: c
                                                     }),
-                                                disabled: !isSuperAdmin && !!initialData
+                                                disabled: !isSystemAdmin && !!initialData
                                             }, void 0, false, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 868,
+                                                lineNumber: 996,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 863,
+                                        lineNumber: 991,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                lineNumber: 639,
+                                lineNumber: 759,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "h-px bg-slate-100"
                             }, void 0, false, {
                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                lineNumber: 876,
+                                lineNumber: 1004,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2281,17 +2545,17 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                         className: "text-lg font-bold text-slate-900 flex items-center gap-2",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "w-1 h-6 bg-indigo-500 rounded-full"
+                                                className: "w-1 h-6 bg-[#0066FF] rounded-full"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 881,
+                                                lineNumber: 1009,
                                                 columnNumber: 17
                                             }, this),
                                             "Media & Verification"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 880,
+                                        lineNumber: 1008,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2305,11 +2569,11 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Cover Image"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 888,
+                                                        lineNumber: 1016,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "relative w-full h-64 rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-50/10 transition-all group flex flex-col items-center justify-center text-center cursor-pointer",
+                                                        className: "relative w-full h-64 rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50 hover:border-[#0066FF] hover:bg-indigo-50/10 transition-all group flex flex-col items-center justify-center text-center cursor-pointer",
                                                         children: [
                                                             form.featureImage ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
                                                                 children: [
@@ -2318,7 +2582,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         className: "w-full h-full object-cover"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 892,
+                                                                        lineNumber: 1020,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2328,12 +2592,12 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                             children: "Change Cover"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                                            lineNumber: 897,
+                                                                            lineNumber: 1025,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 896,
+                                                                        lineNumber: 1024,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2352,17 +2616,17 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                                 className: "h-4 w-4"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                                lineNumber: 908,
+                                                                                lineNumber: 1036,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                                            lineNumber: 900,
+                                                                            lineNumber: 1028,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 899,
+                                                                        lineNumber: 1027,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
@@ -2370,17 +2634,17 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 className: "flex flex-col items-center justify-center p-6 text-slate-400",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                        className: "h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-indigo-500 group-hover:scale-110 transition-transform",
+                                                                        className: "h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-[#0066FF] group-hover:scale-110 transition-transform",
                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$image$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Image$3e$__["Image"], {
                                                                             className: "h-8 w-8"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                                            lineNumber: 915,
+                                                                            lineNumber: 1043,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 914,
+                                                                        lineNumber: 1042,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2388,7 +2652,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Upload Cover Photo"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 917,
+                                                                        lineNumber: 1045,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2396,13 +2660,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Recommended 1200x800px"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 918,
+                                                                        lineNumber: 1046,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 913,
+                                                                lineNumber: 1041,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2418,19 +2682,19 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 }
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 921,
+                                                                lineNumber: 1049,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 889,
+                                                        lineNumber: 1017,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 887,
+                                                lineNumber: 1015,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2441,27 +2705,27 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Business License Files"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 935,
+                                                        lineNumber: 1063,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "relative w-full h-64 rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-50/10 transition-all group flex flex-col items-center justify-center text-center cursor-pointer",
+                                                        className: "relative w-full h-64 rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50 hover:border-[#0066FF] hover:bg-indigo-50/10 transition-all group flex flex-col items-center justify-center text-center cursor-pointer",
                                                         children: [
                                                             form.licenseFiles && form.licenseFiles.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "flex flex-col items-center justify-center p-6 gap-3",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                        className: "h-20 w-20 rounded-[2rem] bg-indigo-50 flex items-center justify-center text-indigo-500",
+                                                                        className: "h-20 w-20 rounded-[2rem] bg-indigo-50 flex items-center justify-center text-[#0066FF]",
                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__["Check"], {
                                                                             className: "h-10 w-10"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                                            lineNumber: 940,
+                                                                            lineNumber: 1068,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 939,
+                                                                        lineNumber: 1067,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2475,21 +2739,21 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                                 ]
                                                                             }, void 0, true, {
                                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                                lineNumber: 943,
+                                                                                lineNumber: 1071,
                                                                                 columnNumber: 27
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                                                                className: "text-xs text-indigo-500 font-bold uppercase tracking-widest",
+                                                                                className: "text-xs text-[#0066FF] font-bold uppercase tracking-widest",
                                                                                 children: "Verification Ready"
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                                lineNumber: 944,
+                                                                                lineNumber: 1072,
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 942,
+                                                                        lineNumber: 1070,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2505,29 +2769,29 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Clear All"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 946,
+                                                                        lineNumber: 1074,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 938,
+                                                                lineNumber: 1066,
                                                                 columnNumber: 23
                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "flex flex-col items-center justify-center p-6 text-slate-400",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                        className: "h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-indigo-500 group-hover:scale-110 transition-transform",
+                                                                        className: "h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-[#0066FF] group-hover:scale-110 transition-transform",
                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$text$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__FileText$3e$__["FileText"], {
                                                                             className: "h-8 w-8"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                                            lineNumber: 960,
+                                                                            lineNumber: 1088,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 959,
+                                                                        lineNumber: 1087,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2535,7 +2799,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Upload Licence Files"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 962,
+                                                                        lineNumber: 1090,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2543,13 +2807,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "PDF or Image Accepted"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 963,
+                                                                        lineNumber: 1091,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 958,
+                                                                lineNumber: 1086,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2572,19 +2836,19 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 }
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 966,
+                                                                lineNumber: 1094,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 936,
+                                                        lineNumber: 1064,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 934,
+                                                lineNumber: 1062,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2600,7 +2864,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                     children: "TIN Number"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/parking-form.tsx",
-                                                                    lineNumber: 986,
+                                                                    lineNumber: 1114,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
@@ -2611,16 +2875,16 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                             tinNumber: e.target.value
                                                                         }),
                                                                     className: "h-10 bg-slate-50 border-transparent focus:bg-white",
-                                                                    disabled: !isSuperAdmin && !!initialData
+                                                                    disabled: !isSystemAdmin && !!initialData
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/parking-form.tsx",
-                                                                    lineNumber: 987,
+                                                                    lineNumber: 1115,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                            lineNumber: 985,
+                                                            lineNumber: 1113,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2631,38 +2895,38 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                     children: "VAT Registration Number"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/parking-form.tsx",
-                                                                    lineNumber: 996,
+                                                                    lineNumber: 1124,
                                                                     columnNumber: 23
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
-                                                                    placeholder: "Enter VAT Reg Number",
+                                                                    placeholder: "Enter VAT Registration Number",
                                                                     value: form.vatRegistrationNumber,
                                                                     onChange: (e)=>setForm({
                                                                             ...form,
                                                                             vatRegistrationNumber: e.target.value
                                                                         }),
                                                                     className: "h-10 bg-slate-50 border-transparent focus:bg-white",
-                                                                    disabled: !isSuperAdmin && !!initialData
+                                                                    disabled: !isSystemAdmin && !!initialData
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/parking-form.tsx",
-                                                                    lineNumber: 997,
+                                                                    lineNumber: 1125,
                                                                     columnNumber: 23
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                            lineNumber: 995,
+                                                            lineNumber: 1123,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/components/forms/parking-form.tsx",
-                                                    lineNumber: 984,
+                                                    lineNumber: 1112,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 983,
+                                                lineNumber: 1111,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2673,27 +2937,27 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Agreement Documents"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 1010,
+                                                        lineNumber: 1138,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "relative w-full h-64 rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50 hover:border-indigo-500 hover:bg-indigo-50/10 transition-all group flex flex-col items-center justify-center text-center cursor-pointer",
+                                                        className: "relative w-full h-64 rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50 hover:border-[#0066FF] hover:bg-indigo-50/10 transition-all group flex flex-col items-center justify-center text-center cursor-pointer",
                                                         children: [
                                                             form.agreementDocuments && form.agreementDocuments.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "flex flex-col items-center justify-center p-6 gap-3",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                        className: "h-20 w-20 rounded-[2rem] bg-indigo-50 flex items-center justify-center text-indigo-500",
+                                                                        className: "h-20 w-20 rounded-[2rem] bg-indigo-50 flex items-center justify-center text-[#0066FF]",
                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__["Check"], {
                                                                             className: "h-10 w-10"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                                            lineNumber: 1015,
+                                                                            lineNumber: 1143,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 1014,
+                                                                        lineNumber: 1142,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2706,12 +2970,12 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                                            lineNumber: 1018,
+                                                                            lineNumber: 1146,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 1017,
+                                                                        lineNumber: 1145,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2727,29 +2991,29 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Clear All"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 1020,
+                                                                        lineNumber: 1148,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 1013,
+                                                                lineNumber: 1141,
                                                                 columnNumber: 23
                                                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "flex flex-col items-center justify-center p-6 text-slate-400",
                                                                 children: [
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                        className: "h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-indigo-500 group-hover:scale-110 transition-transform",
+                                                                        className: "h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-[#0066FF] group-hover:scale-110 transition-transform",
                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$file$2d$text$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__FileText$3e$__["FileText"], {
                                                                             className: "h-8 w-8"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                                            lineNumber: 1034,
+                                                                            lineNumber: 1162,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 1033,
+                                                                        lineNumber: 1161,
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2757,13 +3021,13 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                         children: "Upload Agreement Documents"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                                        lineNumber: 1036,
+                                                                        lineNumber: 1164,
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 1032,
+                                                                lineNumber: 1160,
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2786,25 +3050,25 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 }
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 1039,
+                                                                lineNumber: 1167,
                                                                 columnNumber: 21
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 1011,
+                                                        lineNumber: 1139,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 1009,
+                                                lineNumber: 1137,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 885,
+                                        lineNumber: 1013,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2815,24 +3079,24 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                 children: "Add to Gallery"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 1058,
+                                                lineNumber: 1186,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "relative w-full h-64 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center hover:border-indigo-500 hover:bg-indigo-50/10 transition-all cursor-pointer group",
+                                                className: "relative w-full h-64 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center hover:border-[#0066FF] hover:bg-indigo-50/10 transition-all cursor-pointer group",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-indigo-500 group-hover:scale-110 transition-transform",
+                                                        className: "h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center mb-4 text-[#0066FF] group-hover:scale-110 transition-transform",
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__["Plus"], {
                                                             className: "h-8 w-8"
                                                         }, void 0, false, {
                                                             fileName: "[project]/components/forms/parking-form.tsx",
-                                                            lineNumber: 1061,
+                                                            lineNumber: 1189,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 1060,
+                                                        lineNumber: 1188,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2840,7 +3104,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Add Photos"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 1063,
+                                                        lineNumber: 1191,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -2848,7 +3112,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         children: "Multiple Images Supported"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 1064,
+                                                        lineNumber: 1192,
                                                         columnNumber: 19
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2868,19 +3132,19 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                         }
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 1065,
+                                                        lineNumber: 1193,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 1059,
+                                                lineNumber: 1187,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 1057,
+                                        lineNumber: 1185,
                                         columnNumber: 15
                                     }, this),
                                     form.galleryImages.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2895,7 +3159,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 1081,
+                                                lineNumber: 1209,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2908,7 +3172,7 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                 className: "w-full h-full object-cover transition-transform group-hover:scale-105"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 1085,
+                                                                lineNumber: 1213,
                                                                 columnNumber: 25
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2919,51 +3183,51 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                                                                     className: "h-3 w-3"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/components/forms/parking-form.tsx",
-                                                                    lineNumber: 1094,
+                                                                    lineNumber: 1222,
                                                                     columnNumber: 27
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                                lineNumber: 1089,
+                                                                lineNumber: 1217,
                                                                 columnNumber: 25
                                                             }, this)
                                                         ]
                                                     }, i, true, {
                                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                                        lineNumber: 1084,
+                                                        lineNumber: 1212,
                                                         columnNumber: 23
                                                     }, this))
                                             }, void 0, false, {
                                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                                lineNumber: 1082,
+                                                lineNumber: 1210,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/components/forms/parking-form.tsx",
-                                        lineNumber: 1080,
+                                        lineNumber: 1208,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/forms/parking-form.tsx",
-                                lineNumber: 879,
+                                lineNumber: 1007,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/forms/parking-form.tsx",
-                        lineNumber: 379,
+                        lineNumber: 394,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/components/forms/parking-form.tsx",
-                    lineNumber: 378,
+                    lineNumber: 393,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/forms/parking-form.tsx",
-                lineNumber: 377,
+                lineNumber: 392,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2978,49 +3242,49 @@ function ParkingForm({ initialData, onSave, onOpenChange, isLoading = false }) {
                             children: "Cancel"
                         }, void 0, false, {
                             fileName: "[project]/components/forms/parking-form.tsx",
-                            lineNumber: 1109,
+                            lineNumber: 1237,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                             onClick: submit,
                             disabled: isLoading,
-                            className: "h-14 px-12 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-xl shadow-indigo-200 hover:shadow-2xl transition-all flex items-center gap-3",
+                            className: "h-14 px-12 rounded-xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-bold transition-all flex items-center gap-3",
                             children: [
                                 isLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$loader$2d$circle$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Loader2$3e$__["Loader2"], {
                                     className: "h-5 w-5 animate-spin"
                                 }, void 0, false, {
                                     fileName: "[project]/components/forms/parking-form.tsx",
-                                    lineNumber: 1121,
+                                    lineNumber: 1249,
                                     columnNumber: 26
                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__["Check"], {
                                     className: "h-5 w-5"
                                 }, void 0, false, {
                                     fileName: "[project]/components/forms/parking-form.tsx",
-                                    lineNumber: 1121,
+                                    lineNumber: 1249,
                                     columnNumber: 73
                                 }, this),
                                 initialData ? "Save Changes" : "Create Parking"
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/forms/parking-form.tsx",
-                            lineNumber: 1116,
+                            lineNumber: 1244,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/forms/parking-form.tsx",
-                    lineNumber: 1108,
+                    lineNumber: 1236,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/forms/parking-form.tsx",
-                lineNumber: 1107,
+                lineNumber: 1235,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/forms/parking-form.tsx",
-        lineNumber: 360,
+        lineNumber: 375,
         columnNumber: 5
     }, this);
 }
@@ -3115,6 +3379,9 @@ function CreateParkingPage() {
             if (data.amenities && Array.isArray(data.amenities)) {
                 formData.append("amenities", JSON.stringify(data.amenities));
             }
+            if (data.amenityIds && Array.isArray(data.amenityIds)) {
+                formData.append("amenityIds", JSON.stringify(data.amenityIds));
+            }
             formData.append("isVatIncluded", String(data.isVatIncluded));
             // Feature Image
             if (data.featureImage instanceof File) {
@@ -3136,12 +3403,13 @@ function CreateParkingPage() {
                     }
                 });
             }
-            await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$services$2f$parking$2d$service$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["parkingService"].createParking(formData);
-            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].success("Parking created successfully", {
+            const response = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$services$2f$parking$2d$service$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["parkingService"].createParking(formData);
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].success(response.message || "Parking created successfully", {
                 id: loadingToast
             });
             router.push("/dashboard/parkings");
         } catch (err) {
+            // Error is already toasted by interceptor, but we replace the loading toast to clear it
             __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error(err?.message || "Failed to create parking", {
                 id: loadingToast
             });
@@ -3157,12 +3425,12 @@ function CreateParkingPage() {
             isLoading: loading
         }, void 0, false, {
             fileName: "[project]/app/dashboard/parkings/create/page.tsx",
-            lineNumber: 117,
+            lineNumber: 121,
             columnNumber: 13
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/dashboard/parkings/create/page.tsx",
-        lineNumber: 116,
+        lineNumber: 120,
         columnNumber: 9
     }, this);
 }

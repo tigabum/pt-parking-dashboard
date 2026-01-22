@@ -365,7 +365,7 @@ function LoginForm() {
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                                 type: "text",
-                                placeholder: "Enter your email...",
+                                placeholder: "Enter Email",
                                 value: identifier,
                                 onChange: (e)=>{
                                     setIdentifier(e.target.value);
@@ -399,7 +399,7 @@ function LoginForm() {
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                         type: "submit",
-                        className: "w-full h-12 text-base font-bold bg-primary hover:bg-[#1c07a0] text-white shadow-primary/40 shadow-lg transition-all hover:scale-[1.01] rounded-xl opacity-100 disabled:bg-primary/60",
+                        className: "w-full h-12 text-base font-bold bg-[#0066FF] hover:bg-[#0052CC] text-white transition-all rounded-xl opacity-100 disabled:bg-[#0066FF]/60",
                         disabled: loading || !identifier,
                         children: loading ? "Checking..." : "Continue"
                     }, void 0, false, {
@@ -437,7 +437,7 @@ function LoginForm() {
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                                 type: "password",
-                                placeholder: "••••••••",
+                                placeholder: "Enter Password",
                                 value: password,
                                 onChange: (e)=>{
                                     setPassword(e.target.value);
@@ -474,7 +474,7 @@ function LoginForm() {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                 type: "submit",
-                                className: "w-full h-12 text-base font-bold bg-primary hover:bg-[#1c07a0] text-white shadow-primary/40 shadow-lg transition-all hover:scale-[1.01] rounded-xl opacity-100 disabled:bg-primary/60",
+                                className: "w-full h-12 text-base font-bold bg-[#0066FF] hover:bg-[#0052CC] text-white transition-all rounded-xl opacity-100 disabled:bg-[#0066FF]/60",
                                 disabled: loading || !password,
                                 children: loading ? "Signing in..." : "Sign In"
                             }, void 0, false, {
@@ -532,7 +532,7 @@ function LoginForm() {
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                                 type: "password",
-                                placeholder: "••••••••",
+                                placeholder: "Enter Password",
                                 value: password,
                                 onChange: (e)=>setPassword(e.target.value),
                                 disabled: loading,
@@ -563,7 +563,7 @@ function LoginForm() {
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
                                 type: "password",
-                                placeholder: "••••••••",
+                                placeholder: "Enter Confirm Password",
                                 value: confirmPassword,
                                 onChange: (e)=>setConfirmPassword(e.target.value),
                                 disabled: loading,
@@ -585,7 +585,7 @@ function LoginForm() {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                 type: "submit",
-                                className: "w-full h-12 text-base font-bold bg-primary hover:bg-[#1c07a0] text-white shadow-primary/40 shadow-lg transition-all hover:scale-[1.01] rounded-xl opacity-100 disabled:bg-primary/60",
+                                className: "w-full h-12 text-base font-bold bg-[#0066FF] hover:bg-[#0052CC] text-white transition-all rounded-xl opacity-100 disabled:bg-[#0066FF]/60",
                                 disabled: loading || !password || !confirmPassword,
                                 children: loading ? "Setting Password..." : "Set Password & Login"
                             }, void 0, false, {

@@ -28,6 +28,7 @@ export interface BackendUser {
     role: UserRole;
     profileImage?: string;
     orgId?: string;
+    permissions?: string[];
     status?: string;
     isPasswordSet: boolean;
     isPhoneVerified?: boolean;
@@ -45,6 +46,8 @@ export interface LoginResponse {
         email?: string;
         role: UserRole;
         profileImage?: string;
+        orgId?: string;
+        permissions?: string[];
     };
 }
 

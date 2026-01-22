@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useAuth } from "@/app/context/auth-context"
 import { UserRole } from "@/lib/auth"
+import { useRouter } from "next/navigation"
 import {
   Users, DollarSign, Calendar, Building2, Car,
   MapPin, Clock, CheckCircle2, AlertCircle,
@@ -48,6 +49,7 @@ function EnterpriseStat({ label, value, icon, trend }: { label: string, value: s
 }
 
 export default function DashboardPage() {
+  const router = useRouter()
   const { user, canAccess, hasPermission } = useAuth()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
@@ -57,8 +59,17 @@ export default function DashboardPage() {
   const [managers, setManagers] = useState<any[]>([])
 
   useEffect(() => {
-    loadStats()
-  }, [user, managerFilter, statusFilter])
+    // Redirect if no dashboard access
+    if (!loading && !hasPermission(PERMISSIONS.DASHBOARD_VIEW)) {
+      router.replace("/dashboard/bookings");
+    }
+  }, [loading, hasPermission, router]);
+
+  useEffect(() => {
+    if (hasPermission(PERMISSIONS.DASHBOARD_VIEW)) {
+      loadStats()
+    }
+  }, [user, managerFilter, statusFilter, hasPermission])
 
   useEffect(() => {
     if (user && (user.role === UserRole.SYSTEM_SUPER_ADMIN || user.role === UserRole.PARKING_SUPER_ADMIN)) {

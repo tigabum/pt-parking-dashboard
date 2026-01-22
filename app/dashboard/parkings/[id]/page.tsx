@@ -38,9 +38,12 @@ import {
   Filter,
   Clock,
   Car,
+  Box,
   Wallet as WalletIcon,
   ArrowUpRight,
   ArrowDownLeft,
+  Settings2,
+  DollarSign,
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -52,6 +55,10 @@ import { getImageUrl } from "@/lib/utils";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
+
+const formatMoney = (amount: number | undefined, currency: string | undefined) => {
+  return `${amount || 0} ${currency || "ETB"}`;
+};
 
 export default function ParkingDetailPage() {
   const { id } = useParams();
@@ -371,6 +378,17 @@ export default function ParkingDetailPage() {
               Approve
             </Button>
           )}
+          {(user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.PARKING_SUPER_ADMIN) && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => router.push(`/dashboard/parkings/${id}/edit`)}
+              className="h-9 rounded-full px-4 font-bold text-slate-700 bg-white border-slate-200 hover:bg-slate-50"
+            >
+              <Settings2 className="h-3.5 w-3.5 mr-2" />
+              Edit Parking
+            </Button>
+          )}
           <Button
             variant="outline"
             size="sm"
@@ -429,88 +447,123 @@ export default function ParkingDetailPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="overview" className="w-full space-y-12" onValueChange={setActiveTab}>
+      <Tabs defaultValue="details" className="w-full space-y-12" onValueChange={setActiveTab}>
         <div className="bg-slate-100/50 p-1.5 rounded-2xl w-fit">
           <TabsList className="bg-transparent p-0 h-auto gap-1">
-            {["Overview", "Address", "Location", "Media & Docs", "Bookings", "Reviews", "Wallet"].map((tab) => (
+            {["Details", "Bookings", "Reviews", "Wallet"].map((tab) => (
               <TabsTrigger
                 key={tab}
-                value={tab.toLowerCase().split(" ")[0]}
+                value={tab.toLowerCase()}
                 className="rounded-xl px-6 py-2.5 text-xs font-bold uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all"
               >
-                {tab.split(" ")[0]}
+                {tab}
               </TabsTrigger>
             ))}
           </TabsList>
         </div>
 
-        {/* TAB: OVERVIEW */}
-        <TabsContent value="overview" className="space-y-16 animate-in slide-in-from-bottom-4 duration-500">
-          <DetailSection title="Operational Details" icon={<Info className="h-5 w-5" />}>
-            <div className="bg-slate-50/50 p-6 rounded-[2rem] border border-slate-100 flex flex-col gap-1 transition-all hover:bg-white hover:shadow-lg hover:border-primary/20">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Capacity</p>
-              <p className="text-2xl font-black text-slate-900">{parking.numberOfSpots} Spots</p>
+        {/* TAB: DETAILS (Consolidated) */}
+        <TabsContent value="details" className="space-y-16 animate-in slide-in-from-bottom-4 duration-500 pb-20">
+          {/* Visual Live Capacity Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col gap-4">
+              <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400">
+                <Box className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Total Capacity</p>
+                <p className="text-4xl font-black text-slate-900">{parking.numberOfSpots} <span className="text-sm font-bold text-slate-300">Spots</span></p>
+              </div>
             </div>
-            <div className="bg-green-50/50 p-6 rounded-[2rem] border border-green-100/50 flex flex-col gap-1 transition-all hover:bg-white hover:shadow-lg hover:border-green-200">
-              <p className="text-[10px] font-black text-green-600/60 uppercase tracking-widest">Available Spots</p>
-              <p className="text-2xl font-black text-green-700">{parking.availableSpots} Free</p>
+
+            <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col gap-4 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
+                <CheckCircle2 className="h-24 w-24 text-emerald-500" />
+              </div>
+              <div className="h-12 w-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+                <CheckCircle2 className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-emerald-600/60 uppercase tracking-[0.2em] mb-1">Live Available</p>
+                <p className="text-4xl font-black text-emerald-600">{parking.availableSpots} <span className="text-sm font-bold text-emerald-600/30">Free</span></p>
+              </div>
             </div>
-            <div className="bg-amber-50/50 p-6 rounded-[2rem] border border-amber-100/50 flex flex-col gap-1 transition-all hover:bg-white hover:shadow-lg hover:border-amber-200">
-              <p className="text-[10px] font-black text-amber-600/60 uppercase tracking-widest">Occupied</p>
-              <p className="text-2xl font-black text-amber-700">{parking.numberOfSpots - parking.availableSpots} Busy</p>
+
+            <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col gap-4 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
+                <Car className="h-24 w-24 text-amber-500" />
+              </div>
+              <div className="h-12 w-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600">
+                <Car className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-amber-600/60 uppercase tracking-[0.2em] mb-1">Currently Occupied</p>
+                <p className="text-4xl font-black text-amber-600">{parking.numberOfSpots - (parking.availableSpots ?? 0)} <span className="text-sm font-bold text-amber-600/30">Busy</span></p>
+              </div>
             </div>
-            <div className="bg-primary/5 p-6 rounded-[2rem] border border-primary/10 flex flex-col gap-1 transition-all hover:bg-white hover:shadow-lg hover:border-primary/20">
-              <p className="text-[10px] font-black text-primary/60 uppercase tracking-widest">Fill Rate</p>
-              <p className="text-2xl font-black text-primary">
-                {Math.round(((parking.numberOfSpots - parking.availableSpots) / (parking.numberOfSpots || 1)) * 100)}%
+          </div>
+          <DetailSection title="Capacity & Availability Analysis" icon={<Info className="h-4 w-4" />}>
+            <DetailItem label="Total Capacity" value={`${parking.numberOfSpots} Spots`} />
+            <DetailItem label="Available Spots" value={`${parking.availableSpots} Free`} className="text-emerald-600" />
+            <DetailItem label="Occupied Spots" value={`${parking.numberOfSpots - parking.availableSpots} Busy`} className="text-amber-600" />
+            <DetailItem label="Current Fill Rate" value={`${Math.round(((parking.numberOfSpots - parking.availableSpots) / (parking.numberOfSpots || 1)) * 100)}%`} className="text-primary" />
+          </DetailSection>
+
+          <DetailSection title="System & Administrative Metadata" icon={<ShieldCheck className="h-4 w-4" />}>
+            <DetailItem label="Assigned Manager" value={parking.createdBy?.fullName} />
+            <DetailItem label="Commission Structure" value={parking.commissionConfig?.name} className="text-primary" />
+            <DetailItem label="VAT Number" value={parking.vatRegistrationNumber} />
+            <DetailItem label="TIN/Tax ID" value={parking.tinNumber} />
+            <DetailItem label="Registration Date" value={dayjs(parking.createdAt).format("MMM D, YYYY HH:mm")} />
+            <DetailItem label="Terminal Status" value={parking.status} />
+          </DetailSection>
+
+          <DetailSection title="Revenue & Pricing Configuration" icon={<CreditCard className="h-4 w-4" />}>
+            <DetailItem label="Hourly Rate" value={formatMoney(parking.pricing?.hourly?.price, parking.pricing?.hourly?.currency)} />
+            <DetailItem label="Daily Rate" value={formatMoney(parking.pricing?.daily?.price, parking.pricing?.daily?.currency)} />
+            <DetailItem label="Monthly Plan" value={formatMoney(parking.pricing?.monthly?.price, parking.pricing?.monthly?.currency)} />
+            <DetailItem label="Flat Fee" value={formatMoney(parking.pricing?.flat?.price, parking.pricing?.flat?.currency)} />
+          </DetailSection>
+
+          <DetailSection title="Facility Description & Service Amenities" icon={<FileText className="h-4 w-4" />}>
+            <div className="col-span-1 md:col-span-2 space-y-2">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Facility Overview</p>
+              <p className="text-sm font-medium text-slate-600 leading-relaxed">
+                {parking.description || "No facility description provided."}
               </p>
             </div>
-          </DetailSection>
+            <div className="col-span-1 md:col-span-2 space-y-3">
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Available Services & Amenities</p>
+              <div className="flex flex-wrap gap-2 text-primary">
+                {(parking.amenities?.length > 0 || (parking as any).amenitiesList?.length > 0) ? (
+                  <>
+                    {/* Prefer the JSON amenities which have custom values */}
+                    {parking.amenities?.map((item, i) => (
+                      <div key={`json-${i}`} className="px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-[11px] font-black uppercase tracking-tight flex items-center gap-2">
+                        <Check className="h-3 w-3" />
+                        <span>
+                          {item.name}
+                          {item.value && <span className="text-primary/60 ml-1 font-bold normal-case">({item.value})</span>}
+                        </span>
+                      </div>
+                    ))}
 
-          <DetailSection title="System Information" icon={<ShieldCheck className="h-5 w-5" />}>
-            <DetailItem label="Assigned Manager" value={parking.createdBy?.fullName} icon={<UserSquare className="h-4 w-4" />} />
-            <DetailItem label="Commission Config" value={parking.commissionConfig?.name} icon={<ShieldCheck className="h-4 w-4" />} className="text-primary font-bold" />
-            <DetailItem label="VAT Number" value={parking.vatRegistrationNumber} icon={<FileText className="h-4 w-4" />} />
-            <DetailItem label="TIN/Tax ID" value={parking.tinNumber} icon={<CreditCard className="h-4 w-4" />} />
-            <DetailItem label="Registration Date" value={dayjs(parking.createdAt).format("MMM D, YYYY HH:mm")} icon={<Clock className="h-4 w-4" />} />
-            <DetailItem label="Terminal Status" value={parking.status} icon={<Power className="h-4 w-4" />} />
-          </DetailSection>
-
-          <DetailSection title="Pricing Schedule" icon={<CreditCard className="h-5 w-5" />}>
-            <DetailItem label="Hourly Rate" value={`${parking.pricing?.hourly?.price || 0} ${parking.pricing?.hourly?.currency || "ETB"}`} />
-            <DetailItem label="Daily Rate" value={`${parking.pricing?.daily?.price || 0} ${parking.pricing?.daily?.currency || "ETB"}`} />
-            <DetailItem label="Monthly Rate" value={`${parking.pricing?.monthly?.price || 0} ${parking.pricing?.monthly?.currency || "ETB"}`} />
-            <DetailItem label="Flat Rate" value={`${parking.pricing?.flat?.price || 0} ${parking.pricing?.flat?.currency || "ETB"}`} />
-          </DetailSection>
-
-          <DetailSection title="Description & Amenities" icon={<FileText className="h-5 w-5" />}>
-            <div className="col-span-1 md:col-span-2 space-y-4">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pl-1">Facility Description</p>
-              <p className="text-base font-medium text-slate-600 leading-relaxed bg-slate-50/50 p-6 rounded-[2rem] border border-slate-100">
-                {parking.description || "No description provided."}
-              </p>
-            </div>
-            <div className="col-span-1 md:col-span-2 space-y-4">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pl-1">Available Amenities</p>
-              <div className="flex flex-wrap gap-3">
-                {parking.amenities && parking.amenities.length > 0 ? (
-                  parking.amenities.map((item, i) => (
-                    <div key={i} className="px-5 py-3 rounded-2xl bg-white border border-slate-100 shadow-sm text-sm font-bold text-slate-700 flex items-center gap-3 transition-all hover:border-primary/30 hover:shadow-md">
-                      <div className="w-2 h-2 rounded-full bg-primary" />
-                      {item.name}
-                    </div>
-                  ))
+                    {/* Fallback to amenitiesList if JSON amenities are missing but relation exists */}
+                    {(!parking.amenities || parking.amenities.length === 0) && (parking as any).amenitiesList?.map((item: any, i: number) => (
+                      <div key={`list-${i}`} className="px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-[11px] font-black uppercase tracking-tight flex items-center gap-2">
+                        <Check className="h-3 w-3" />
+                        {item.name}
+                      </div>
+                    ))}
+                  </>
                 ) : (
-                  <span className="text-slate-400 text-sm italic">No amenities listed.</span>
+                  <span className="text-slate-400 text-xs italic">No amenities listed.</span>
                 )}
               </div>
             </div>
           </DetailSection>
-        </TabsContent>
 
-        {/* TAB: ADDRESS */}
-        <TabsContent value="address" className="animate-in slide-in-from-bottom-4 duration-500">
-          <DetailSection title="Address Information" icon={<MapPin className="h-5 w-5" />}>
+          <DetailSection title="Geographic & Address Details" icon={<MapPin className="h-4 w-4" />}>
             <DetailItem label="Region" value={parking.region} />
             <DetailItem label="City" value={parking.city} />
             <DetailItem label="Sub-City" value={parking.subCity} />
@@ -519,30 +572,26 @@ export default function ParkingDetailPage() {
             <DetailItem label="Street Name" value={parking.streetName} />
             <DetailItem label="Country" value={parking.country} />
           </DetailSection>
-        </TabsContent>
 
-        {/* TAB: LOCATION */}
-        <TabsContent value="location" className="animate-in slide-in-from-bottom-4 duration-500">
-          <div className="rounded-3xl overflow-hidden border shadow-sm relative bg-slate-100 h-[600px]">
-            {parking.lat && parking.lng ? (
-              <iframe
-                width="100%"
-                height="100%"
-                frameBorder="0"
-                style={{ border: 0 }}
-                src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${parking.lat},${parking.lng}&zoom=17`}
-                allowFullScreen
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full text-slate-400 font-bold">Map Unavailable</div>
-            )}
-          </div>
-        </TabsContent>
+          <DetailSection title="Exact Geographic Positioning" icon={<Search className="h-4 w-4" />}>
+            <div className="col-span-full rounded-2xl overflow-hidden border border-slate-100 shadow-sm relative bg-slate-50 h-[450px]">
+              {parking.lat && parking.lng ? (
+                <iframe
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  style={{ border: 0 }}
+                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${parking.lat},${parking.lng}&zoom=17`}
+                  allowFullScreen
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full text-slate-400 font-bold italic">Exact coordinates not provided.</div>
+              )}
+            </div>
+          </DetailSection>
 
-        {/* TAB: MEDIA */}
-        <TabsContent value="media" className="space-y-16 animate-in slide-in-from-bottom-4 duration-500">
-          <DetailSection title="Legal Documents & Agreements" icon={<FileText className="h-5 w-5" />}>
-            <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <DetailSection title="Legal Compliance & Certifications" icon={<ShieldCheck className="h-4 w-4" />}>
+            <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
               {[
                 ...(parking.licenseFiles || []).map((f, idx) => ({ url: f, type: 'Business License', label: `License #${idx + 1}` })),
                 ...(parking.agreementDocuments || []).map((f, idx) => ({ url: f, type: 'Agreement Doc', label: `Agreement #${idx + 1}` }))
@@ -550,53 +599,45 @@ export default function ParkingDetailPage() {
                 <div
                   key={i}
                   onClick={() => setPreviewDoc({ url: getImageUrl(doc.url), title: doc.label })}
-                  className="group flex items-start gap-4 p-5 rounded-[2rem] bg-slate-50/50 border border-slate-100 hover:bg-white hover:border-primary/20 hover:shadow-xl transition-all duration-500 cursor-pointer"
+                  className="group flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:bg-white hover:border-primary/30 hover:shadow-md transition-all cursor-pointer"
                 >
-                  <div className="h-14 w-14 rounded-2xl bg-white border shadow-sm flex items-center justify-center text-primary group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all duration-500">
-                    <FileText className="h-6 w-6 stroke-[1.5]" />
+                  <div className="h-10 w-10 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                    <FileText className="h-5 w-5" />
                   </div>
-                  <div className="flex-1 min-w-0 pt-1">
-                    <p className="font-black text-slate-900 truncate group-hover:text-primary transition-colors">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-bold text-slate-900 truncate">
                       {doc.label}
                     </p>
-                    <p className="text-[10px] uppercase font-black text-slate-400 mt-1 tracking-widest">
-                      Preview Document
+                    <p className="text-[9px] uppercase font-bold text-slate-400 mt-0.5 tracking-widest">
+                      {doc.type} • Click to view
                     </p>
-                  </div>
-                  <div className="self-center opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
-                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      <ArrowLeft className="h-4 w-4 rotate-180 text-primary" />
-                    </div>
                   </div>
                 </div>
               ))}
               {[...(parking.licenseFiles || []), ...(parking.agreementDocuments || [])].length === 0 && (
-                <div className="col-span-full py-12 text-center bg-slate-50/50 rounded-[2rem] border border-dashed border-slate-200">
-                  <p className="text-slate-400 text-sm font-bold uppercase tracking-widest opacity-60">No documents uploaded.</p>
+                <div className="col-span-full py-8 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                  <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest opacity-60">No documents found in system records.</p>
                 </div>
               )}
             </div>
           </DetailSection>
 
-          <DetailSection title="Photo Gallery" icon={<ImageIcon className="h-5 w-5" />}>
-            <div className="col-span-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          <DetailSection title="Visual Media & Facility Gallery" icon={<ImageIcon className="h-4 w-4" />}>
+            <div className="col-span-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pt-2">
               {parking.galleryImages && parking.galleryImages.length > 0 ? (
                 parking.galleryImages.map((img, i) => (
-                  <div key={i} className="group relative aspect-square rounded-[2rem] overflow-hidden bg-slate-100 border border-slate-200 shadow-sm cursor-zoom-in transition-all hover:shadow-2xl hover:border-primary/20">
+                  <div key={i} className="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 shadow-sm cursor-zoom-in transition-all hover:shadow-lg hover:border-primary/20">
                     <img
                       src={getImageUrl(img)}
-                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"
+                      className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
                       alt={`Gallery ${i}`}
                     />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-                    <div className="absolute bottom-4 right-4 h-10 w-10 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
-                      <Search className="h-4 w-4 text-white" />
-                    </div>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
                   </div>
                 ))
               ) : (
-                <div className="col-span-full h-40 flex items-center justify-center border-2 border-dashed rounded-[2rem] bg-slate-50 text-slate-400">
-                  <p className="text-sm font-bold uppercase tracking-widest opacity-60">No gallery images available.</p>
+                <div className="col-span-full h-32 flex items-center justify-center border-2 border-dashed rounded-2xl bg-slate-50 text-slate-400">
+                  <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">No visual media uploaded.</p>
                 </div>
               )}
             </div>

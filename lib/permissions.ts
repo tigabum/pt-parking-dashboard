@@ -276,8 +276,8 @@ export function getPermissionsByContext(isParkingDashboard: boolean) {
     return isParkingDashboard ? PARKING_DASHBOARD_PERMISSIONS : SYSTEM_DASHBOARD_PERMISSIONS;
 }
 
-export const DEFAULT_PERMISSIONS_BY_ROLE = {
-    "PARKING-SUPER-ADMIN": [
+export const DEFAULT_PERMISSIONS_BY_ROLE: Record<string, string[]> = {
+    "PARKING_SUPER_ADMIN": [
         // Parking (view only, no create/delete/approve)
         PERMISSIONS.PARKING_VIEW,
         PERMISSIONS.PARKING_UPDATE,
@@ -324,6 +324,7 @@ export const DEFAULT_PERMISSIONS_BY_ROLE = {
         PERMISSIONS.DASHBOARD_TOTAL_REVENUE,
         PERMISSIONS.DASHBOARD_DAILY_STATS,
         PERMISSIONS.DASHBOARD_MONTHLY_STATS,
+        PERMISSIONS.DASHBOARD_YEARLY_STATS,
 
         // Revenue
         PERMISSIONS.REVENUE_VIEW,
@@ -332,8 +333,9 @@ export const DEFAULT_PERMISSIONS_BY_ROLE = {
         // Settings
         PERMISSIONS.SETTINGS_VIEW,
         PERMISSIONS.SETTINGS_CHANGE_PASSWORD,
+        PERMISSIONS.SETTINGS_RESET_PASSWORD,
     ],
-    "PARKING-MANAGER": [
+    "PARKING_MANAGER": [
         // Parking (view only)
         PERMISSIONS.PARKING_VIEW,
 
@@ -373,12 +375,13 @@ export const DEFAULT_PERMISSIONS_BY_ROLE = {
         PERMISSIONS.REVENUE_VIEW,
 
         // Settings
+        PERMISSIONS.SETTINGS_VIEW,
         PERMISSIONS.SETTINGS_CHANGE_PASSWORD,
     ],
-    "SYSTEM-ADMIN": [
+    "SYSTEM_ADMIN": [
         ...Object.values(PERMISSIONS),
     ],
-    "SYSTEM-SUPER-ADMIN": [
+    "SYSTEM_SUPER_ADMIN": [
         // Full access to everything
         ...Object.values(PERMISSIONS),
     ],

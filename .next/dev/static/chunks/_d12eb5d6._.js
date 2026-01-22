@@ -92,7 +92,7 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = /*#__PURE__*/ __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
 const API_CONFIG = {
     // Force local backend if env var is missing or empty
-    BASE_URL: ("TURBOPACK compile-time value", "http://157.180.114.86:5000/api") || 'http://157.180.114.86:5000',
+    BASE_URL: ("TURBOPACK compile-time value", "http://localhost:5000/api") || 'http://157.180.114.86:5000',
     TIMEOUT: 30000
 };
 const API_ENDPOINTS = {
@@ -407,6 +407,8 @@ class AuthService {
             role,
             phoneNumber: backendUser.phoneNumber,
             profileImage: backendUser.profileImage,
+            orgId: backendUser.orgId,
+            permissions: backendUser.permissions || [],
             createdAt: backendUser.createdAt || new Date().toISOString(),
             isPasswordSet: backendUser.isPasswordSet,
             isPhoneVerified: backendUser.isPhoneVerified,
@@ -601,7 +603,20 @@ function AuthProvider({ children }) {
         if (user.role === "SYSTEM-SUPER-ADMIN" || user.role === "PARKING-SUPER-ADMIN") {
             return true;
         }
-        // Check specific permissions array
+        // Explicitly allow core items for Parking Managers even if permissions array is missing
+        if (user.role === "PARKING-MANAGER") {
+            const basicPermissions = [
+                "DASHBOARD_VIEW",
+                "DASHBOARD_TOTAL_BOOKINGS",
+                "DASHBOARD_DAILY_STATS",
+                "REVENUE_VIEW",
+                "BOOKING_VIEW",
+                "SETTINGS_VIEW",
+                "SETTINGS_CHANGE_PASSWORD"
+            ];
+            if (basicPermissions.includes(permission)) return true;
+        }
+        // Check specific permissions array from backend
         if (user.permissions && Array.isArray(user.permissions)) {
             return user.permissions.includes(permission);
         }
@@ -622,7 +637,7 @@ function AuthProvider({ children }) {
         children: children
     }, void 0, false, {
         fileName: "[project]/app/context/auth-context.tsx",
-        lineNumber: 168,
+        lineNumber: 182,
         columnNumber: 5
     }, this);
 }

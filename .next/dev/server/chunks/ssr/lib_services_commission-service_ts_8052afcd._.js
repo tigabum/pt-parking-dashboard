@@ -30,6 +30,18 @@ const commissionService = {
     deleteCommission: async (id)=>{
         const res = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$api$2d$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].delete(`/commissions/${id}`);
         return res.data;
+    },
+    getBookingCommissions: async (params)=>{
+        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$api$2d$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get("/commissions/bookings", {
+            params
+        });
+        return res.data;
+    },
+    getCommissionStats: async (params)=>{
+        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$api$2d$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get("/commissions/stats", {
+            params
+        });
+        return res.data;
     }
 };
 }),

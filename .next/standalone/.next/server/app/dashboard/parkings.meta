@@ -1,0 +1,16 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/dashboard/layout,_N_T_/dashboard/parkings/layout,_N_T_/dashboard/parkings/page,_N_T_/dashboard/parkings"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/dashboard/parkings/__PAGE__",
+    "/dashboard/parkings",
+    "/dashboard",
+    "/_index",
+    "/_head"
+  ]
+}

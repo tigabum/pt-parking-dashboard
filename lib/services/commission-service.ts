@@ -27,4 +27,13 @@ export const commissionService = {
         const res = await apiClient.delete<ServiceResponse<null>>(`/commissions/${id}`);
         return res.data;
     },
+
+    getBookingCommissions: async (params?: any) => {
+        const res = await apiClient.get<ServiceResponse<any>>("/commissions/bookings", { params });
+        return res.data;
+    },
+    getCommissionStats: async (params?: any) => {
+        const res = await apiClient.get<ServiceResponse<any>>("/commissions/stats", { params });
+        return res.data;
+    },
 };

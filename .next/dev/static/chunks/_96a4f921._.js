@@ -403,6 +403,7 @@ const statusColorMap = {
     EXPIRED: "bg-slate-100 text-slate-700",
     REFUNDED: "bg-indigo-100 text-indigo-700",
     DISABLED: "bg-gray-100 text-gray-700",
+    COMPLETED: "bg-orange-100 text-orange-700",
     // Legacy values for backward compatibility
     Active: "bg-primary/10 text-primary",
     Pending: "bg-amber-100 text-amber-700",
@@ -416,7 +417,7 @@ const statusColumn = ()=>({
                 children: row.status || "InActive"
             }, void 0, false, {
                 fileName: "[project]/components/tables/columns/status-column.tsx",
-                lineNumber: 21,
+                lineNumber: 22,
                 columnNumber: 5
             }, ("TURBOPACK compile-time value", void 0))
     });
@@ -1832,7 +1833,7 @@ function ParkingUsersPage() {
                 sortBy,
                 sortOrder,
                 isStaffUser: false,
-                orgId: user?.orgId ? `!${user.orgId}` : undefined
+                orgId: user?.role === __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["UserRole"].SYSTEM_SUPER_ADMIN || user?.role === __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["UserRole"].SYSTEM_ADMIN ? undefined : user?.orgId
             });
             const userList = response.data || response.users;
             if (response && userList) {
@@ -1894,7 +1895,7 @@ function ParkingUsersPage() {
             children: "Access Denied: Missing USER_VIEW permission"
         }, void 0, false, {
             fileName: "[project]/app/dashboard/parking-users/page.tsx",
-            lineNumber: 123,
+            lineNumber: 125,
             columnNumber: 16
         }, this);
     }
@@ -1915,7 +1916,7 @@ function ParkingUsersPage() {
                                     className: "absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"
                                 }, void 0, false, {
                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                    lineNumber: 136,
+                                    lineNumber: 138,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Input"], {
@@ -1925,13 +1926,13 @@ function ParkingUsersPage() {
                                     onChange: (e)=>setSearchTerm(e.target.value)
                                 }, void 0, false, {
                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                    lineNumber: 137,
+                                    lineNumber: 139,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                            lineNumber: 135,
+                            lineNumber: 137,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1947,12 +1948,12 @@ function ParkingUsersPage() {
                                                 placeholder: "Role"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                                lineNumber: 149,
+                                                lineNumber: 151,
                                                 columnNumber: 33
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                            lineNumber: 148,
+                                            lineNumber: 150,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -1963,7 +1964,7 @@ function ParkingUsersPage() {
                                                     children: "All Roles"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                                    lineNumber: 152,
+                                                    lineNumber: 154,
                                                     columnNumber: 33
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -1971,7 +1972,7 @@ function ParkingUsersPage() {
                                                     children: "Facility Supervisor"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                                    lineNumber: 153,
+                                                    lineNumber: 155,
                                                     columnNumber: 33
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -1979,19 +1980,19 @@ function ParkingUsersPage() {
                                                     children: "Terminal Manager"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                                    lineNumber: 154,
+                                                    lineNumber: 156,
                                                     columnNumber: 33
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                            lineNumber: 151,
+                                            lineNumber: 153,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                    lineNumber: 147,
+                                    lineNumber: 149,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Select"], {
@@ -2004,12 +2005,12 @@ function ParkingUsersPage() {
                                                 placeholder: "Status"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                                lineNumber: 160,
+                                                lineNumber: 162,
                                                 columnNumber: 33
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                            lineNumber: 159,
+                                            lineNumber: 161,
                                             columnNumber: 29
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectContent"], {
@@ -2020,7 +2021,7 @@ function ParkingUsersPage() {
                                                     children: "All Status"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                                    lineNumber: 163,
+                                                    lineNumber: 165,
                                                     columnNumber: 33
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -2028,7 +2029,7 @@ function ParkingUsersPage() {
                                                     children: "Active"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                                    lineNumber: 164,
+                                                    lineNumber: 166,
                                                     columnNumber: 33
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -2036,7 +2037,7 @@ function ParkingUsersPage() {
                                                     children: "Pending"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                                    lineNumber: 165,
+                                                    lineNumber: 167,
                                                     columnNumber: 33
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$select$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["SelectItem"], {
@@ -2044,19 +2045,19 @@ function ParkingUsersPage() {
                                                     children: "Disabled"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                                    lineNumber: 166,
+                                                    lineNumber: 168,
                                                     columnNumber: 33
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                            lineNumber: 162,
+                                            lineNumber: 164,
                                             columnNumber: 29
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                    lineNumber: 158,
+                                    lineNumber: 160,
                                     columnNumber: 25
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$date$2d$range$2d$picker$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DatePickerWithRange"], {
@@ -2064,7 +2065,7 @@ function ParkingUsersPage() {
                                     setDate: setDateRange
                                 }, void 0, false, {
                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                    lineNumber: 171,
+                                    lineNumber: 173,
                                     columnNumber: 25
                                 }, this),
                                 (searchTerm !== "" || roleFilter !== "ALL" || statusFilter !== "ALL" || dateRange?.from) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -2076,18 +2077,18 @@ function ParkingUsersPage() {
                                         className: "h-4 w-4"
                                     }, void 0, false, {
                                         fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                        lineNumber: 175,
+                                        lineNumber: 177,
                                         columnNumber: 33
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                    lineNumber: 174,
+                                    lineNumber: 176,
                                     columnNumber: 29
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                            lineNumber: 146,
+                            lineNumber: 148,
                             columnNumber: 21
                         }, this),
                         hasPermission(__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$permissions$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PERMISSIONS"].USER_CREATE) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -2098,25 +2099,25 @@ function ParkingUsersPage() {
                                     className: "h-4 w-4 mr-2"
                                 }, void 0, false, {
                                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                                    lineNumber: 186,
+                                    lineNumber: 188,
                                     columnNumber: 29
                                 }, this),
                                 "Add Manager"
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                            lineNumber: 182,
+                            lineNumber: 184,
                             columnNumber: 25
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                    lineNumber: 133,
+                    lineNumber: 135,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                lineNumber: 128,
+                lineNumber: 130,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2130,12 +2131,12 @@ function ParkingUsersPage() {
                     onResetPassword: hasPermission(__TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$permissions$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["PERMISSIONS"].SETTINGS_RESET_PASSWORD) ? handleResetPassword : undefined
                 }, void 0, false, {
                     fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                    lineNumber: 194,
+                    lineNumber: 196,
                     columnNumber: 17
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                lineNumber: 193,
+                lineNumber: 195,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$tables$2f$dashboard$2d$pagination$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["DashboardPagination"], {
@@ -2147,13 +2148,13 @@ function ParkingUsersPage() {
                 onLimitChange: setLimit
             }, void 0, false, {
                 fileName: "[project]/app/dashboard/parking-users/page.tsx",
-                lineNumber: 204,
+                lineNumber: 206,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/dashboard/parking-users/page.tsx",
-        lineNumber: 127,
+        lineNumber: 129,
         columnNumber: 9
     }, this);
 }

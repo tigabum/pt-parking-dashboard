@@ -27,77 +27,84 @@ const navigationItems = [
     href: "/dashboard",
     icon: LayoutDashboard,
     permission: PERMISSIONS.DASHBOARD_VIEW,
-    showInParkingDashboard: false, // Hide dashboard for parking users
+    showInParkingDashboard: true,
   },
   {
     label: "Staff Users",
     href: "/dashboard/users",
     icon: Users,
     permission: PERMISSIONS.USER_VIEW,
-    showInParkingDashboard: false, // Only for system admins
+    showInParkingDashboard: false,
   },
   {
     label: "Parking Users",
     href: "/dashboard/parking-users",
     icon: UserCog,
     permission: PERMISSIONS.USER_VIEW,
-    showInParkingDashboard: true, // Parking staff can manage their team
+    showInParkingDashboard: true,
   },
   {
-    label: "Parkings",
+    label: "Parking Settings",
     href: "/dashboard/parkings",
     icon: ParkingCircle,
     permission: PERMISSIONS.PARKING_VIEW,
-    showInParkingDashboard: false, // Parking staff assigned to specific parking
+    showInParkingDashboard: true,
   },
   {
     label: "Bookings",
     href: "/dashboard/bookings",
     icon: Calendar,
     permission: PERMISSIONS.BOOKING_VIEW,
-    showInParkingDashboard: true, // Core feature for parking dashboard
+    showInParkingDashboard: true,
+  },
+  {
+    label: "Commission",
+    href: "/dashboard/configurations/commissions",
+    icon: Star,
+    permission: PERMISSIONS.REVENUE_VIEW,
+    showInParkingDashboard: false,
   },
   {
     label: "Customers",
     href: "/dashboard/customers",
     icon: UserRound,
     permission: PERMISSIONS.CUSTOMER_VIEW,
-    showInParkingDashboard: false, // View through bookings
+    showInParkingDashboard: false,
   },
   {
     label: "Vehicles",
     href: "/dashboard/vehicles",
     icon: Car,
     permission: PERMISSIONS.VEHICLE_VIEW,
-    showInParkingDashboard: false, // View through bookings
+    showInParkingDashboard: false,
   },
   {
     label: "Wallets",
     href: "/dashboard/wallets",
     icon: Wallet,
     permission: PERMISSIONS.REVENUE_VIEW,
-    showInParkingDashboard: false, // Only for system admins
+    showInParkingDashboard: false,
   },
   {
     label: "Password Reset",
     href: "/dashboard/forgot-password",
     icon: KeyRound,
     permission: PERMISSIONS.SETTINGS_RESET_PASSWORD,
-    showInParkingDashboard: false, // Only for system admins
+    showInParkingDashboard: true,
   },
   {
     label: "Configurations",
     href: "/dashboard/configurations",
     icon: Settings2,
     permission: PERMISSIONS.CONFIGURATION_VIEW,
-    showInParkingDashboard: false, // Only for system admins
+    showInParkingDashboard: false,
   },
   {
     label: "Settings",
     href: "/dashboard/settings",
     icon: Settings,
     permission: PERMISSIONS.SETTINGS_VIEW,
-    showInParkingDashboard: true, // Everyone needs settings
+    showInParkingDashboard: true,
   },
 ];
 
@@ -116,7 +123,9 @@ export function Sidebar({ onItemClick }: SidebarProps) {
   };
 
   // Determine if user is a parking dashboard user
-  const isParkingUser = user?.role === UserRole.PARKING_SUPER_ADMIN || user?.role === UserRole.PARKING_MANAGER;
+  const isParkingSuperAdmin = user?.role === UserRole.PARKING_SUPER_ADMIN;
+  const isParkingManager = user?.role === UserRole.PARKING_MANAGER;
+  const isParkingLevelUser = isParkingSuperAdmin || isParkingManager;
 
   // Filter navigation items based on role and permissions
   const filteredItems = navigationItems.filter((item) => {
@@ -125,8 +134,15 @@ export function Sidebar({ onItemClick }: SidebarProps) {
       return false;
     }
 
-    // For parking users, only show items marked as showInParkingDashboard
-    if (isParkingUser) {
+    // For parking managers, be very restrictive
+    if (isParkingManager) {
+      // Parking Managers ONLY see Bookings and Settings
+      const allowedForManager = ["/dashboard", "/dashboard/bookings", "/dashboard/settings"];
+      return allowedForManager.includes(item.href);
+    }
+
+    // For parking super admins, show only items marked for parking dashboard
+    if (isParkingSuperAdmin) {
       return item.showInParkingDashboard === true;
     }
 
@@ -164,7 +180,12 @@ export function Sidebar({ onItemClick }: SidebarProps) {
             <button
               key={item.href}
               onClick={() => {
-                router.push(item.href);
+                // If it's a parking user clicking "Parking Settings", go directly to their parking detail
+                if (item.label === "Parking Settings" && isParkingLevelUser && user?.orgId) {
+                  router.push(`/dashboard/parkings/${user.orgId}`);
+                } else {
+                  router.push(item.href);
+                }
                 onItemClick?.();
               }}
               className={cn(

@@ -267,7 +267,7 @@ function getPermissionsByContext(isParkingDashboard) {
     return isParkingDashboard ? PARKING_DASHBOARD_PERMISSIONS : SYSTEM_DASHBOARD_PERMISSIONS;
 }
 const DEFAULT_PERMISSIONS_BY_ROLE = {
-    "PARKING-SUPER-ADMIN": [
+    "PARKING_SUPER_ADMIN": [
         // Parking (view only, no create/delete/approve)
         PERMISSIONS.PARKING_VIEW,
         PERMISSIONS.PARKING_UPDATE,
@@ -307,14 +307,16 @@ const DEFAULT_PERMISSIONS_BY_ROLE = {
         PERMISSIONS.DASHBOARD_TOTAL_REVENUE,
         PERMISSIONS.DASHBOARD_DAILY_STATS,
         PERMISSIONS.DASHBOARD_MONTHLY_STATS,
+        PERMISSIONS.DASHBOARD_YEARLY_STATS,
         // Revenue
         PERMISSIONS.REVENUE_VIEW,
         PERMISSIONS.REVENUE_EXPORT,
         // Settings
         PERMISSIONS.SETTINGS_VIEW,
-        PERMISSIONS.SETTINGS_CHANGE_PASSWORD
+        PERMISSIONS.SETTINGS_CHANGE_PASSWORD,
+        PERMISSIONS.SETTINGS_RESET_PASSWORD
     ],
-    "PARKING-MANAGER": [
+    "PARKING_MANAGER": [
         // Parking (view only)
         PERMISSIONS.PARKING_VIEW,
         // Booking
@@ -345,12 +347,13 @@ const DEFAULT_PERMISSIONS_BY_ROLE = {
         // Revenue (view only)
         PERMISSIONS.REVENUE_VIEW,
         // Settings
+        PERMISSIONS.SETTINGS_VIEW,
         PERMISSIONS.SETTINGS_CHANGE_PASSWORD
     ],
-    "SYSTEM-ADMIN": [
+    "SYSTEM_ADMIN": [
         ...Object.values(PERMISSIONS)
     ],
-    "SYSTEM-SUPER-ADMIN": [
+    "SYSTEM_SUPER_ADMIN": [
         // Full access to everything
         ...Object.values(PERMISSIONS)
     ]
@@ -375,6 +378,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$settings$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Settings$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/settings.js [app-ssr] (ecmascript) <export default as Settings>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$parking$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ParkingCircle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/circle-parking.js [app-ssr] (ecmascript) <export default as ParkingCircle>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Calendar$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/calendar.js [app-ssr] (ecmascript) <export default as Calendar>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$star$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Star$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/star.js [app-ssr] (ecmascript) <export default as Star>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2d$cog$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__UserCog$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/user-cog.js [app-ssr] (ecmascript) <export default as UserCog>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$key$2d$round$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__KeyRound$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/key-round.js [app-ssr] (ecmascript) <export default as KeyRound>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2d$round$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__UserRound$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/user-round.js [app-ssr] (ecmascript) <export default as UserRound>");
@@ -396,7 +400,7 @@ const navigationItems = [
         href: "/dashboard",
         icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$layout$2d$dashboard$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__LayoutDashboard$3e$__["LayoutDashboard"],
         permission: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$permissions$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PERMISSIONS"].DASHBOARD_VIEW,
-        showInParkingDashboard: false
+        showInParkingDashboard: true
     },
     {
         label: "Staff Users",
@@ -413,11 +417,11 @@ const navigationItems = [
         showInParkingDashboard: true
     },
     {
-        label: "Parkings",
+        label: "Parking Settings",
         href: "/dashboard/parkings",
         icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$parking$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ParkingCircle$3e$__["ParkingCircle"],
         permission: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$permissions$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PERMISSIONS"].PARKING_VIEW,
-        showInParkingDashboard: false
+        showInParkingDashboard: true
     },
     {
         label: "Bookings",
@@ -425,6 +429,13 @@ const navigationItems = [
         icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$calendar$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Calendar$3e$__["Calendar"],
         permission: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$permissions$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PERMISSIONS"].BOOKING_VIEW,
         showInParkingDashboard: true
+    },
+    {
+        label: "Commission",
+        href: "/dashboard/configurations/commissions",
+        icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$star$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Star$3e$__["Star"],
+        permission: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$permissions$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PERMISSIONS"].REVENUE_VIEW,
+        showInParkingDashboard: false
     },
     {
         label: "Customers",
@@ -452,7 +463,7 @@ const navigationItems = [
         href: "/dashboard/forgot-password",
         icon: __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$key$2d$round$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__KeyRound$3e$__["KeyRound"],
         permission: __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$permissions$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["PERMISSIONS"].SETTINGS_RESET_PASSWORD,
-        showInParkingDashboard: false
+        showInParkingDashboard: true
     },
     {
         label: "Configurations",
@@ -478,15 +489,27 @@ function Sidebar({ onItemClick }) {
         router.push("/");
     };
     // Determine if user is a parking dashboard user
-    const isParkingUser = user?.role === __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserRole"].PARKING_SUPER_ADMIN || user?.role === __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserRole"].PARKING_MANAGER;
+    const isParkingSuperAdmin = user?.role === __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserRole"].PARKING_SUPER_ADMIN;
+    const isParkingManager = user?.role === __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["UserRole"].PARKING_MANAGER;
+    const isParkingLevelUser = isParkingSuperAdmin || isParkingManager;
     // Filter navigation items based on role and permissions
     const filteredItems = navigationItems.filter((item)=>{
         // Check permission first
         if (!hasPermission(item.permission)) {
             return false;
         }
-        // For parking users, only show items marked as showInParkingDashboard
-        if (isParkingUser) {
+        // For parking managers, be very restrictive
+        if (isParkingManager) {
+            // Parking Managers ONLY see Bookings and Settings
+            const allowedForManager = [
+                "/dashboard",
+                "/dashboard/bookings",
+                "/dashboard/settings"
+            ];
+            return allowedForManager.includes(item.href);
+        }
+        // For parking super admins, show only items marked for parking dashboard
+        if (isParkingSuperAdmin) {
             return item.showInParkingDashboard === true;
         }
         // System users see all items they have permission for
@@ -509,12 +532,12 @@ function Sidebar({ onItemClick }) {
                                 className: "w-full h-full object-cover"
                             }, void 0, false, {
                                 fileName: "[project]/components/layouts/sidebar.tsx",
-                                lineNumber: 143,
+                                lineNumber: 159,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/layouts/sidebar.tsx",
-                            lineNumber: 142,
+                            lineNumber: 158,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -523,23 +546,23 @@ function Sidebar({ onItemClick }) {
                                 children: "Gelagle Park"
                             }, void 0, false, {
                                 fileName: "[project]/components/layouts/sidebar.tsx",
-                                lineNumber: 150,
+                                lineNumber: 166,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/layouts/sidebar.tsx",
-                            lineNumber: 149,
+                            lineNumber: 165,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/layouts/sidebar.tsx",
-                    lineNumber: 141,
+                    lineNumber: 157,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/layouts/sidebar.tsx",
-                lineNumber: 140,
+                lineNumber: 156,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("nav", {
@@ -549,7 +572,12 @@ function Sidebar({ onItemClick }) {
                     const isActive = pathname === item.href;
                     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         onClick: ()=>{
-                            router.push(item.href);
+                            // If it's a parking user clicking "Parking Settings", go directly to their parking detail
+                            if (item.label === "Parking Settings" && isParkingLevelUser && user?.orgId) {
+                                router.push(`/dashboard/parkings/${user.orgId}`);
+                            } else {
+                                router.push(item.href);
+                            }
                             onItemClick?.();
                         },
                         className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["cn"])("w-full flex items-center gap-3 md:gap-4 px-4 md:px-6 py-3 md:py-4 rounded-lg text-sm md:text-base font-medium transition-colors my-0.5 md:my-1", isActive ? "bg-primary text-primary-foreground shadow-md" : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:pl-5 md:hover:pl-7"),
@@ -558,26 +586,26 @@ function Sidebar({ onItemClick }) {
                                 className: "w-5 h-5 md:w-[22px] md:h-[22px]"
                             }, void 0, false, {
                                 fileName: "[project]/components/layouts/sidebar.tsx",
-                                lineNumber: 177,
+                                lineNumber: 198,
                                 columnNumber: 15
                             }, this),
                             item.label
                         ]
                     }, item.href, true, {
                         fileName: "[project]/components/layouts/sidebar.tsx",
-                        lineNumber: 164,
+                        lineNumber: 180,
                         columnNumber: 13
                     }, this);
                 })
             }, void 0, false, {
                 fileName: "[project]/components/layouts/sidebar.tsx",
-                lineNumber: 158,
+                lineNumber: 174,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/layouts/sidebar.tsx",
-        lineNumber: 138,
+        lineNumber: 154,
         columnNumber: 5
     }, this);
 }

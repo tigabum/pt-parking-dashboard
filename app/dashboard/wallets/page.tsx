@@ -8,7 +8,8 @@ import { PERMISSIONS } from "@/lib/permissions";
 import { UserRole } from "@/lib/auth";
 import { PageHeader } from "@/components/layouts/page-header";
 import { DashboardPagination } from "@/components/tables/dashboard-pagination";
-import { Search, Wallet, Eye, Plus } from "lucide-react";
+import { Search, Wallet, Eye, Plus, History as HistoryIcon } from "lucide-react";
+import { WalletTransactions } from "@/components/wallets/wallet-transactions";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -40,6 +41,7 @@ export default function WalletsPage() {
     // Top Up State
     const [selectedWallet, setSelectedWallet] = useState<any>(null);
     const [isTopUpOpen, setIsTopUpOpen] = useState(false);
+    const [isHistoryOpen, setIsHistoryOpen] = useState(false);
     const [topUpAmount, setTopUpAmount] = useState("");
     const [topUpDescription, setTopUpDescription] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -189,6 +191,18 @@ export default function WalletsPage() {
                         <Plus className="w-3.5 h-3.5" />
                         <span className="text-xs font-bold">Top Up</span>
                     </Button>
+                    <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-8 gap-2 bg-indigo-50 text-indigo-600 border-indigo-200 hover:bg-indigo-100 hover:text-indigo-700 hover:border-indigo-300"
+                        onClick={() => {
+                            setSelectedWallet(row);
+                            setIsHistoryOpen(true);
+                        }}
+                    >
+                        <HistoryIcon className="w-3.5 h-3.5" />
+                        <span className="text-xs font-bold">History</span>
+                    </Button>
                 </div>
             ),
         },
@@ -279,6 +293,28 @@ export default function WalletsPage() {
                         <Button onClick={handleTopUp} disabled={isSubmitting || !topUpAmount}>
                             {isSubmitting ? "Processing..." : "Confirm Top Up"}
                         </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* History Modal */}
+            <Dialog open={isHistoryOpen} onOpenChange={setIsHistoryOpen}>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-[2.5rem]">
+                    <DialogHeader>
+                        <DialogTitle>Wallet Transaction History</DialogTitle>
+                        <DialogDescription>
+                            Showing recent transactions for <b>{selectedWallet?.parking?.name}</b>.
+                        </DialogDescription>
+                    </DialogHeader>
+
+                    <div className="py-4">
+                        {selectedWallet?.parking?.id && (
+                            <WalletTransactions parkingId={selectedWallet.parking.id} />
+                        )}
+                    </div>
+
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsHistoryOpen(false)}>Close</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

@@ -30,6 +30,18 @@ const commissionService = {
     deleteCommission: async (id)=>{
         const res = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$api$2d$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].delete(`/commissions/${id}`);
         return res.data;
+    },
+    getBookingCommissions: async (params)=>{
+        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$api$2d$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get("/commissions/bookings", {
+            params
+        });
+        return res.data;
+    },
+    getCommissionStats: async (params)=>{
+        const res = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$api$2d$client$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get("/commissions/stats", {
+            params
+        });
+        return res.data;
     }
 };
 }),
@@ -569,6 +581,7 @@ const statusColorMap = {
     EXPIRED: "bg-slate-100 text-slate-700",
     REFUNDED: "bg-indigo-100 text-indigo-700",
     DISABLED: "bg-gray-100 text-gray-700",
+    COMPLETED: "bg-orange-100 text-orange-700",
     // Legacy values for backward compatibility
     Active: "bg-primary/10 text-primary",
     Pending: "bg-amber-100 text-amber-700",
@@ -582,7 +595,7 @@ const statusColumn = ()=>({
                 children: row.status || "InActive"
             }, void 0, false, {
                 fileName: "[project]/components/tables/columns/status-column.tsx",
-                lineNumber: 21,
+                lineNumber: 22,
                 columnNumber: 5
             }, ("TURBOPACK compile-time value", void 0))
     });

@@ -28,8 +28,15 @@ import { ParkingStatus, ParkingType } from "@/components/types";
 
 export default function ParkingPage() {
   const router = useRouter();
-  const { canAccess, hasPermission } = useAuth();
+  const { canAccess, hasPermission, user } = useAuth();
 
+  useEffect(() => {
+    // If it's a parking user, redirect to their own parking detail page
+    const isParkingUser = user?.role === UserRole.PARKING_SUPER_ADMIN || user?.role === UserRole.PARKING_MANAGER;
+    if (isParkingUser && user?.orgId) {
+      router.replace(`/dashboard/parkings/${user.orgId}`);
+    }
+  }, [user, router]);
   const [parkings, setParkings] = useState<ParkingResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");

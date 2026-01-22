@@ -67,7 +67,7 @@ export function ForgotPasswordForm() {
             <Input
               id="email"
               type="email"
-              placeholder="Enter Your Email"
+              placeholder="Enter Email"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -82,10 +82,10 @@ export function ForgotPasswordForm() {
 
           <Button
             type="submit"
-            className="w-full h-12 text-base font-semibold shadow-lg shadow-primary/20 transition-all hover:scale-[1.01]"
+            className="w-full h-12 text-base font-semibold bg-[#0066FF] hover:bg-[#0052CC] text-white transition-all rounded-xl shadow-none border-none"
             disabled={loading}
           >
-            {loading ? "Sending Link..." : "Send"}
+            {loading ? "Sending Link..." : "Send Reset Link"}
           </Button>
 
           <div className="text-center">

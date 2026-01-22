@@ -22,6 +22,7 @@ interface RatingDialogProps {
     onOpenChange: (open: boolean) => void;
     parkingId: string;
     parkingName?: string;
+    customerPhone?: string;
     onSuccess?: () => void;
 }
 
@@ -30,6 +31,7 @@ export function RatingDialog({
     onOpenChange,
     parkingId,
     parkingName = "this parking",
+    customerPhone,
     onSuccess,
 }: RatingDialogProps) {
     const [rating, setRating] = useState<number>(0);
@@ -48,6 +50,7 @@ export function RatingDialog({
                 parkingId,
                 rating,
                 comment: comment.trim() || undefined,
+                customerPhone,
             });
             toast.success("Thank you for your rating!");
             onSuccess?.();
@@ -65,7 +68,7 @@ export function RatingDialog({
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[450px] rounded-[2.5rem] p-0 overflow-hidden border-none shadow-2xl bg-white">
-                <div className="bg-slate-900 p-8 text-white relative">
+                <div className="bg-primary p-8 text-white relative">
                     <DialogHeader>
                         <DialogTitle className="text-2xl font-black tracking-tight uppercase tracking-widest leading-tight">
                             Rate Experience
@@ -135,7 +138,7 @@ export function RatingDialog({
                             </Label>
                         </div>
                         <Textarea
-                            placeholder="Tell us what you liked or how we can improve..."
+                            placeholder="Enter Comment"
                             value={comment}
                             onChange={(e) => setComment(e.target.value)}
                             className="min-h-[120px] rounded-2xl bg-slate-50 border-none focus:ring-primary/10 transition-all font-medium text-slate-600 p-4"
@@ -146,7 +149,7 @@ export function RatingDialog({
                         <Button
                             onClick={handleSubmit}
                             disabled={submitting || rating === 0}
-                            className="w-full h-14 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-black uppercase tracking-[0.2em] shadow-xl shadow-amber-100 transition-all active:scale-95 border-none text-xs"
+                            className="w-full h-14 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-black uppercase tracking-[0.2em] transition-all active:scale-95 border-none text-xs shadow-none"
                         >
                             {submitting ? (
                                 <Loader2 className="h-5 w-5 animate-spin" />

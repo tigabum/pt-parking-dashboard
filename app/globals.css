@@ -11,16 +11,16 @@
   --popover-foreground: oklch(0.15 0.02 280);
 
   /* PREMIUM BRAND COLOR - VIBRANT INDIGO BLUE (LOGO MATCH) */
-  --primary: #2409c7;
+  --primary: #0066FF;
   --primary-foreground: #ffffff;
-  --primary-solid: #2409c7;
+  --primary-solid: #0066FF;
 
   --secondary: oklch(0.96 0.01 230);
   --secondary-foreground: oklch(0.3 0.02 230);
   --muted: oklch(0.94 0.005 230);
   --muted-foreground: oklch(0.45 0.02 230);
 
-  --accent: #2409c7;
+  --accent: #0066FF;
   --accent-foreground: #ffffff;
 
   --destructive: oklch(0.55 0.22 25);
@@ -28,9 +28,9 @@
   --border: oklch(0.91 0.01 230);
   --input: oklch(0.94 0.01 230);
 
-  --ring: #2409c7;
+  --ring: #0066FF;
 
-  --chart-1: #2409c7;
+  --chart-1: #0066FF;
   --chart-2: oklch(0.6 0.2 200);
   --chart-3: oklch(0.5 0.2 150);
   --chart-4: oklch(0.65 0.2 60);
@@ -38,12 +38,12 @@
   --radius: 0.75rem;
   --sidebar: #ffffff;
   --sidebar-foreground: oklch(0.15 0.02 230);
-  --sidebar-primary: #2409c7;
+  --sidebar-primary: #0066FF;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: oklch(0.96 0.01 230);
   --sidebar-accent-foreground: oklch(0.15 0.02 230);
   --sidebar-border: oklch(0.91 0.01 230);
-  --sidebar-ring: #2409c7;
+  --sidebar-ring: #0066FF;
 }
 
 .dark {
@@ -55,16 +55,16 @@
   --popover-foreground: oklch(0.97 0.01 230);
 
   /* PREMIUM BRAND COLOR */
-  --primary: #2409c7;
+  --primary: #0066FF;
   --primary-foreground: #ffffff;
-  --primary-solid: #2409c7;
+  --primary-solid: #0066FF;
 
   --secondary: oklch(0.2 0.02 230);
   --secondary-foreground: oklch(0.97 0.01 230);
   --muted: oklch(0.2 0.02 230);
   --muted-foreground: oklch(0.7 0.01 230);
 
-  --accent: #2409c7;
+  --accent: #0066FF;
   --accent-foreground: #ffffff;
 
   --destructive: oklch(0.5 0.2 25);
@@ -72,21 +72,21 @@
   --border: oklch(0.2 0.02 230);
   --input: oklch(0.15 0.02 230);
 
-  --ring: #2409c7;
+  --ring: #0066FF;
 
-  --chart-1: #2409c7;
+  --chart-1: #0066FF;
   --chart-2: oklch(0.6 0.2 200);
   --chart-3: oklch(0.5 0.2 150);
   --chart-4: oklch(0.65 0.2 60);
   --chart-5: oklch(0.7 0.2 30);
   --sidebar: oklch(0.1 0.01 280);
   --sidebar-foreground: oklch(0.97 0.01 280);
-  --sidebar-primary: #2409c7;
+  --sidebar-primary: #0066FF;
   --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: oklch(0.2 0.02 230);
   --sidebar-accent-foreground: oklch(0.97 0.01 230);
   --sidebar-border: oklch(0.2 0.02 230);
-  --sidebar-ring: #2409c7;
+  --sidebar-ring: #0066FF;
 }
 
 @theme inline {
@@ -150,7 +150,7 @@
   }
 
   .premium-gradient {
-    background: linear-gradient(135deg, #2409c7 0%, #4338ca 100%);
+    background: linear-gradient(135deg, #0066FF 0%, #4338ca 100%);
   }
 
   .animate-float {

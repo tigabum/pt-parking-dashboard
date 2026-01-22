@@ -64,18 +64,46 @@ export default function SettingsPage() {
       formData.append("phoneNumber", profileData.phoneNumber)
 
       const response = await userService.updateProfile(formData)
-      if (response.success) {
+      if (response.success && response.data) {
         toast.success("Profile updated successfully")
         if (user) {
           loginWithData({
             ...user,
-            fullName: profileData.fullName,
-            phoneNumber: profileData.phoneNumber
+            fullName: response.data.fullName,
+            phoneNumber: response.data.phoneNumber,
+            profileImage: response.data.profileImage
           })
         }
       }
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed to update profile")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    try {
+      setLoading(true)
+      const formData = new FormData()
+      formData.append("profileImage", file)
+
+      const response = await userService.updateProfile(formData)
+      if (response.success && response.data) {
+        setProfileData(prev => ({ ...prev, profileImage: response.data.profileImage }))
+        if (user) {
+          loginWithData({
+            ...user,
+            profileImage: response.data.profileImage
+          })
+        }
+        toast.success("Profile image updated")
+      }
+    } catch (error) {
+      toast.error("Failed to upload image")
     } finally {
       setLoading(false)
     }
@@ -134,7 +162,7 @@ export default function SettingsPage() {
         {/* Profile Header Section with Banner-like Feel */}
         <div className="bg-slate-50/50 p-8 md:p-12 border-b border-slate-100 relative">
           <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
-            <div className="relative group cursor-pointer">
+            <div className="relative group cursor-pointer" onClick={() => document.getElementById('profile-image-input')?.click()}>
               <Avatar className="h-40 w-40 border-8 border-white shadow-xl group-hover:opacity-90 transition-all">
                 <AvatarImage src={getImageUrl(profileData.profileImage)} />
                 <AvatarFallback className="bg-primary/5 text-primary text-4xl font-black">
@@ -146,6 +174,13 @@ export default function SettingsPage() {
                   <Camera className="h-8 w-8 text-white" />
                 </div>
               </div>
+              <input
+                id="profile-image-input"
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
             </div>
 
             <div className="text-center md:text-left space-y-2">

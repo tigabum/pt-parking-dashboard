@@ -42,7 +42,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 import { SYSTEM_ORG_ID } from "@/lib/constants";
-import { PERMISSION_LABELS, getPermissionsByContext } from "@/lib/permissions";
+import { PERMISSION_LABELS, getPermissionsByContext, DEFAULT_PERMISSIONS_BY_ROLE } from "@/lib/permissions";
 
 type Props = {
   onOpenChange: (open: boolean) => void;
@@ -71,22 +71,33 @@ export function UserForm({
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!initialData) return;
-    setFullName(initialData.fullName || "");
-    setEmail(initialData.email || "");
-    setPhoneNumber(initialData.phoneNumber || "");
-    setRole((initialData.role as UserRole) || UserRole.SYSTEM_ADMIN);
-    if (
-      initialData.profileImage &&
-      typeof initialData.profileImage === "string"
-    ) {
-      setPreview(initialData.profileImage);
-    }
-    // Handle permissions if backend returns it as array
-    if (initialData.permissions && Array.isArray(initialData.permissions)) {
-      setPermissions(initialData.permissions);
+    if (initialData) {
+      setFullName(initialData.fullName || "");
+      setEmail(initialData.email || "");
+      setPhoneNumber(initialData.phoneNumber || "");
+      setRole((initialData.role as UserRole) || UserRole.SYSTEM_ADMIN);
+      if (
+        initialData.profileImage &&
+        typeof initialData.profileImage === "string"
+      ) {
+        setPreview(initialData.profileImage);
+      }
+      // Handle permissions if backend returns it as array
+      if (initialData.permissions && Array.isArray(initialData.permissions)) {
+        setPermissions(initialData.permissions);
+      }
+    } else {
+      // Pre-fill for new users
+      setPermissions(DEFAULT_PERMISSIONS_BY_ROLE[role] || []);
     }
   }, [initialData]);
+
+  // Handle role change pre-filling for new users
+  useEffect(() => {
+    if (!initialData && role) {
+      setPermissions(DEFAULT_PERMISSIONS_BY_ROLE[role] || []);
+    }
+  }, [role, initialData]);
 
   useEffect(() => {
     if (!profileImage) return;
@@ -265,8 +276,8 @@ export function UserForm({
                         value={role}
                         onValueChange={(val) => setRole(val as UserRole)}
                       >
-                        <SelectTrigger className="h-12 w-full rounded-xl border-slate-200 bg-white font-bold transition-all hover:border-primary/50">
-                          <SelectValue placeholder="Choose Role" />
+                        <SelectTrigger className="h-12 w-full rounded-xl border-slate-200 bg-white font-bold transition-all hover:border-[#0066FF]/50">
+                          <SelectValue placeholder="Enter Role Selection" />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl shadow-2xl border-slate-100">
                           <SelectItem
@@ -319,7 +330,7 @@ export function UserForm({
                       </Label>
                       <Input
                         className={`h-12 w-full rounded-xl border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.fullName ? "border-red-500 bg-red-50" : ""}`}
-                        placeholder="e.g. Samuel Ayele"
+                        placeholder="Enter Full Legal Name"
                         value={fullName}
                         onChange={(e) => {
                           setFullName(e.target.value);
@@ -337,7 +348,7 @@ export function UserForm({
                       <Input
                         className={`h-12 w-full rounded-xl border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.email ? "border-red-500 bg-red-50" : ""}`}
                         type="email"
-                        placeholder="name@organization.com"
+                        placeholder="Enter Official Email"
                         value={email}
                         onChange={(e) => {
                           setEmail(e.target.value);
@@ -354,7 +365,7 @@ export function UserForm({
                       </Label>
                       <Input
                         className={`h-12 w-full rounded-xl border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.phoneNumber ? "border-red-500 bg-red-50" : ""}`}
-                        placeholder="+251 9..."
+                        placeholder="Enter Primary Contact"
                         value={phoneNumber}
                         onChange={(e) => {
                           setPhoneNumber(e.target.value);
@@ -384,7 +395,7 @@ export function UserForm({
                         permissions={permissions}
                         onPermissionsChange={setPermissions}
                         categories={getPermissionsByContext(role === UserRole.PARKING_SUPER_ADMIN || role === UserRole.PARKING_MANAGER)}
-                        placeholder="Search and assign capabilities..."
+                        placeholder="Enter Site Permissions"
                       />
                       <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center gap-4 transition-all hover:bg-white hover:shadow-sm group">
                         <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm transition-transform group-hover:scale-110">
@@ -432,7 +443,7 @@ export function UserForm({
             <Button
               onClick={handleSubmit}
               disabled={isLoading}
-              className="h-14 px-16 rounded-xl bg-primary hover:opacity-90 text-white font-bold transition-all min-w-[160px] shadow-lg shadow-primary/10"
+              className="h-14 px-16 rounded-xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-bold transition-all min-w-[160px] shadow-none border-none"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isNew ? "Create User" : "Update User"}

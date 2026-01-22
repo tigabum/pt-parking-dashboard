@@ -38,7 +38,7 @@ import { PERMISSIONS } from "@/lib/permissions";
 
 function BookingActions({ row, onDetail, onConfirmPayment, onConfirmArrival }: { row: BookingResponse, onDetail: (r: BookingResponse) => void, onConfirmPayment?: (r: BookingResponse) => void, onConfirmArrival?: (r: BookingResponse) => void }) {
   const { hasPermission } = useAuth();
-  const showConfirmPayment = row.paymentMethod === 'INCASH' && (row.status === 'PENDING' || row.status === 'COMPLETED') && hasPermission(PERMISSIONS.BOOKING_UPDATE);
+  const showConfirmPayment = (row.status === 'PENDING' || row.status === 'COMPLETED') && hasPermission(PERMISSIONS.BOOKING_UPDATE);
   const showConfirmArrival = row.status === 'PENDING' && hasPermission(PERMISSIONS.BOOKING_UPDATE);
   const showDetail = hasPermission(PERMISSIONS.BOOKING_VIEW);
 

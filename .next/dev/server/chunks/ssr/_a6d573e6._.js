@@ -254,7 +254,7 @@ function ForgotPasswordForm() {
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Input"], {
                                 id: "email",
                                 type: "email",
-                                placeholder: "Enter Your Email",
+                                placeholder: "Enter Email",
                                 value: email,
                                 onChange: (e)=>{
                                     setEmail(e.target.value);
@@ -287,9 +287,9 @@ function ForgotPasswordForm() {
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                         type: "submit",
-                        className: "w-full h-12 text-base font-semibold shadow-lg shadow-primary/20 transition-all hover:scale-[1.01]",
+                        className: "w-full h-12 text-base font-semibold bg-[#0066FF] hover:bg-[#0052CC] text-white transition-all rounded-xl shadow-none border-none",
                         disabled: loading,
-                        children: loading ? "Sending Link..." : "Send"
+                        children: loading ? "Sending Link..." : "Send Reset Link"
                     }, void 0, false, {
                         fileName: "[project]/components/forms/forgot-password-form.tsx",
                         lineNumber: 83,

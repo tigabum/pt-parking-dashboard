@@ -63,7 +63,9 @@ export default function ParkingUsersPage() {
                 sortBy,
                 sortOrder,
                 isStaffUser: false,
-                orgId: user?.orgId ? `!${user.orgId}` : undefined
+                orgId: (user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.SYSTEM_ADMIN)
+                    ? undefined
+                    : user?.orgId
             });
 
             const userList = response.data || response.users;

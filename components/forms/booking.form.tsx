@@ -379,7 +379,7 @@ export function BookingForm({
               <QRCode
                 value={JSON.stringify({ ref: createdBooking?.referenceNo || "N/A", customer: booking.customerName })}
                 size={240}
-                fgColor="#2409c7"
+                fgColor="#0066FF"
               />
             </div>
             <div className="text-center space-y-1">
@@ -398,7 +398,7 @@ export function BookingForm({
             </Button>
             <Button
               onClick={() => onOpenChange(false)}
-              className="flex-1 h-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-bold shadow-lg"
+              className="flex-1 h-14 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-bold shadow-none border-none"
             >
               Done
             </Button>
@@ -467,8 +467,8 @@ export function BookingForm({
                           setBooking({ ...booking, customerPhone: e.target.value });
                           if (errors.customerPhone) setErrors({ ...errors, customerPhone: "" });
                         }}
-                        placeholder="09..."
-                        className={`h-14 rounded-2xl bg-white border-2 focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all font-bold text-lg px-6 ${errors.customerPhone ? "border-red-500 bg-red-50" : "border-primary/5"}`}
+                        placeholder="Enter Phone Number"
+                        className={`h-14 rounded-2xl bg-white border-2 focus:border-[#0066FF]/50 focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-lg px-6 ${errors.customerPhone ? "border-red-500 bg-red-50" : "border-[#0066FF]/5"}`}
                       />
                       {errors.customerPhone && <p className="text-xs text-red-500 font-medium">{errors.customerPhone}</p>}
                     </div>
@@ -482,8 +482,8 @@ export function BookingForm({
                           setBooking({ ...booking, plateNumber: e.target.value.toUpperCase() });
                           if (errors.plateNumber) setErrors({ ...errors, plateNumber: "" });
                         }}
-                        placeholder="A 12345"
-                        className={`h-14 rounded-2xl bg-white border-2 focus:border-primary/50 focus:ring-4 focus:ring-primary/5 font-mono font-black uppercase tracking-widest text-2xl px-6 ${errors.plateNumber ? "border-red-500 bg-red-50" : "border-primary/5"}`}
+                        placeholder="Enter Plate Number"
+                        className={`h-14 rounded-2xl bg-white border-2 focus:border-[#0066FF]/50 focus:ring-4 focus:ring-[#0066FF]/5 font-mono font-black uppercase tracking-widest text-2xl px-6 ${errors.plateNumber ? "border-red-500 bg-red-50" : "border-[#0066FF]/5"}`}
                       />
                       {errors.plateNumber && <p className="text-xs text-red-500 font-medium">{errors.plateNumber}</p>}
                     </div>
@@ -500,7 +500,7 @@ export function BookingForm({
                     <Button
                       onClick={handleNext}
                       disabled={searching}
-                      className="h-14 px-14 rounded-2xl bg-primary hover:bg-primary/90 text-white font-bold shadow-xl shadow-primary/10 flex items-center gap-3 active:scale-95 transition-all text-lg"
+                      className="h-14 px-14 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-bold flex items-center gap-3 active:scale-95 transition-all text-lg shadow-none border-none"
                     >
                       {searching ? <Loader2 className="h-5 w-5 animate-spin" /> : <ArrowRight className="h-5 w-5" />}
                       Verify & Continue
@@ -521,7 +521,7 @@ export function BookingForm({
                         setBooking({ ...booking, customerName: e.target.value });
                         if (errors.customerName) setErrors({ ...errors, customerName: "" });
                       }}
-                      placeholder="Full Name"
+                      placeholder="Enter Driver Name"
                       className={`h-12 rounded-xl bg-slate-50 border-none font-bold ${errors.customerName ? "border-2 border-red-500 bg-red-50" : ""}`}
                     />
                     {errors.customerName && <p className="text-xs text-red-500 font-medium">{errors.customerName}</p>}
@@ -531,7 +531,7 @@ export function BookingForm({
                     <Input
                       value={booking.vehicleBrand}
                       onChange={(e) => setBooking({ ...booking, vehicleBrand: e.target.value })}
-                      placeholder="Toyota"
+                      placeholder="Enter Vehicle Brand"
                       className="h-12 rounded-xl bg-slate-50 border-none font-bold"
                     />
                   </div>
@@ -540,7 +540,7 @@ export function BookingForm({
                     <Input
                       value={booking.vehicleName}
                       onChange={(e) => setBooking({ ...booking, vehicleName: e.target.value })}
-                      placeholder="Corolla"
+                      placeholder="Enter Model"
                       className="h-12 rounded-xl bg-slate-50 border-none font-bold"
                     />
                   </div>
@@ -619,7 +619,7 @@ export function BookingForm({
                     </Button>
                     <Button
                       onClick={() => setStep(2)}
-                      className="h-12 px-10 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold shadow-lg shadow-primary/10 flex items-center gap-3"
+                      className="h-12 px-10 rounded-xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-bold flex items-center gap-3 shadow-none border-none"
                     >
                       Review & Proceed
                       <ArrowRight className="h-4 w-4" />
@@ -678,7 +678,7 @@ export function BookingForm({
                   <Button
                     onClick={handleSaveAction}
                     disabled={isLoading}
-                    className="h-16 px-16 rounded-[2rem] bg-slate-900 hover:bg-black text-white font-black shadow-2xl transition-all active:scale-95 flex items-center gap-4 text-lg uppercase tracking-widest"
+                    className="h-16 px-16 rounded-[2rem] bg-[#0066FF] hover:bg-[#0052CC] text-white font-black transition-all active:scale-95 flex items-center gap-4 text-lg uppercase tracking-widest shadow-none border-none"
                   >
                     {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : <Zap className="h-6 w-6 fill-white" />}
                     Confirm & Start

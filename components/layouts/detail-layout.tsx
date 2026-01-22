@@ -84,16 +84,14 @@ interface DetailSectionProps {
 
 export function DetailSection({ title, children, className, icon }: DetailSectionProps) {
     return (
-        <div className={cn("space-y-8", className)}>
-            <div className="flex items-center gap-4">
-                <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                    {icon || <div className="w-1.5 h-1.5 rounded-full bg-primary" />}
-                </div>
-                <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+        <div className={cn("space-y-6 pb-2 border-b border-slate-50 last:border-0", className)}>
+            <div className="flex items-center gap-3">
+                {icon && <div className="text-primary/70">{icon}</div>}
+                <h2 className="text-sm font-black text-slate-400 uppercase tracking-[0.2em]">
                     {title}
                 </h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-12 px-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-12 px-1 pb-8">
                 {children}
             </div>
         </div>
@@ -108,12 +106,12 @@ interface DetailItemProps {
 
 export function DetailItem({ label, value, className }: DetailItemProps) {
     return (
-        <div className={cn("flex flex-col gap-2.5", className)}>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] pl-1">
+        <div className={cn("flex flex-col gap-1 transition-all group", className)}>
+            <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                 {label}
             </p>
-            <div className="text-base font-bold text-slate-900 bg-slate-50/50 border border-slate-100 rounded-2xl px-5 py-4 min-h-[56px] flex items-center break-words transition-all hover:bg-slate-50 hover:border-primary/20">
-                {value || "—"}
+            <div className="text-sm md:text-base font-bold text-slate-900 leading-tight">
+                {value || <span className="text-slate-300 font-medium">Not Provided</span>}
             </div>
         </div>
     );
