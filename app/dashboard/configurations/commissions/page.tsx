@@ -25,7 +25,8 @@ export default function BookingCommissionsPage() {
 
     const [stats, setStats] = useState({
         totalEarned: 0,
-        count: 0
+        count: 0,
+        totalVat: 0,
     });
 
     useEffect(() => {
@@ -41,7 +42,8 @@ export default function BookingCommissionsPage() {
             if (res && res.success) {
                 setStats({
                     totalEarned: res.data.totalEarned,
-                    count: res.data.count
+                    count: res.data.count,
+                    totalVat: res.data.totalVat || 0,
                 });
             }
         } catch (err) {
@@ -62,13 +64,6 @@ export default function BookingCommissionsPage() {
                 setCommissions(res.data || []);
                 setTotal(res.total || 0);
                 setTotalPages(res.totalPages || 1);
-
-                // Calculate simple stats from the current view (real stats should come from backend)
-                const earned = (res.data || []).reduce((acc: number, curr: BookingCommission) => acc + Number(curr.commissionAmount), 0);
-                setStats({
-                    totalEarned: earned,
-                    count: res.total || 0
-                });
             }
         } catch (err) {
             toast.error("Failed to load booking commissions");
@@ -115,6 +110,15 @@ export default function BookingCommissionsPage() {
             ),
         },
         {
+            key: "vatAmount",
+            header: "VAT (15%)",
+            render: (row) => (
+                <span className="font-semibold text-amber-600 text-sm">
+                    {Number(row.vatAmount || 0).toLocaleString()} ETB
+                </span>
+            ),
+        },
+        {
             key: "createdAt",
             header: "Date Earned",
             render: (row) => (
@@ -154,7 +158,7 @@ export default function BookingCommissionsPage() {
             </PageHeader>
 
             {/* Simple Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-5">
                     <div className="h-14 w-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
                         <TrendingUp className="h-7 w-7" />
@@ -172,6 +176,16 @@ export default function BookingCommissionsPage() {
                     <div className="space-y-0.5">
                         <p className="text-[10px] font-bold uppercase text-slate-400 tracking-wider font-mono">Platform Revenue (ETB)</p>
                         <p className="text-3xl font-black text-slate-900">{stats.totalEarned.toLocaleString()} ETB</p>
+                    </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm flex items-center gap-5">
+                    <div className="h-14 w-14 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-600">
+                        <DollarSign className="h-7 w-7" />
+                    </div>
+                    <div className="space-y-0.5">
+                        <p className="text-[10px] font-bold uppercase text-slate-400 tracking-wider font-mono">Total VAT (15%)</p>
+                        <p className="text-3xl font-black text-slate-900">{stats.totalVat.toLocaleString()} ETB</p>
                     </div>
                 </div>
             </div>

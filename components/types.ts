@@ -548,6 +548,7 @@ export interface BookingCommission {
   parkingId: string;
   totalAmount: number;
   commissionAmount: number;
+  vatAmount?: number;
   referenceNo: string;
   createdAt: string;
   updatedAt: string;

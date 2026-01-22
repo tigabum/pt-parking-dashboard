@@ -189,20 +189,21 @@ function PortalContent() {
             const normalized = normalizePhone(phoneNumber);
             const upperPlate = plateNumber.toUpperCase().replace(/\s/g, '');
 
-            // 1. First Check for Active Bookings (Enterprise standard: Resume session)
+            // 1. Check for PENDING or ACTIVE bookings (Resume session if exists)
             if (parkingId) {
-                const active = await portalService.getActiveBooking(normalized, parkingId, upperPlate);
-                if (active) {
+                // Relaxed lookup: Find by phone only to handle inconsistent plate formatting or entry
+                const active = await portalService.getActiveBooking(normalized, parkingId);
+                if (active && (active.status === 'PENDING' || active.status === 'ACTIVE' || active.status === 'COMPLETED')) {
                     setActiveBooking(active);
                     localStorage.setItem("guestPhone", phoneNumber);
                     localStorage.setItem("guestPlate", plateNumber);
-                    toast.success("Welcome back! Active session resumed.");
+                    toast.success("Welcome back! Your session has been resumed.");
                     setSearching(false);
                     return;
                 }
             }
 
-            // 2. If no active session, look up customer profile to pre-fill
+            // 2. If no active/pending session, look up customer profile to pre-fill
             const result = await portalService.checkCustomer(normalized);
             if (result.exists) {
                 setFullName(result.fullName || "");
@@ -289,7 +290,7 @@ function PortalContent() {
                 parkingId: parking.id,
                 customerName: fullName,
                 customerPhone: normalizePhone(phoneNumber),
-                plateNumber: plateNumber.toUpperCase(),
+                plateNumber: plateNumber.toUpperCase().replace(/\s/g, ''),
                 vehicleBrand: brand || "Generic",
                 vehicleModel: model || "Car",
                 startTime: now.toISOString(),
@@ -1123,6 +1124,22 @@ function CheckoutView({
                                     <p className="font-bold text-slate-900 text-sm">
                                         Active for <span className="text-primary font-black">{Math.max(0, Math.floor(((new Date(booking.endTime || new Date()).getTime() - new Date(booking.startTime).getTime()) / 60000)))}</span> Minutes
                                     </p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-3">
+                                <Label className="text-[8px] uppercase font-black text-slate-300 tracking-[0.4em] ml-1 flex items-center gap-2">
+                                    <User className="h-3 w-3" /> Guest Details
+                                </Label>
+                                <div className="bg-slate-50 border border-slate-100/50 rounded-2xl p-4 space-y-2">
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Name</span>
+                                        <span className="font-bold text-slate-900 text-xs">{booking.customerName}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Phone</span>
+                                        <span className="font-bold text-slate-900 text-xs">{booking.customerPhone}</span>
+                                    </div>
                                 </div>
                             </div>
 
