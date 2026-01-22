@@ -19,9 +19,10 @@ export const portalService = {
     },
 
     // 2.1 Find Active Guest Booking
-    getActiveBooking: async (phone: string, parkingId: string, plateNumber?: string) => {
-        let url = `/bookings/public/active?phone=${phone}&parkingId=${parkingId}`;
-        if (plateNumber) url += `&plateNumber=${plateNumber}`;
+    getActiveBooking: async (phone: string | null, parkingId: string, id?: string) => {
+        let url = `/bookings/public/active?parkingId=${parkingId}`;
+        if (id) url += `&id=${id}`;
+        if (phone) url += `&phone=${phone}`;
         return apiClient.get<Booking | null>(url).then(handleResponse);
     },
 

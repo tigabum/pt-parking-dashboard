@@ -34,9 +34,6 @@ export function QrCodeDialog({ open, onOpenChange, parkingId, parkingName }: QrC
                     <div className="bg-white p-4 rounded-xl shadow-lg border">
                         <QRCode value={url} size={200} />
                     </div>
-                    <p className="text-sm text-center text-muted-foreground break-all">
-                        {url}
-                    </p>
                 </div>
                 <div className="flex justify-end gap-2">
                     <Button variant="outline" onClick={handlePrint}>

@@ -207,7 +207,7 @@ export default function BookingsPage() {
           <div className="relative w-full xl:w-72 shrink-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
-              placeholder="Search by ref or plate..."
+              placeholder="Search by Plate, Ref or Customer..."
               className="pl-10 h-11 rounded-xl border-slate-200 w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -225,6 +225,7 @@ export default function BookingsPage() {
                 <SelectItem value={BookingStatus.ACTIVE}>Active</SelectItem>
                 <SelectItem value={BookingStatus.PAID}>Paid</SelectItem>
                 <SelectItem value={BookingStatus.PENDING}>Pending</SelectItem>
+                <SelectItem value={BookingStatus.COMPLETED}>Completed</SelectItem>
                 <SelectItem value={BookingStatus.CANCELLED}>Cancelled</SelectItem>
               </SelectContent>
             </Select>

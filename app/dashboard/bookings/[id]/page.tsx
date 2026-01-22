@@ -57,7 +57,6 @@ export default function BookingDetailPage() {
     const [extending, setExtending] = useState(false);
     const [elapsedCost, setElapsedCost] = useState<number>(0);
     const [extraCost, setExtraCost] = useState<number>(0);
-    const [isRatingOpen, setIsRatingOpen] = useState(false);
 
     useEffect(() => {
         if (id) {
@@ -210,8 +209,6 @@ export default function BookingDetailPage() {
             setLoading(true);
             await bookingService.updateBookingStatus(id as string, 'PAID', booking.totalAmount);
             loadData();
-            // Show rating dialog after payment
-            setIsRatingOpen(true);
         } catch (err) {
             toast.error("Failed to confirm payment", { id: loadingToast });
         } finally {
@@ -248,7 +245,6 @@ export default function BookingDetailPage() {
             await bookingService.updateBookingStatus(id as string, 'PAID', finalAmount);
             toast.success("Checkout successful", { id: loadingToast });
             await loadData();
-            setIsRatingOpen(true);
         } catch (err) {
             toast.error("Failed to checkout", { id: loadingToast });
         } finally {
@@ -383,59 +379,65 @@ export default function BookingDetailPage() {
                         )}
                     </div>
                 } />
-                <DetailItem label="Current Cost" value={formatMoney(elapsedCost)} />
+                {elapsedCost > 0 && <DetailItem label="Current Cost" value={formatMoney(elapsedCost)} />}
                 <DetailItem label="Final Total" value={formatMoney(booking.totalAmount)} />
                 <DetailItem label="Arrival Time" value={formatDateTime(booking.startTime)} />
                 <DetailItem label="Departure Time" value={booking.endTime ? formatDateTime(booking.endTime) : "Open Ended"} />
-                <DetailItem label="Booking Type" value={<Badge variant="secondary" className="font-bold">{booking.type}</Badge>} />
-                <DetailItem label="Booking Method" value={<Badge variant="outline" className="font-bold uppercase tracking-widest text-[9px]">{booking.bookingMethod}</Badge>} />
+                {booking.type && <DetailItem label="Booking Type" value={<Badge variant="secondary" className="font-bold">{booking.type}</Badge>} />}
+                {booking.bookingMethod && <DetailItem label="Booking Method" value={<Badge variant="outline" className="font-bold uppercase tracking-widest text-[9px]">{booking.bookingMethod}</Badge>} />}
             </DetailSection>
 
             <DetailSection title="Financial Reconciliation">
                 <DetailItem label="Final Amount" value={<span className="text-lg font-black text-slate-900">{formatMoney(booking.totalAmount)}</span>} />
-                <DetailItem label="Service Fee" value={formatMoney(booking.commissionAmount || 0)} className="text-primary" />
-                <DetailItem label="VAT Amount" value={formatMoney(booking.vatAmount || 0)} className="text-slate-500" />
+                {booking.commissionAmount !== null && <DetailItem label="Service Fee" value={formatMoney(booking.commissionAmount || 0)} className="text-primary" />}
+                {booking.vatAmount !== null && <DetailItem label="VAT Amount" value={formatMoney(booking.vatAmount || 0)} className="text-slate-500" />}
                 <DetailItem label="VAT Status" value={booking.isVatIncluded ? "Included" : "Excluded"} />
-                <DetailItem label="Payment Source" value={
-                    <div className="flex items-center gap-2">
-                        <CreditCard className="h-3 w-3 text-slate-400" />
-                        <span className="font-bold">{booking.paymentMethod}</span>
-                    </div>
-                } />
+                {booking.paymentMethod && (
+                    <DetailItem label="Payment Source" value={
+                        <div className="flex items-center gap-2">
+                            <CreditCard className="h-3 w-3 text-slate-400" />
+                            <span className="font-bold">{booking.paymentMethod}</span>
+                        </div>
+                    } />
+                )}
                 <DetailItem label="Ref Number" value={<span className="font-mono text-xs font-bold text-slate-500">{booking.referenceNo}</span>} />
                 <DetailItem label="Settlement" value={<Badge className={booking.status === 'PAID' ? "bg-green-100 text-green-700 hover:bg-green-100" : "bg-amber-100 text-amber-700 hover:bg-amber-100"}>{booking.status === 'PAID' ? "SETTLED" : "OUTSTANDING"}</Badge>} />
             </DetailSection>
 
             <DetailSection title="Customer & Asset Registry">
-                <DetailItem label="Customer Name" value={booking.customerName} />
-                <DetailItem label="Contact Phone" value={booking.customerPhone} />
+                {booking.customerName && <DetailItem label="Customer Name" value={booking.customerName} />}
+                {booking.customerPhone && <DetailItem label="Contact Phone" value={booking.customerPhone} />}
                 <DetailItem label="Plate Number" value={
                     <span className="bg-slate-900 text-white px-3 py-1 rounded-lg font-mono font-black text-sm tracking-wider uppercase">
                         {booking.plateNumber}
                     </span>
                 } />
-                <DetailItem label="Vehicle Asset" value={`${booking.vehicleName || booking.vehicleBrand || "—"} ${booking.vehicleModel || ""}`} />
+                {(booking.vehicleName || booking.vehicleBrand || booking.vehicleModel) && (
+                    <DetailItem label="Vehicle Asset" value={`${booking.vehicleName || booking.vehicleBrand || ""} ${booking.vehicleModel || ""}`.trim() || "—"} />
+                )}
             </DetailSection>
 
             <DetailSection title="System Traceability">
                 <DetailItem label="Created At" value={dayjs(booking.createdAt).format("MMM D, YYYY HH:mm")} />
                 <DetailItem label="Last Change" value={dayjs(booking.updatedAt).format("MMM D, YYYY HH:mm")} />
-                <DetailItem label="Originator" value={
-                    <div className="flex flex-col">
-                        <span className="font-bold text-slate-900">{booking.createdBy?.fullName || "—"}</span>
-                        {booking.createdBy?.email && <span className="text-[10px] text-slate-400 font-medium">{booking.createdBy.email}</span>}
-                    </div>
-                } />
-                <DetailItem label="Confirmed By" value={
-                    booking.status === 'PAID' ? (
+                {booking.createdBy && (
+                    <DetailItem label="Originator" value={
+                        <div className="flex flex-col">
+                            <span className="font-bold text-slate-900">{booking.createdBy?.fullName || "—"}</span>
+                            {booking.createdBy?.email && <span className="text-[10px] text-slate-400 font-medium">{booking.createdBy.email}</span>}
+                        </div>
+                    } />
+                )}
+                {booking.status === 'PAID' && booking.confirmedBy && (
+                    <DetailItem label="Confirmed By" value={
                         <div className="flex flex-col">
                             <span className="font-bold text-green-600">{booking.confirmedBy?.fullName || "—"}</span>
                             {booking.confirmedBy?.email && <span className="text-[10px] text-slate-400 font-medium">{booking.confirmedBy.email}</span>}
                         </div>
-                    ) : "Awaiting Confirmation"
-                } />
-                <DetailItem label="Parking Terminal" value={parking?.name} />
-                <DetailItem label="Terminal Addr" value={[parking?.city, parking?.subCity, parking?.woreda].filter(Boolean).join(", ")} />
+                    } />
+                )}
+                {parking?.name && <DetailItem label="Parking Terminal" value={parking?.name} />}
+                {(parking?.city || parking?.subCity) && <DetailItem label="Terminal Addr" value={[parking?.city, parking?.subCity, parking?.woreda].filter(Boolean).join(", ")} />}
             </DetailSection>
 
             {/* Redesigned Extension Dialog */}
@@ -501,12 +503,6 @@ export default function BookingDetailPage() {
                 </DialogContent>
             </Dialog>
 
-            <RatingDialog
-                open={isRatingOpen}
-                onOpenChange={setIsRatingOpen}
-                parkingId={booking.parkingId}
-                parkingName={parking?.name}
-            />
         </DetailLayout>
     );
 }

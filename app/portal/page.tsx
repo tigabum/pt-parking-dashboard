@@ -70,12 +70,12 @@ function PortalContent() {
     // Flow State
     const [step, setStep] = useState(0); // 0: Lookup, 1: Full Form
 
-    // Form States - Pre-filled for Testing
-    const [phoneNumber, setPhoneNumber] = useState("0911000000");
-    const [plateNumber, setPlateNumber] = useState("A1234");
-    const [fullName, setFullName] = useState("Guest Tester");
-    const [brand, setBrand] = useState("Toyota");
-    const [model, setModel] = useState("Corolla");
+    // Form States - Empty defaults for production feel
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [plateNumber, setPlateNumber] = useState("");
+    const [fullName, setFullName] = useState("");
+    const [brand, setBrand] = useState("");
+    const [model, setModel] = useState("");
     const [isExistingCustomer, setIsExistingCustomer] = useState(false);
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string | null>(null);
     const [paymentCategory, setPaymentCategory] = useState<PaymentMethod>(PaymentMethod.INCASH);
@@ -119,23 +119,46 @@ function PortalContent() {
 
                 // Check Persistence
                 const savedPhone = localStorage.getItem("guestPhone");
+                const savedPlate = localStorage.getItem("guestPlate");
+                const savedBookingId = localStorage.getItem("activeBookingId");
+
                 if (savedPhone && mounted) {
-                    setPhoneNumber(savedPhone);
                     const finalPhone = normalizePhone(savedPhone);
                     try {
-                        const existingBooking = await portalService.getActiveBooking(finalPhone, parkingId);
+                        const existingBooking = await portalService.getActiveBooking(finalPhone, parkingId, savedBookingId || undefined);
                         if (existingBooking && mounted) {
                             setActiveBooking(existingBooking);
+                            setPhoneNumber(savedPhone);
                             setPlateNumber(existingBooking.plateNumber || "");
                             setFullName(existingBooking.customerName || "");
                             localStorage.setItem("guestPlate", existingBooking.plateNumber || "");
-                        } else {
+                            localStorage.setItem("activeBookingId", existingBooking.id);
+                        } else if (mounted) {
                             // Pre-fill fields from storage even if no active booking found
-                            const savedPlate = localStorage.getItem("guestPlate");
                             if (savedPlate) setPlateNumber(savedPlate);
+
+                            // If we have phone, check if customer exists to pre-fill name
+                            const result = await portalService.checkCustomer(finalPhone);
+                            if (result.exists && mounted) {
+                                setFullName(result.fullName || "");
+                                setIsExistingCustomer(true);
+                            }
                         }
                     } catch (err) {
                         console.error("Error checking active booking", err);
+                    }
+                } else if (savedBookingId && mounted) {
+                    // Try recovery by ID only if phone is missing
+                    try {
+                        const existingBooking = await portalService.getActiveBooking(null, parkingId, savedBookingId);
+                        if (existingBooking && mounted) {
+                            setActiveBooking(existingBooking);
+                            setPhoneNumber(existingBooking.customerPhone || "");
+                            setPlateNumber(existingBooking.plateNumber || "");
+                            setFullName(existingBooking.customerName || "");
+                        }
+                    } catch (e) {
+                        console.error("Recovery by ID failed", e);
                     }
                 }
             } catch (e: any) {
@@ -157,13 +180,20 @@ function PortalContent() {
 
         const pollInterval = setInterval(async () => {
             try {
-                const updated = await portalService.getActiveBooking(normalizePhone(phoneNumber), parkingId!);
+                // Use ID for precise polling if available, fallback to phone
+                const updated = await portalService.getActiveBooking(
+                    normalizePhone(phoneNumber),
+                    parkingId!,
+                    activeBooking.id
+                );
+
                 if (updated) {
-                    setActiveBooking(updated);
-                    if (updated.status === 'PAID') {
+                    // Check if status changed from something else to PAID
+                    if (updated.status === 'PAID' && activeBooking.status !== 'PAID') {
                         toast.success("Payment confirmed! You may now exit.");
                         setIsRatingOpen(true);
                     }
+                    setActiveBooking(updated);
                 }
             } catch (e) {
                 console.warn("Polling error", e);
@@ -171,7 +201,7 @@ function PortalContent() {
         }, 5000);
 
         return () => clearInterval(pollInterval);
-    }, [activeBooking?.status, phoneNumber, parkingId, activeBooking]);
+    }, [activeBooking?.status, phoneNumber, parkingId, activeBooking?.id]);
 
     const normalizePhone = (phone: string) => {
         let p = phone.replace(/\D/g, '');
@@ -189,14 +219,14 @@ function PortalContent() {
             const normalized = normalizePhone(phoneNumber);
             const upperPlate = plateNumber.toUpperCase().replace(/\s/g, '');
 
-            // 1. Check for PENDING or ACTIVE bookings (Resume session if exists)
+            // 1. Check for PENDING or ACTIVE or COMPLETED bookings (Resume session if exists)
             if (parkingId) {
-                // Relaxed lookup: Find by phone only to handle inconsistent plate formatting or entry
                 const active = await portalService.getActiveBooking(normalized, parkingId);
-                if (active && (active.status === 'PENDING' || active.status === 'ACTIVE' || active.status === 'COMPLETED')) {
+                if (active && (active.status === 'PENDING' || active.status === 'ACTIVE' || active.status === 'COMPLETED' || active.status === 'PAID')) {
                     setActiveBooking(active);
                     localStorage.setItem("guestPhone", phoneNumber);
-                    localStorage.setItem("guestPlate", plateNumber);
+                    localStorage.setItem("guestPlate", plateNumber || active.plateNumber || "");
+                    localStorage.setItem("activeBookingId", active.id);
                     toast.success("Welcome back! Your session has been resumed.");
                     setSearching(false);
                     return;
@@ -310,6 +340,7 @@ function PortalContent() {
                 setActiveBooking(response.data.booking);
                 localStorage.setItem("guestPhone", phoneNumber);
                 localStorage.setItem("guestPlate", plateNumber);
+                localStorage.setItem("activeBookingId", response.data.booking.id);
                 toast.success(response.message || "Parking Session Started!");
                 return;
             }
@@ -441,8 +472,9 @@ function PortalContent() {
                         <CardContent className="p-10 text-center space-y-6">
                             <Button
                                 onClick={() => {
-                                    localStorage.removeItem("activeBookingId"); // In case we added it
-                                    window.location.reload();
+                                    localStorage.removeItem("activeBookingId");
+                                    setActiveBooking(null);
+                                    setStep(0);
                                 }}
                                 className="w-full h-14 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-black uppercase tracking-widest transition-all active:scale-95 border-none shadow-none text-xs"
                             >
@@ -565,12 +597,12 @@ function PortalContent() {
                                             <div className="space-y-3 px-1">
                                                 <Label className="text-[10px] uppercase font-black text-primary tracking-[0.2em] ml-1">Customer Phone *</Label>
                                                 <div className="relative group">
-                                                    <Phone className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
+                                                    <Phone className="absolute left-5 sm:left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                                     <Input
                                                         value={phoneNumber}
                                                         onChange={(e) => setPhoneNumber(e.target.value)}
-                                                        placeholder="Enter Phone Number"
-                                                        className="h-16 pl-14 rounded-2xl bg-slate-50/50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-xl px-6"
+                                                        placeholder="Phone Number"
+                                                        className="h-14 sm:h-16 pl-14 rounded-2xl bg-slate-50/50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-lg sm:text-xl px-4 sm:px-6"
                                                     />
                                                 </div>
                                             </div>
@@ -578,12 +610,12 @@ function PortalContent() {
                                             <div className="space-y-3 px-1">
                                                 <Label className="text-[10px] uppercase font-black text-primary tracking-[0.2em] ml-1">Vehicle Plate *</Label>
                                                 <div className="relative group">
-                                                    <Car className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
+                                                    <Car className="absolute left-5 sm:left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
                                                     <Input
                                                         value={plateNumber}
                                                         onChange={(e) => setPlateNumber(e.target.value.toUpperCase())}
-                                                        placeholder="Enter Plate Number"
-                                                        className="h-16 pl-14 rounded-2xl bg-slate-50/50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 font-mono font-black uppercase tracking-widest text-2xl px-6"
+                                                        placeholder="Plate Number"
+                                                        className="h-14 sm:h-16 pl-14 rounded-2xl bg-slate-50/50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 font-mono font-black uppercase tracking-widest text-lg sm:text-2xl px-4 sm:px-6"
                                                     />
                                                 </div>
                                             </div>
@@ -594,8 +626,8 @@ function PortalContent() {
                                 <div className="flex justify-center pt-6">
                                     <Button
                                         onClick={handleLookup}
-                                        disabled={searching}
-                                        className="h-16 w-full sm:w-auto sm:px-16 rounded-[1.5rem] bg-[#0066FF] hover:bg-[#0052CC] text-white font-black flex items-center justify-center gap-3 active:scale-95 transition-all text-xs uppercase tracking-[0.3em] border-none shadow-none"
+                                        disabled={searching || !phoneNumber || !plateNumber}
+                                        className="h-14 sm:h-16 w-full sm:w-auto sm:px-16 rounded-[1.5rem] bg-[#0066FF] hover:bg-[#0052CC] text-white font-black flex items-center justify-center gap-3 active:scale-95 transition-all text-xs uppercase tracking-[0.3em] border-none shadow-none disabled:opacity-50 disabled:scale-100"
                                     >
                                         {searching ? <Loader2 className="h-5 w-5 animate-spin" /> : <Search className="h-5 w-5" />}
                                         Initialize Entrance
@@ -614,7 +646,7 @@ function PortalContent() {
                                                 value={fullName}
                                                 onChange={(e) => setFullName(e.target.value)}
                                                 placeholder="Enter Full Name"
-                                                className="h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-lg px-6"
+                                                className="h-14 sm:h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-base sm:text-lg px-6"
                                             />
                                         </div>
 
@@ -624,7 +656,7 @@ function PortalContent() {
                                                 value={brand}
                                                 onChange={(e) => setBrand(e.target.value)}
                                                 placeholder="Enter Vehicle Brand"
-                                                className="h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-lg px-6"
+                                                className="h-14 sm:h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-base sm:text-lg px-6"
                                             />
                                         </div>
 
@@ -634,14 +666,14 @@ function PortalContent() {
                                                 value={model}
                                                 onChange={(e) => setModel(e.target.value)}
                                                 placeholder="Enter Model"
-                                                className="h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-lg px-6"
+                                                className="h-14 sm:h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-base sm:text-lg px-6"
                                             />
                                         </div>
 
                                         <div className="space-y-3">
                                             <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Billing Tier</Label>
                                             <Select value={bookingType} onValueChange={(v: any) => setBookingType(v)}>
-                                                <SelectTrigger className="w-full h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-lg px-6">
+                                                <SelectTrigger className="w-full h-14 sm:h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-base sm:text-lg px-6">
                                                     <SelectValue />
                                                 </SelectTrigger>
                                                 <SelectContent className="rounded-2xl border-none shadow-2xl">
@@ -771,7 +803,7 @@ function PortalContent() {
                                     <div className="w-full sm:w-auto order-1 sm:order-2">
                                         <Button
                                             onClick={handleStartParking}
-                                            className="w-full h-16 sm:px-12 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-black transition-all active:scale-95 uppercase tracking-[0.2em] border-none text-[10px] flex items-center justify-center gap-3 shadow-none"
+                                            className="w-full h-14 sm:h-16 sm:px-12 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-black transition-all active:scale-95 uppercase tracking-[0.2em] border-none text-[10px] flex items-center justify-center gap-3 shadow-none"
                                         >
                                             Secure & Start Session
                                             <Zap className="h-4 w-4 fill-white animate-pulse" />
@@ -825,8 +857,11 @@ function ActiveSessionView({ booking, onEnd, onOpenExtend }: { booking: Booking;
                 <div className="h-16 w-16 sm:h-20 sm:w-20 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 text-slate-900 relative z-10">
                     <Clock className="h-8 w-8 sm:h-10 sm:w-10 animate-pulse" />
                 </div>
-                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-1 tracking-tight relative z-10">Live Tracking</h2>
-                <p className="text-slate-300 font-bold uppercase tracking-[0.3em] text-[8px] relative z-10">Session Monitored In Real-Time</p>
+                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-1 tracking-tight relative z-10 flex items-center justify-center gap-3">
+                    Live Tracking
+                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                </h2>
+                <p className="text-slate-300 font-bold uppercase tracking-[0.3em] text-[8px] relative z-10">Syncing with Station Radar</p>
             </div>
             <CardContent className="p-6 sm:p-10 text-center space-y-8 sm:space-y-12">
                 <div className="relative py-8 sm:py-12">
@@ -834,6 +869,7 @@ function ActiveSessionView({ booking, onEnd, onOpenExtend }: { booking: Booking;
                         startTime={booking.startTime}
                         endTime={booking.endTime || new Date().toISOString()}
                         displayTime={elapsed}
+                        size={typeof window !== 'undefined' && window.innerWidth < 640 ? 220 : 300}
                     />
                 </div>
 
@@ -1051,12 +1087,13 @@ function CheckoutView({
                 <div className="bg-[#0089cf] p-6 flex flex-col items-center justify-center text-white relative overflow-hidden">
                     <div className="absolute inset-0 bg-white/10" />
                     <h5 className="relative z-10 text-2xl font-black uppercase tracking-tight mb-2">Telebirr Payment</h5>
-                    <div className="relative z-10 scale-75">
+                    <div className="relative z-10">
                         <CircularSessionCounter
                             startTime={booking.startTime}
                             endTime={booking.endTime || new Date().toISOString()}
                             displayTime="00:00:00"
                             stopped={true}
+                            size={typeof window !== 'undefined' && window.innerWidth < 640 ? 180 : 220}
                         />
                     </div>
                     <p className="text-white/60 font-bold uppercase tracking-[0.3em] text-[8px] relative z-10 mt-2">Secure Merchant Tunnel</p>
