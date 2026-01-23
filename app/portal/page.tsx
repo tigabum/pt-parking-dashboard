@@ -144,6 +144,9 @@ function PortalContent() {
 
                             if (mounted) setLoading(false);
                             return; // Stop here, we found it
+                        } else {
+                            // Clear if it's no longer an active/pending session
+                            localStorage.removeItem("activeBookingId");
                         }
                     } catch (e) {
                         console.warn("ID recovery failed, falling back to phone lookup", e);
@@ -167,7 +170,8 @@ function PortalContent() {
                             localStorage.setItem("activeBookingId", existingBooking.id);
                             localStorage.setItem("guestPlate", existingBooking.plateNumber || "");
                         } else {
-                            // No session, but pre-fill profile
+                            // No session or session finalized, clear storage and pre-fill profile
+                            localStorage.removeItem("activeBookingId");
                             setPhoneNumber(savedPhone);
                             const savedPlate = localStorage.getItem("guestPlate");
                             if (savedPlate) setPlateNumber(savedPlate);
@@ -209,10 +213,18 @@ function PortalContent() {
                 );
 
                 if (updated) {
-                    // Check if status changed from something else to PAID
-                    if (updated.status === 'PAID' && activeBooking.status !== 'PAID') {
-                        toast.success("Payment confirmed! You may now exit.");
-                        setIsRatingOpen(true);
+                    // Check if status changed from something else to a finalized state
+                    const isNewFinalized = ['PAID', 'CANCELLED', 'REFUNDED'].includes(updated.status) && activeBooking.status !== updated.status;
+
+                    if (isNewFinalized) {
+                        if (updated.status === 'PAID') {
+                            toast.success("Payment confirmed! You may now exit.");
+                            setIsRatingOpen(true);
+                        } else if (updated.status === 'CANCELLED') {
+                            toast.error("Your booking has been cancelled.");
+                        }
+                        // Clean up session storage now that it's finalized
+                        localStorage.removeItem("activeBookingId");
                     }
                     setActiveBooking(updated);
                 }
