@@ -14,7 +14,8 @@ import {
     LogOut,
     Check,
     Star,
-    PlayCircle
+    PlayCircle,
+    Trash2
 } from "lucide-react";
 import dayjs from "dayjs";
 import { getImageUrl } from "@/lib/utils";
@@ -51,6 +52,7 @@ export default function BookingDetailPage() {
     const [booking, setBooking] = useState<BookingResponse | null>(null);
     const [parking, setParking] = useState<ParkingResponse | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isActionInProgress, setIsActionInProgress] = useState(false);
     const [sessionDuration, setSessionDuration] = useState<string>("00:00:00");
     const [isExtendOpen, setIsExtendOpen] = useState(false);
     const [newEndTime, setNewEndTime] = useState("");
@@ -206,13 +208,14 @@ export default function BookingDetailPage() {
 
         const loadingToast = toast.loading("Confirming payment...");
         try {
-            setLoading(true);
+            setIsActionInProgress(true);
             await bookingService.updateBookingStatus(id as string, 'PAID', booking.totalAmount);
-            loadData();
+            toast.success("Payment Verified Successfully", { id: loadingToast });
+            await loadData();
         } catch (err) {
             toast.error("Failed to confirm payment", { id: loadingToast });
         } finally {
-            setLoading(false);
+            setIsActionInProgress(false);
         }
     };
 
@@ -222,14 +225,14 @@ export default function BookingDetailPage() {
 
         const loadingToast = toast.loading("Confirming arrival...");
         try {
-            setLoading(true);
+            setIsActionInProgress(true);
             await bookingService.updateBookingStatus(id as string, BookingStatus.ACTIVE);
             toast.success("Arrival confirmed. Session active.", { id: loadingToast });
-            loadData();
+            await loadData();
         } catch (err) {
             toast.error("Failed to confirm arrival", { id: loadingToast });
         } finally {
-            setLoading(false);
+            setIsActionInProgress(false);
         }
     };
 
@@ -239,7 +242,7 @@ export default function BookingDetailPage() {
 
         const loadingToast = toast.loading("Processing checkout...");
         try {
-            setLoading(true);
+            setIsActionInProgress(true);
             // For hourly sessions, we use the elapsed cost calculated by the timer
             const finalAmount = booking.type === 'HOURLY' ? elapsedCost.toFixed(2) : booking.totalAmount;
             await bookingService.updateBookingStatus(id as string, 'PAID', finalAmount);
@@ -248,7 +251,7 @@ export default function BookingDetailPage() {
         } catch (err) {
             toast.error("Failed to checkout", { id: loadingToast });
         } finally {
-            setLoading(false);
+            setIsActionInProgress(false);
         }
     };
 
@@ -260,11 +263,28 @@ export default function BookingDetailPage() {
             await bookingService.extendBooking(id as string, newEndTime);
             toast.success("Booking extended successfully", { id: loadingToast });
             setIsExtendOpen(false);
-            loadData();
+            await loadData();
         } catch (err) {
             toast.error("Failed to extend booking", { id: loadingToast });
         } finally {
             setExtending(false);
+        }
+    };
+
+    const handleCancel = async () => {
+        if (!id || !booking) return;
+        if (!confirm(`Are you sure you want to cancel booking ${booking.referenceNo}?`)) return;
+
+        const loadingToast = toast.loading("Cancelling booking...");
+        try {
+            setIsActionInProgress(true);
+            await bookingService.updateBookingStatus(id as string, BookingStatus.CANCELLED);
+            toast.success("Booking Cancelled", { id: loadingToast });
+            await loadData();
+        } catch (err) {
+            toast.error("Failed to cancel booking", { id: loadingToast });
+        } finally {
+            setIsActionInProgress(false);
         }
     };
 
@@ -320,37 +340,51 @@ export default function BookingDetailPage() {
                     {canExtend && booking.status === "PENDING" && (
                         <Button
                             onClick={handleConfirmArrival}
+                            disabled={isActionInProgress}
                             className="h-10 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[10px] uppercase tracking-widest transition-all"
                         >
-                            <PlayCircle className="h-4 w-4 mr-2" />
+                            {isActionInProgress ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <PlayCircle className="h-4 w-4 mr-2" />}
                             Confirm Arrival
                         </Button>
                     )}
                     {canExtend && booking.status === "ACTIVE" && (
                         <Button
                             onClick={handleCheckout}
+                            disabled={isActionInProgress}
                             className="h-10 px-4 rounded-xl bg-orange-600 hover:bg-orange-500 text-white font-bold text-[10px] uppercase tracking-widest transition-all"
                         >
-                            <LogOut className="h-4 w-4 mr-2" />
+                            {isActionInProgress ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <LogOut className="h-4 w-4 mr-2" />}
                             Checkout
                         </Button>
                     )}
                     {canExtend && (booking.status === "PENDING" || booking.status === "COMPLETED") && (
                         <Button
                             onClick={handleConfirmPayment}
+                            disabled={isActionInProgress}
                             className="h-10 px-4 rounded-xl bg-green-600 hover:bg-green-500 text-white font-bold text-[10px] uppercase tracking-widest transition-all"
                         >
-                            <CreditCard className="h-4 w-4 mr-2" />
+                            {isActionInProgress ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CreditCard className="h-4 w-4 mr-2" />}
                             {booking.status === "COMPLETED" ? "Confirm Payment Request" : "Confirm Payment"}
+                        </Button>
+                    )}
+                    {canExtend && booking.status === "PENDING" && (
+                        <Button
+                            onClick={handleCancel}
+                            disabled={isActionInProgress}
+                            variant="destructive"
+                            className="h-10 px-4 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all"
+                        >
+                            {isActionInProgress ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Trash2 className="h-4 w-4 mr-2" />}
+                            Cancel Booking
                         </Button>
                     )}
                     <Badge
                         className={cn(
-                            booking.status === BookingStatus.PAID ? 'bg-emerald-500 shadow-emerald-100 text-white' :
-                                booking.status === BookingStatus.ACTIVE ? 'bg-primary shadow-primary/20 text-white' :
-                                    booking.status === BookingStatus.CANCELLED ? 'bg-red-500 shadow-red-100 text-white' :
-                                        booking.status === BookingStatus.EXPIRED ? 'bg-slate-500 shadow-slate-100 text-white' :
-                                            booking.status === BookingStatus.REFUNDED ? 'bg-primary shadow-primary/20 text-white' :
+                            (booking.status as any) === 'PAID' || (booking.status as any) === 'COMPLETED' ? 'bg-emerald-500 shadow-emerald-100 text-white' :
+                                (booking.status as any) === 'ACTIVE' ? 'bg-blue-600 shadow-blue-100 text-white' :
+                                    (booking.status as any) === 'CANCELLED' ? 'bg-red-500 shadow-red-100 text-white' :
+                                        (booking.status as any) === 'EXPIRED' ? 'bg-slate-500 shadow-slate-100 text-white' :
+                                            (booking.status as any) === 'REFUNDED' ? 'bg-indigo-500 shadow-indigo-100 text-white' :
                                                 'bg-amber-500 shadow-amber-100 text-white'
                         )}
                     >

@@ -35,6 +35,7 @@ export default function BookingsPage() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [spaces, setSpaces] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [actionId, setActionId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Pagination State
@@ -156,11 +157,14 @@ export default function BookingsPage() {
 
     const loadingToast = toast.loading("Verifying payment...");
     try {
+      setActionId(row.id);
       await bookingService.updateBookingStatus(row.id, BookingStatus.PAID);
       toast.success("Payment Verified Successfully", { id: loadingToast });
-      loadData(page);
+      await loadData(page);
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Verification failed", { id: loadingToast });
+    } finally {
+      setActionId(null);
     }
   };
 
@@ -173,11 +177,34 @@ export default function BookingsPage() {
 
     const loadingToast = toast.loading("Confirming arrival...");
     try {
+      setActionId(row.id);
       await bookingService.updateBookingStatus(row.id, BookingStatus.ACTIVE);
       toast.success("Arrival Confirmed. Session Started.", { id: loadingToast });
-      loadData(page);
+      await loadData(page);
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Confirmation failed", { id: loadingToast });
+    } finally {
+      setActionId(null);
+    }
+  };
+
+  const handleCancel = async (row: any) => {
+    if (!hasPermission(PERMISSIONS.BOOKING_UPDATE)) {
+      return toast.error("Required permission: Update Booking");
+    }
+    const confirm = window.confirm(`Are you sure you want to cancel booking ${row.referenceNo}? This will release the spot.`);
+    if (!confirm) return;
+
+    const loadingToast = toast.loading("Cancelling booking...");
+    try {
+      setActionId(row.id);
+      await bookingService.updateBookingStatus(row.id, BookingStatus.CANCELLED);
+      toast.success("Booking Cancelled", { id: loadingToast });
+      await loadData(page);
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Cancellation failed", { id: loadingToast });
+    } finally {
+      setActionId(null);
     }
   };
 
@@ -299,6 +326,8 @@ export default function BookingsPage() {
           loading={loading}
           onConfirmPayment={handleConfirmPayment}
           onConfirmArrival={handleConfirmArrival}
+          onCancel={handleCancel}
+          actionId={actionId}
         />
       </div>
 

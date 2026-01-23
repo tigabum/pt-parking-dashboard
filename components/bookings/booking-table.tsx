@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Eye, Banknote, PlayCircle } from "lucide-react";
+import { MoreVertical, Eye, Banknote, PlayCircle, Loader2, Trash2 } from "lucide-react";
 
 import {
   ReusableTable,
@@ -31,24 +31,34 @@ type Props = {
   loading?: boolean;
   onConfirmPayment?: (row: BookingResponse) => void;
   onConfirmArrival?: (row: BookingResponse) => void;
+  onCancel?: (row: BookingResponse) => void;
+  actionId?: string | null;
 };
 
 import { useAuth } from "@/app/context/auth-context";
 import { PERMISSIONS } from "@/lib/permissions";
 
-function BookingActions({ row, onDetail, onConfirmPayment, onConfirmArrival }: { row: BookingResponse, onDetail: (r: BookingResponse) => void, onConfirmPayment?: (r: BookingResponse) => void, onConfirmArrival?: (r: BookingResponse) => void }) {
+function BookingActions({ row, onDetail, onConfirmPayment, onConfirmArrival, onCancel, isBusy }: {
+  row: BookingResponse,
+  onDetail: (r: BookingResponse) => void,
+  onConfirmPayment?: (r: BookingResponse) => void,
+  onConfirmArrival?: (r: BookingResponse) => void,
+  onCancel?: (r: BookingResponse) => void,
+  isBusy?: boolean
+}) {
   const { hasPermission } = useAuth();
   const showConfirmPayment = (row.status === 'PENDING' || row.status === 'COMPLETED') && hasPermission(PERMISSIONS.BOOKING_UPDATE);
   const showConfirmArrival = row.status === 'PENDING' && hasPermission(PERMISSIONS.BOOKING_UPDATE);
+  const showCancel = row.status === 'PENDING' && (hasPermission(PERMISSIONS.BOOKING_UPDATE) || hasPermission(PERMISSIONS.BOOKING_DELETE));
   const showDetail = hasPermission(PERMISSIONS.BOOKING_VIEW);
 
-  if (!showDetail && !showConfirmPayment && !showConfirmArrival) return null;
+  if (!showDetail && !showConfirmPayment && !showConfirmArrival && !showCancel) return null;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-          <MoreVertical className="h-4 w-4" />
+        <Button variant="ghost" size="icon" className="h-8 w-8 p-0" disabled={isBusy}>
+          {isBusy ? <Loader2 className="h-4 w-4 animate-spin text-primary" /> : <MoreVertical className="h-4 w-4" />}
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
@@ -73,6 +83,13 @@ function BookingActions({ row, onDetail, onConfirmPayment, onConfirmArrival }: {
             <span>Confirm Payment</span>
           </DropdownMenuItem>
         )}
+
+        {showCancel && onCancel && (
+          <DropdownMenuItem onClick={() => onCancel(row)} className="text-red-500 hover:text-red-600 focus:text-red-600">
+            <Trash2 className="mr-2 h-4 w-4" />
+            <span>Cancel Booking</span>
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -84,6 +101,8 @@ export function BookingsTable({
   loading,
   onConfirmPayment,
   onConfirmArrival,
+  onCancel,
+  actionId,
 }: Props) {
   const router = useRouter();
   const onDetail = (booking: BookingResponse) => router.push(`/dashboard/bookings/${booking.id}`);
@@ -143,7 +162,14 @@ export function BookingsTable({
     {
       key: "actions",
       header: "Actions",
-      render: (row) => <BookingActions row={row} onDetail={onDetail} onConfirmPayment={onConfirmPayment} onConfirmArrival={onConfirmArrival} />
+      render: (row) => <BookingActions
+        row={row}
+        onDetail={onDetail}
+        onConfirmPayment={onConfirmPayment}
+        onConfirmArrival={onConfirmArrival}
+        onCancel={onCancel}
+        isBusy={actionId === row.id}
+      />
     }
   ];
 

@@ -537,8 +537,18 @@ function PortalContent() {
 
                             <div className="flex flex-col gap-3">
                                 <Button
+                                    onClick={() => setIsRatingOpen(true)}
+                                    className="w-full h-14 rounded-[1.25rem] bg-amber-500 hover:bg-amber-600 text-white font-black uppercase tracking-[0.2em] transition-all active:scale-95 border-none shadow-lg shadow-amber-200 text-[10px] flex items-center justify-center gap-3"
+                                >
+                                    <Sparkles className="h-4 w-4" />
+                                    Rate our Service
+                                </Button>
+
+                                <Button
                                     onClick={() => {
                                         localStorage.removeItem("activeBookingId");
+                                        localStorage.removeItem("guestPhone");
+                                        localStorage.removeItem("guestPlate");
                                         setActiveBooking(null);
                                         setStep(0);
                                     }}
@@ -1091,6 +1101,14 @@ function CheckoutView({
                             </p>
                         </div>
                     </div>
+                    {/* Allow guest to change payment method if wait is too long */}
+                    <Button
+                        variant="ghost"
+                        onClick={() => onSelectPayment("TRANSFER")} // This will trigger category switch in parent
+                        className="text-[9px] font-black text-slate-300 underline underline-offset-4 decoration-slate-200 uppercase tracking-widest hover:text-primary transition-colors mt-4"
+                    >
+                        Change Payment Method
+                    </Button>
                 </CardContent>
             </Card>
         );
