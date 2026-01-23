@@ -559,15 +559,14 @@ function PortalContent() {
                                 <Button
                                     onClick={() => {
                                         localStorage.removeItem("activeBookingId");
-                                        localStorage.removeItem("guestPhone");
-                                        localStorage.removeItem("guestPlate");
                                         setActiveBooking(null);
                                         setStep(0);
+                                        toast.info("Session cleared. You can now start a new booking if needed.");
                                     }}
                                     className="w-full h-16 rounded-[1.5rem] bg-slate-900 hover:bg-black text-white font-black uppercase tracking-[0.2em] transition-all active:scale-95 border-none shadow-none text-[10px] flex items-center justify-center gap-3"
                                 >
                                     <LogOut className="h-4 w-4" />
-                                    Leave Terminal
+                                    New Booking / Leave
                                 </Button>
                                 <p className="text-[9px] text-slate-300 text-center font-bold uppercase tracking-[0.2em]">Session ID: {activeBooking.id.substring(0, 8)}</p>
                             </div>
