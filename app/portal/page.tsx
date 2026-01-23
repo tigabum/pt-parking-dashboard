@@ -243,6 +243,46 @@ function PortalContent() {
         return `+251${p}`;
     };
 
+    // Auto-populate effect
+    useEffect(() => {
+        const timeoutId = setTimeout(async () => {
+            const hasValidPhone = phoneNumber && phoneNumber.length >= 9;
+            const hasValidPlate = plateNumber && plateNumber.length >= 4;
+
+            if (hasValidPhone || hasValidPlate) {
+                // If we already have a full session resumed, don't keep looking up
+                if (activeBooking && (activeBooking.status === 'PENDING' || activeBooking.status === 'ACTIVE' || activeBooking.status === 'WAITING_CONFIRMATION')) return;
+
+                try {
+                    const normalized = hasValidPhone ? normalizePhone(phoneNumber) : undefined;
+                    const upperPlate = hasValidPlate ? plateNumber.toUpperCase().replace(/\s/g, '') : undefined;
+
+                    const result = await portalService.checkCustomer(normalized, upperPlate);
+                    if (result.exists) {
+                        if (result.fullName && !fullName) setFullName(result.fullName);
+                        if (result.phoneNumber && !phoneNumber) setPhoneNumber(result.phoneNumber);
+
+                        setIsExistingCustomer(true);
+
+                        if (hasValidPlate) {
+                            const cleanPlateStr = (p: string) => p.replace(/\s/g, '').toUpperCase();
+                            const target = upperPlate || "";
+                            const vehicle = result.vehicles?.find((v: any) => cleanPlateStr(v.plateNumber) === target);
+                            if (vehicle) {
+                                if (!brand) setBrand(vehicle.brand || "");
+                                if (!model) setModel(vehicle.model || "");
+                            }
+                        }
+                    }
+                } catch (e) {
+                    // Fail silently for background lookup
+                }
+            }
+        }, 800);
+
+        return () => clearTimeout(timeoutId);
+    }, [phoneNumber, plateNumber, isExistingCustomer, activeBooking]);
+
     const handleLookup = async () => {
         if (!phoneNumber || phoneNumber.length < 9) return toast.error("Valid phone number is required");
         if (!plateNumber || plateNumber.length < 5) return toast.error("Valid plate number is required");
@@ -267,12 +307,12 @@ function PortalContent() {
             }
 
             // 2. If no active/pending session, look up customer profile to pre-fill
-            const result = await portalService.checkCustomer(normalized);
+            const result = await portalService.checkCustomer(normalized, upperPlate);
             if (result.exists) {
                 setFullName(result.fullName || "");
                 setIsExistingCustomer(true);
 
-                // Find vehicle by plate
+                // Pre-fill vehicle details from the search result
                 const cleanPlate = (p: string) => p.replace(/\s/g, '').toUpperCase();
                 const targetPlate = cleanPlate(plateNumber);
                 const vehicle = result.vehicles?.find((v: any) => cleanPlate(v.plateNumber) === targetPlate);
@@ -281,7 +321,7 @@ function PortalContent() {
                     setBrand(vehicle.brand || "");
                     setModel(vehicle.model || "");
                 }
-                toast.success(`Profile found!`);
+                toast.success(`Profile found! Welcome back, ${result.fullName}`);
             } else {
                 setIsExistingCustomer(false);
                 setFullName("");

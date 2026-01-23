@@ -273,9 +273,10 @@ export function BookingForm({
 
       setBooking(prev => ({
         ...prev,
-        customerName: foundCustomer?.fullName || prev.customerName,
+        customerName: foundCustomer?.fullName || foundVehicle?.customer?.fullName || prev.customerName,
+        customerPhone: foundCustomer?.phoneNumber || foundVehicle?.customer?.phoneNumber || prev.customerPhone,
         vehicleBrand: foundVehicle?.brand || prev.vehicleBrand,
-        vehicleName: foundVehicle?.name || prev.vehicleName || foundVehicle?.brand || "",
+        vehicleName: foundVehicle?.model || prev.vehicleName || foundVehicle?.brand || "",
         plateNumber: foundVehicle?.plateNumber || prev.plateNumber,
       }));
 

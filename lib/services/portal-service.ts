@@ -12,9 +12,12 @@ export const portalService = {
     },
 
     // 2. Check Customer Status
-    checkCustomer: async (phone: string) => {
-        return apiClient.get<{ exists: boolean; fullName?: string; vehicles?: any[] }>(
-            `/customers/check-status?phone=${phone}`
+    checkCustomer: async (phone?: string, plate?: string) => {
+        let url = `/customers/check-status?`;
+        if (phone) url += `phone=${phone}&`;
+        if (plate) url += `plate=${plate}&`;
+        return apiClient.get<{ exists: boolean; fullName?: string; phoneNumber?: string; vehicles?: any[] }>(
+            url
         ).then(handleResponse);
     },
 
