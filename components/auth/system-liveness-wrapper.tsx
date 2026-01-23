@@ -24,9 +24,11 @@ export function SystemLivenessWrapper({ children }: { children: React.ReactNode 
         )
     }
 
-    if (!isServerActive) {
-        return <ServerDown />
-    }
+    // if (!isServerActive) {
+    //     return <ServerDown />
+    // }
+
+    return <>{children}</>
 
     return <>{children}</>
 }
