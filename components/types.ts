@@ -18,6 +18,7 @@ export enum BookingMethod {
 export enum BookingStatus {
   PENDING = "PENDING",
   ACTIVE = "ACTIVE",
+  WAITING_CONFIRMATION = "WAITING_CONFIRMATION",
   PAID = "PAID",
   CANCELLED = "CANCELLED",
 }

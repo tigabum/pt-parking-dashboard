@@ -131,7 +131,7 @@ function PortalContent() {
                             savedBookingId
                         );
 
-                        if (existingBooking && ['PENDING', 'ACTIVE'].includes(existingBooking.status)) {
+                        if (existingBooking && ['PENDING', 'ACTIVE', 'WAITING_CONFIRMATION'].includes(existingBooking.status)) {
                             console.log("Resumed session via ID", existingBooking);
                             setActiveBooking(existingBooking);
                             if (existingBooking.customerPhone) {
@@ -160,7 +160,7 @@ function PortalContent() {
                     try {
                         const existingBooking = await portalService.getActiveBooking(finalPhone, parkingId);
 
-                        if (existingBooking && ['PENDING', 'ACTIVE'].includes(existingBooking.status)) {
+                        if (existingBooking && ['PENDING', 'ACTIVE', 'WAITING_CONFIRMATION'].includes(existingBooking.status)) {
                             console.log("Resumed session via Phone", existingBooking);
                             setActiveBooking(existingBooking);
                             setPhoneNumber(savedPhone);
@@ -255,7 +255,7 @@ function PortalContent() {
             // 1. Check for PENDING or ACTIVE or COMPLETED bookings (Resume session if exists)
             if (parkingId) {
                 const active = await portalService.getActiveBooking(normalized, parkingId);
-                if (active && (active.status === 'PENDING' || active.status === 'ACTIVE' || active.status === 'COMPLETED')) {
+                if (active && (active.status === 'PENDING' || active.status === 'ACTIVE' || active.status === 'WAITING_CONFIRMATION')) {
                     setActiveBooking(active);
                     localStorage.setItem("guestPhone", phoneNumber);
                     localStorage.setItem("guestPlate", plateNumber || active.plateNumber || "");

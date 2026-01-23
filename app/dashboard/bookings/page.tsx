@@ -250,6 +250,7 @@ export default function BookingsPage() {
               <SelectContent className="rounded-xl">
                 <SelectItem value="ALL">All Status</SelectItem>
                 <SelectItem value={BookingStatus.ACTIVE}>Active</SelectItem>
+                <SelectItem value={BookingStatus.WAITING_CONFIRMATION}>Waiting Confirmation</SelectItem>
                 <SelectItem value={BookingStatus.PAID}>Paid</SelectItem>
                 <SelectItem value={BookingStatus.PENDING}>Pending</SelectItem>
                 <SelectItem value={BookingStatus.CANCELLED}>Cancelled</SelectItem>

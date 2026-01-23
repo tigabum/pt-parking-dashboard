@@ -7,7 +7,7 @@ const statusColorMap: Record<string, string> = {
   CANCELLED: "bg-red-100 text-red-700",
   DISABLED: "bg-gray-100 text-gray-700",
   // Legacy aliases
-  COMPLETED: "bg-emerald-100 text-emerald-700",
+  WAITING_CONFIRMATION: "bg-indigo-100 text-indigo-700",
 };
 
 export const statusColumn = <T extends { status?: string }>(): Column<T> => ({
