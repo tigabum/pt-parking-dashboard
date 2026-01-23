@@ -131,7 +131,7 @@ function PortalContent() {
                             savedBookingId
                         );
 
-                        if (existingBooking && ['PENDING', 'ACTIVE', 'COMPLETED', 'PAID'].includes(existingBooking.status)) {
+                        if (existingBooking && ['PENDING', 'ACTIVE', 'COMPLETED'].includes(existingBooking.status)) {
                             console.log("Resumed session via ID", existingBooking);
                             setActiveBooking(existingBooking);
                             if (existingBooking.customerPhone) {
@@ -157,7 +157,7 @@ function PortalContent() {
                     try {
                         const existingBooking = await portalService.getActiveBooking(finalPhone, parkingId);
 
-                        if (existingBooking && ['PENDING', 'ACTIVE', 'COMPLETED', 'PAID'].includes(existingBooking.status)) {
+                        if (existingBooking && ['PENDING', 'ACTIVE', 'COMPLETED'].includes(existingBooking.status)) {
                             console.log("Resumed session via Phone", existingBooking);
                             setActiveBooking(existingBooking);
                             setPhoneNumber(savedPhone);
@@ -243,7 +243,7 @@ function PortalContent() {
             // 1. Check for PENDING or ACTIVE or COMPLETED bookings (Resume session if exists)
             if (parkingId) {
                 const active = await portalService.getActiveBooking(normalized, parkingId);
-                if (active && (active.status === 'PENDING' || active.status === 'ACTIVE' || active.status === 'COMPLETED' || active.status === 'PAID')) {
+                if (active && (active.status === 'PENDING' || active.status === 'ACTIVE' || active.status === 'COMPLETED')) {
                     setActiveBooking(active);
                     localStorage.setItem("guestPhone", phoneNumber);
                     localStorage.setItem("guestPlate", plateNumber || active.plateNumber || "");
@@ -889,8 +889,8 @@ function ActiveSessionView({ booking, onEnd, onOpenExtend }: { booking: Booking;
                 {/* Brand Header */}
                 <div className="space-y-6">
                     <div className="flex items-center justify-center gap-2">
-                        <div className="h-8 w-8 bg-[#0066FF] rounded-lg flex items-center justify-center text-white font-black italic">
-                            P
+                        <div className="h-10 w-10 rounded-xl overflow-hidden shadow-lg border border-slate-100">
+                            <img src="/login-brand.png" alt="Logo" className="w-full h-full object-cover" />
                         </div>
                         <h1 className="text-2xl font-black text-slate-900 tracking-tight">
                             <span className="text-[#0066FF]">GELAGLE</span> PARKING

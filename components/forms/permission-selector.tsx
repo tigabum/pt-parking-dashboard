@@ -119,11 +119,12 @@ export function PermissionSelector({
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent
-                    className="w-[var(--radix-popover-trigger-width)] min-w-[320px] md:min-w-[480px] p-0 rounded-2xl shadow-2xl border-primary/20 overflow-hidden z-[9999]"
+                    className="w-[var(--radix-popover-trigger-width)] min-w-[320px] md:min-w-[480px] p-0 rounded-2xl shadow-2xl border-primary/20 overflow-hidden z-[9999] flex flex-col max-h-[400px]"
                     align="start"
                     side="bottom"
                     sideOffset={8}
                     avoidCollisions={true}
+                    collisionPadding={20}
                 >
                     <div className="p-4 border-b bg-slate-50/50 space-y-3">
                         <div className="relative">
@@ -147,7 +148,7 @@ export function PermissionSelector({
                             </button>
                         </div>
                     </div>
-                    <ScrollArea className="max-h-[480px]">
+                    <ScrollArea className="max-h-[300px] overflow-y-auto">
                         <div className="p-2 space-y-4">
                             {Object.entries(filteredCategories).map(
                                 ([category, perms]) => {
