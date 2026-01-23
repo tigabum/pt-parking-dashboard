@@ -608,7 +608,7 @@ function PortalContent() {
                         <ParkingCircle className="h-5 w-5" />
                     </div>
                     <h2 className="text-lg font-black text-slate-900 uppercase tracking-tight">
-                        Client Hub
+                        Gelagle Park
                     </h2>
                 </div>
                 <div className="flex items-center gap-3">
@@ -654,8 +654,8 @@ function PortalContent() {
                                         <Input
                                             value={plateNumber}
                                             onChange={(e) => setPlateNumber(e.target.value.toUpperCase())}
-                                            placeholder="Select Plate Code"
-                                            className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary/20"
+                                            placeholder="Vehicle Plate Number"
+                                            className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-xs placeholder:text-slate-300 placeholder:font-medium focus-visible:ring-2 focus-visible:ring-primary/20"
                                         />
                                     </div>
 
@@ -667,8 +667,8 @@ function PortalContent() {
                                             type="tel"
                                             value={phoneNumber}
                                             onChange={(e) => setPhoneNumber(e.target.value)}
-                                            placeholder="+251 9-------"
-                                            className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary/20"
+                                            placeholder="Your Phone Number"
+                                            className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-xs placeholder:text-slate-300 placeholder:font-medium focus-visible:ring-2 focus-visible:ring-primary/20"
                                         />
                                     </div>
                                 </div>
@@ -681,9 +681,6 @@ function PortalContent() {
                                     >
                                         {searching ? <Loader2 className="h-5 w-5 animate-spin" /> : "Register"}
                                     </Button>
-                                    <p className="text-center text-xs text-slate-400 mt-4 font-medium">
-                                        Powered by USP Services
-                                    </p>
                                 </div>
                             </div>
                         )}
@@ -704,10 +701,10 @@ function PortalContent() {
                                             <Input
                                                 value={fullName}
                                                 onChange={(e) => setFullName(e.target.value)}
-                                                placeholder="Enter Full Name"
+                                                placeholder="Full Name"
                                                 readOnly={isExistingCustomer}
                                                 className={cn(
-                                                    "h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary/20",
+                                                    "h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-xs placeholder:text-slate-300 placeholder:font-medium focus-visible:ring-2 focus-visible:ring-primary/20",
                                                     isExistingCustomer && "bg-emerald-50 text-emerald-900 pl-10"
                                                 )}
                                             />
@@ -721,8 +718,8 @@ function PortalContent() {
                                             <Input
                                                 value={brand}
                                                 onChange={(e) => setBrand(e.target.value)}
-                                                placeholder="Toyota"
-                                                className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary/20"
+                                                placeholder="Vehicle Brand"
+                                                className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-xs placeholder:text-slate-300 placeholder:font-medium focus-visible:ring-2 focus-visible:ring-primary/20"
                                             />
                                         </div>
                                         <div className="space-y-2">
@@ -730,8 +727,8 @@ function PortalContent() {
                                             <Input
                                                 value={model}
                                                 onChange={(e) => setModel(e.target.value)}
-                                                placeholder="Corolla"
-                                                className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary/20"
+                                                placeholder="Vehicle Model"
+                                                className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-xs placeholder:text-slate-300 placeholder:font-medium focus-visible:ring-2 focus-visible:ring-primary/20"
                                             />
                                         </div>
                                     </div>
@@ -755,7 +752,7 @@ function PortalContent() {
                                             type="datetime-local"
                                             value={startTime}
                                             onChange={(e) => setStartTime(e.target.value)}
-                                            className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary/20"
+                                            className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-xs placeholder:text-slate-300 placeholder:font-medium focus-visible:ring-2 focus-visible:ring-primary/20"
                                         />
                                     </div>
 
@@ -845,8 +842,7 @@ function PortalContent() {
                                             onClick={handleStartParking}
                                             className="w-full h-14 sm:h-16 sm:px-12 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-black transition-all active:scale-95 uppercase tracking-[0.2em] border-none text-[10px] flex items-center justify-center gap-3 shadow-none"
                                         >
-                                            Secure & Start Session
-                                            <Zap className="h-4 w-4 fill-white animate-pulse" />
+                                            Start
                                         </Button>
                                     </div>
                                 </div>
@@ -900,7 +896,7 @@ function ActiveSessionView({ booking, onEnd, onOpenExtend }: { booking: Booking;
                             P
                         </div>
                         <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-                            <span className="text-[#0066FF]">USP</span> PARKING
+                            <span className="text-[#0066FF]">GELAGLE</span> PARKING
                         </h1>
                     </div>
                 </div>
