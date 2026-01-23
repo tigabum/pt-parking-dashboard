@@ -33,20 +33,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
 
       await fetch(`${API_CONFIG.BASE_URL}/auth/user/pre-login?email=ping_test`, {
-        method: 'GET',
+        method: 'POST', // Try POST as GET might be rejected by some proxies/nest method guards
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'ping_test' }),
         signal: controller.signal
+      }).then(res => {
+        // We don't care about the 404/400/401 here, just that we got a response
+        return res;
       }).catch(err => {
-        // If it's just a 4xx/5xx it means server is up
-        // If it's a network error (failed to fetch), it's down
-        if (err.name === 'AbortError' || err.message.includes('Failed to fetch')) {
-          throw err;
-        }
+        // If it's a network error, it will throw. We catch it here.
+        throw err;
       });
 
       clearTimeout(timeoutId);
       setIsServerActive(true)
     } catch (error) {
-      console.error("Backend server is unreachable:", error)
+      // console.warn("Backend connection check failed (silent):", error) 
+      // Don't log error to avoid user confusion
       setIsServerActive(false)
     } finally {
       setIsCheckingServer(false)
