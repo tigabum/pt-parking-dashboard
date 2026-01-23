@@ -37,14 +37,14 @@ const navigationItems = [
     showInParkingDashboard: false,
   },
   {
-    label: "Parking Users",
+    label: "Users",
     href: "/dashboard/parking-users",
     icon: UserCog,
     permission: PERMISSIONS.USER_VIEW,
     showInParkingDashboard: true,
   },
   {
-    label: "Parking Settings",
+    label: "Parkings",
     href: "/dashboard/parkings",
     icon: ParkingCircle,
     permission: PERMISSIONS.PARKING_VIEW,
@@ -86,7 +86,7 @@ const navigationItems = [
     showInParkingDashboard: false,
   },
   {
-    label: "Password Reset",
+    label: "Reset Password",
     href: "/dashboard/forgot-password",
     icon: KeyRound,
     permission: PERMISSIONS.SETTINGS_RESET_PASSWORD,

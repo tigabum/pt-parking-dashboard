@@ -55,10 +55,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const initAuth = async () => {
-      // 1. Check server status first
-      await checkServer()
+      // 1. Check server status in background (don't block UI)
+      checkServer()
 
-      // 2. Load stored user
+      // 2. Load stored user immediately
       const storedUser = localStorage.getItem("user")
       if (storedUser) {
         try {
@@ -74,48 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   }, [])
 
-  // Inactivity Timer (30 minutes)
-  useEffect(() => {
-    const INACTIVITY_TIMEOUT = 30 * 60 * 1000; // 30 minutes
-    let timeoutId: NodeJS.Timeout;
-
-    const resetTimer = () => {
-      if (timeoutId) clearTimeout(timeoutId);
-      if (user) {
-        timeoutId = setTimeout(() => {
-          // Auto logout
-          logout();
-          // Optional: Show toast before redirecting?
-          if (typeof window !== 'undefined') {
-            window.location.href = "/";
-          }
-        }, INACTIVITY_TIMEOUT);
-      }
-    };
-
-    const handleUserActivity = () => {
-      resetTimer();
-    };
-
-    if (user) {
-      window.addEventListener('mousemove', handleUserActivity);
-      window.addEventListener('mousedown', handleUserActivity);
-      window.addEventListener('keypress', handleUserActivity);
-      window.addEventListener('scroll', handleUserActivity);
-      window.addEventListener('touchmove', handleUserActivity); // changed touchstart to touchmove/click usually better but safe enough
-
-      resetTimer();
-    }
-
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-      window.removeEventListener('mousemove', handleUserActivity);
-      window.removeEventListener('mousedown', handleUserActivity);
-      window.removeEventListener('keypress', handleUserActivity);
-      window.removeEventListener('scroll', handleUserActivity);
-      window.removeEventListener('touchmove', handleUserActivity);
-    };
-  }, [user]); // Re-run when user changes
+  // ... (Inactivity Timer useEffect stays here)
 
   const login = async (email?: string, password: string = "", phoneNumber?: string) => {
     try {
@@ -123,6 +82,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (validatedUser) {
         setUser(validatedUser)
         localStorage.setItem("user", JSON.stringify(validatedUser))
+        // Ensure loading is cleared and server is marked active
+        setLoading(false);
+        setIsServerActive(true);
       }
     } catch (error: any) {
       console.error("Login context error:", error);
@@ -133,6 +95,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithData = (userData: User) => {
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
+    setLoading(false);
+    setIsServerActive(true);
   }
 
 

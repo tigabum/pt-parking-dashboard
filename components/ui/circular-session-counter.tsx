@@ -147,33 +147,11 @@ export function CircularSessionCounter({ startTime, endTime, displayTime, stoppe
             </svg>
 
             <div className="absolute text-center z-20 flex flex-col items-center justify-center p-4">
-                <div className="flex items-center justify-center gap-2 mb-2 bg-[#0066FF]/5 px-3 py-1.5 rounded-full border border-primary/5">
-                    <div className="h-4 w-4 rounded-full bg-primary flex items-center justify-center shrink-0 shadow-lg shadow-primary/20">
-                        <Zap className="h-2 w-2 text-white fill-white animate-pulse" />
-                    </div>
-                    <span className="text-[10px] font-black uppercase text-primary tracking-[0.2em] antialiased">Live Radar Session</span>
-                </div>
-
                 <div
-                    className="font-mono font-black text-slate-900 tracking-tighter tabular-nums leading-none select-none"
-                    style={{ fontSize: size * 0.17 }}
+                    className="font-black text-slate-900 tracking-tighter tabular-nums leading-none select-none"
+                    style={{ fontSize: size * 0.18 }}
                 >
                     {liveTime}
-                </div>
-
-                <div className="mt-4 sm:mt-6">
-                    <div className="px-5 py-2.5 bg-slate-900 border border-slate-800 rounded-2xl flex flex-col items-center gap-1 shadow-2xl shadow-slate-300 transition-transform hover:scale-105 active:scale-95 cursor-default">
-                        <div className="flex items-center gap-2">
-                            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                            <p
-                                className="font-black text-white uppercase tracking-[0.2em] leading-none"
-                                style={{ fontSize: Math.max(8, size * 0.028) }}
-                            >
-                                {Math.round(percentage)}% Complete
-                            </p>
-                        </div>
-                        <p className="text-[7px] font-bold text-slate-500 uppercase tracking-widest">Digital Terminal Sync Active</p>
-                    </div>
                 </div>
             </div>
         </div>

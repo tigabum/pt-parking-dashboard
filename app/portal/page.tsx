@@ -99,7 +99,7 @@ function PortalContent() {
 
     const [error, setError] = useState<string | null>(null);
 
-    // Initial Load
+    // Initial Load & Session Recovery
     useEffect(() => {
         let mounted = true;
 
@@ -111,55 +111,69 @@ function PortalContent() {
             }
 
             try {
-                // Fetch Parking
+                // 1. Fetch Parking Details
                 const response = await portalService.getParkingDetails(parkingId);
                 const parkingData = response.data || response;
                 if (mounted) {
                     setParking(parkingData);
                 }
 
-                // Check Persistence
+                // 2. Check Persistence / Recovery
                 const savedPhone = localStorage.getItem("guestPhone");
-                const savedPlate = localStorage.getItem("guestPlate");
                 const savedBookingId = localStorage.getItem("activeBookingId");
 
-                if (savedPhone && mounted) {
+                // Priority 1: If we know the phone, check for ANY active/pending booking first
+                if (savedPhone) {
                     const finalPhone = normalizePhone(savedPhone);
                     try {
-                        const existingBooking = await portalService.getActiveBooking(finalPhone, parkingId, savedBookingId || undefined);
-                        if (existingBooking && mounted) {
+                        // Check for existing session by Phone + Parking
+                        const existingBooking = await portalService.getActiveBooking(finalPhone, parkingId);
+
+                        if (existingBooking && ['PENDING', 'ACTIVE', 'COMPLETED', 'PAID'].includes(existingBooking.status) && mounted) {
+                            console.log("Resumed existing session via Phone query", existingBooking);
                             setActiveBooking(existingBooking);
                             setPhoneNumber(savedPhone);
                             setPlateNumber(existingBooking.plateNumber || "");
                             setFullName(existingBooking.customerName || "");
-                            localStorage.setItem("guestPlate", existingBooking.plateNumber || "");
+
+                            // Re-save specific ID to ensure sync
                             localStorage.setItem("activeBookingId", existingBooking.id);
+                            localStorage.setItem("guestPlate", existingBooking.plateNumber || "");
+
+                            toast.success("Active session found & resumed.");
                         } else if (mounted) {
-                            // Pre-fill fields from storage even if no active booking found
+                            // No active session found, but we know the user. Pre-fill profile.
+                            setPhoneNumber(savedPhone);
+                            const savedPlate = localStorage.getItem("guestPlate");
                             if (savedPlate) setPlateNumber(savedPlate);
 
-                            // If we have phone, check if customer exists to pre-fill name
                             const result = await portalService.checkCustomer(finalPhone);
-                            if (result.exists && mounted) {
+                            if (result.exists) {
                                 setFullName(result.fullName || "");
                                 setIsExistingCustomer(true);
+                                // Note: We don't auto-fill vehicle here unless plate matches later
                             }
                         }
                     } catch (err) {
-                        console.error("Error checking active booking", err);
+                        console.error("Error checking active booking by phone", err);
                     }
-                } else if (savedBookingId && mounted) {
-                    // Try recovery by ID only if phone is missing
+                }
+                // Priority 2: Fallback to ID recovery if phone didn't work or wasn't saved (orphaned ID)
+                else if (savedBookingId) {
                     try {
                         const existingBooking = await portalService.getActiveBooking(null, parkingId, savedBookingId);
                         if (existingBooking && mounted) {
                             setActiveBooking(existingBooking);
-                            setPhoneNumber(existingBooking.customerPhone || "");
+                            if (existingBooking.customerPhone) {
+                                setPhoneNumber(existingBooking.customerPhone);
+                                localStorage.setItem("guestPhone", existingBooking.customerPhone);
+                            }
                             setPlateNumber(existingBooking.plateNumber || "");
                             setFullName(existingBooking.customerName || "");
                         }
                     } catch (e) {
                         console.error("Recovery by ID failed", e);
+                        localStorage.removeItem("activeBookingId"); // Clear invalid ID
                     }
                 }
             } catch (e: any) {
@@ -311,11 +325,11 @@ function PortalContent() {
         try {
             toast.loading("Creating booking session...");
             // Recalculate times to ensure session starts at 00:00:00 relative to now
+            // Recalculate times. Open-ended session: Default to 1 hour initial duration.
             const now = new Date();
             const startObj = new Date(startTime);
-            const endObj = new Date(endTime);
-            const durationMs = endObj.getTime() - startObj.getTime();
-            const newEnd = new Date(now.getTime() + durationMs);
+            // Default End = Start + 1 hour
+            const newEnd = new Date(startObj.getTime() + 60 * 60 * 1000);
 
             const payload = {
                 parkingId: parking.id,
@@ -353,7 +367,13 @@ function PortalContent() {
         } catch (e: any) {
             toast.dismiss();
             console.error("Booking Create Error:", e);
-            toast.error(e.response?.data?.message || e.message || "Failed to start parking");
+            const msg = e.response?.data?.message;
+            if (Array.isArray(msg)) {
+                // Show first few errors to avoid spamming
+                msg.slice(0, 3).forEach((m: string) => toast.error(m));
+            } else {
+                toast.error(msg || e.message || "Failed to start parking");
+            }
         }
     };
 
@@ -605,197 +625,174 @@ function PortalContent() {
                     <div className="bg-white p-5 sm:p-8 md:p-10 rounded-[1.5rem] sm:rounded-[2.5rem] border shadow-sm space-y-8 md:space-y-10">
 
                         {step === 0 && (
-                            <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                <div className="space-y-10">
-                                    <div className="grid grid-cols-1 gap-8">
-                                        {/* Core Identification & Available Status */}
-                                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-slate-50 pb-8">
-                                            <div className="space-y-1.5 flex-1">
-                                                <Label className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Selected Location</Label>
-                                                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">
-                                                    {parking?.name || "Premium Station"}
-                                                </h1>
-                                            </div>
+                            <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-sm mx-auto w-full">
+                                <div className="text-center space-y-2 mb-4">
+                                    <div className="flex justify-center mb-2 text-primary">
+                                        <ParkingCircle className="h-10 w-10" />
+                                    </div>
+                                    <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+                                        {parking?.name || "Gelagle Park"}
+                                    </h1>
+                                    <h2 className="text-lg font-bold text-slate-900">
+                                        Guest Check-in
+                                    </h2>
+                                </div>
 
-                                            <div className="space-y-1.5 bg-slate-50 px-5 py-3 rounded-2xl border border-slate-100/50 w-fit">
-                                                <Label className="text-[9px] uppercase font-bold text-slate-400 tracking-widest">Real-time Status</Label>
-                                                <div className="flex items-center gap-2">
-                                                    <div className={cn("h-2 w-2 rounded-full", (parking?.availableSpots ?? 0) > 0 ? "bg-emerald-500 animate-pulse" : "bg-red-500")} />
-                                                    <p className={cn(
-                                                        "text-lg font-black tracking-tight",
-                                                        (parking?.availableSpots ?? 0) > 0 ? "text-emerald-700" : "text-red-600"
-                                                    )}>
-                                                        {parking?.availableSpots ?? 0} Vacant Spots
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                {/* "Parking Zone" Card Style */}
+                                <div className="bg-[#0066FF] w-full rounded-xl py-8 flex flex-col items-center justify-center text-white shadow-xl shadow-blue-900/10">
+                                    <p className="text-white/80 font-bold text-sm tracking-wide mb-1">Parking Location</p>
+                                    <h3 className="text-4xl font-black tracking-tighter uppercase">
+                                        {parking?.name ? parking.name.split(' ')[0] : 'GELAGLE'}
+                                    </h3>
+                                </div>
 
-                                        {/* REMOVED: Map, Address, Amenities, Entry Rates as per user request */}
+                                <div className="space-y-4 pt-2">
+                                    <div className="space-y-2">
+                                        <Label className="text-sm font-bold text-slate-800 ml-1">
+                                            License Plate
+                                        </Label>
+                                        <Input
+                                            value={plateNumber}
+                                            onChange={(e) => setPlateNumber(e.target.value.toUpperCase())}
+                                            placeholder="Select Plate Code"
+                                            className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary/20"
+                                        />
+                                    </div>
 
-                                        <div className="h-px bg-slate-100 my-2" />
-
-                                        {/* Primary Inputs */}
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div className="space-y-3 px-1">
-                                                <Label className="text-[10px] uppercase font-black text-primary tracking-[0.2em] ml-1">Customer Phone *</Label>
-                                                <div className="relative group">
-                                                    <Phone className="absolute left-5 sm:left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
-                                                    <Input
-                                                        value={phoneNumber}
-                                                        onChange={(e) => setPhoneNumber(e.target.value)}
-                                                        placeholder="Phone Number"
-                                                        className="h-14 sm:h-16 pl-14 rounded-2xl bg-slate-50/50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-lg sm:text-xl px-4 sm:px-6"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="space-y-3 px-1">
-                                                <Label className="text-[10px] uppercase font-black text-primary tracking-[0.2em] ml-1">Vehicle Plate *</Label>
-                                                <div className="relative group">
-                                                    <Car className="absolute left-5 sm:left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors" />
-                                                    <Input
-                                                        value={plateNumber}
-                                                        onChange={(e) => setPlateNumber(e.target.value.toUpperCase())}
-                                                        placeholder="Plate Number"
-                                                        className="h-14 sm:h-16 pl-14 rounded-2xl bg-slate-50/50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 font-mono font-black uppercase tracking-widest text-lg sm:text-2xl px-4 sm:px-6"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div className="space-y-2">
+                                        <Label className="text-sm font-bold text-slate-800 ml-1">
+                                            Phone Number
+                                        </Label>
+                                        <Input
+                                            type="tel"
+                                            value={phoneNumber}
+                                            onChange={(e) => setPhoneNumber(e.target.value)}
+                                            placeholder="+251 9-------"
+                                            className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary/20"
+                                        />
                                     </div>
                                 </div>
 
-                                <div className="flex justify-center pt-6">
+                                <div className="pt-8">
                                     <Button
                                         onClick={handleLookup}
                                         disabled={searching || !phoneNumber || !plateNumber}
-                                        className="h-14 sm:h-16 w-full sm:w-auto sm:px-16 rounded-[1.5rem] bg-[#0066FF] hover:bg-[#0052CC] text-white font-black flex items-center justify-center gap-3 active:scale-95 transition-all text-xs uppercase tracking-[0.3em] border-none shadow-none disabled:opacity-50 disabled:scale-100"
+                                        className="w-full h-14 bg-[#0066FF] hover:bg-[#0052CC] text-white rounded-xl font-bold text-lg shadow-lg active:scale-95 transition-all"
                                     >
-                                        {searching ? <Loader2 className="h-5 w-5 animate-spin" /> : <Search className="h-5 w-5" />}
-                                        Initialize Entrance
+                                        {searching ? <Loader2 className="h-5 w-5 animate-spin" /> : "Register"}
                                     </Button>
+                                    <p className="text-center text-xs text-slate-400 mt-4 font-medium">
+                                        Powered by USP Services
+                                    </p>
                                 </div>
                             </div>
                         )}
 
                         {step === 1 && (
-                            <div className="space-y-10 min-h-[550px] flex flex-col justify-between animate-in fade-in slide-in-from-right-4 duration-500 font-bold">
-                                <div className="space-y-10">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
-                                        <div className="space-y-3 col-span-1 md:col-span-2">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Legal Full Name *</Label>
+                            <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-500 max-w-sm mx-auto w-full">
+                                <div className="text-center mb-6">
+                                    <h2 className="text-xl font-black text-slate-900 tracking-tight">Complete Details</h2>
+                                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Finalize Check-in</p>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <Label className="text-sm font-bold text-slate-800 ml-1">
+                                            {isExistingCustomer ? "Customer Name" : "Full Name"}
+                                        </Label>
+                                        <div className="relative">
                                             <Input
                                                 value={fullName}
                                                 onChange={(e) => setFullName(e.target.value)}
                                                 placeholder="Enter Full Name"
-                                                className="h-14 sm:h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-base sm:text-lg px-6"
+                                                readOnly={isExistingCustomer}
+                                                className={cn(
+                                                    "h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary/20",
+                                                    isExistingCustomer && "bg-emerald-50 text-emerald-900 pl-10"
+                                                )}
                                             />
+                                            {isExistingCustomer && <BadgeCheck className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-emerald-500" />}
                                         </div>
+                                    </div>
 
-                                        <div className="space-y-3">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Vehicle Brand</Label>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label className="text-sm font-bold text-slate-800 ml-1">Brand</Label>
                                             <Input
                                                 value={brand}
                                                 onChange={(e) => setBrand(e.target.value)}
-                                                placeholder="Enter Vehicle Brand"
-                                                className="h-14 sm:h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-base sm:text-lg px-6"
+                                                placeholder="Toyota"
+                                                className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary/20"
                                             />
                                         </div>
-
-                                        <div className="space-y-3">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Model</Label>
+                                        <div className="space-y-2">
+                                            <Label className="text-sm font-bold text-slate-800 ml-1">Model</Label>
                                             <Input
                                                 value={model}
                                                 onChange={(e) => setModel(e.target.value)}
-                                                placeholder="Enter Model"
-                                                className="h-14 sm:h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-[#0066FF]/20 focus:bg-white focus:ring-4 focus:ring-[#0066FF]/5 transition-all font-bold text-base sm:text-lg px-6"
+                                                placeholder="Corolla"
+                                                className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary/20"
                                             />
                                         </div>
+                                    </div>
 
-                                        <div className="space-y-3">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Billing Tier</Label>
-                                            <Select value={bookingType} onValueChange={(v: any) => setBookingType(v)}>
-                                                <SelectTrigger className="w-full h-14 sm:h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-base sm:text-lg px-6">
-                                                    <SelectValue />
-                                                </SelectTrigger>
-                                                <SelectContent className="rounded-2xl border-none shadow-2xl">
-                                                    <SelectItem value="HOURLY" className="font-bold">Hourly Billing</SelectItem>
-                                                    <SelectItem value="DAILY" className="font-bold">Daily Pass</SelectItem>
-                                                    <SelectItem value="MONTHLY" className="font-bold">Monthly Plan</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
+                                    <div className="space-y-2">
+                                        <Label className="text-sm font-bold text-slate-800 ml-1">Billing Type</Label>
+                                        <Select value={bookingType} onValueChange={(v: any) => setBookingType(v)}>
+                                            <SelectTrigger className="w-full h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 focus:ring-primary/20">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent className="rounded-xl border-none shadow-xl">
+                                                <SelectItem value="HOURLY" className="font-bold py-3">Hourly Billing</SelectItem>
+                                                <SelectItem value="DAILY" className="font-bold py-3">Daily Pass</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
 
-                                        <div className="space-y-3">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Scheduled Start *</Label>
-                                            <div className="relative group">
-                                                <CalendarClock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors pointer-events-none" />
-                                                <Input
-                                                    type="datetime-local"
-                                                    value={startTime}
-                                                    onChange={(e) => setStartTime(e.target.value)}
-                                                    className="h-16 pl-14 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-lg px-6 block w-full"
-                                                />
-                                            </div>
-                                        </div>
+                                    <div className="space-y-2">
+                                        <Label className="text-sm font-bold text-slate-800 ml-1">Start Time</Label>
+                                        <Input
+                                            type="datetime-local"
+                                            value={startTime}
+                                            onChange={(e) => setStartTime(e.target.value)}
+                                            className="h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary/20"
+                                        />
+                                    </div>
 
-                                        <div className="space-y-3">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Expected End *</Label>
-                                            <div className="relative group">
-                                                <Clock className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-300 group-focus-within:text-primary transition-colors pointer-events-none" />
-                                                <Input
-                                                    type="datetime-local"
-                                                    value={endTime}
-                                                    onChange={(e) => setEndTime(e.target.value)}
-                                                    className="h-16 pl-14 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-lg px-6 block w-full"
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="space-y-3">
-                                            <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest ml-1">Payment Method</Label>
-                                            <Select value={paymentCategory} onValueChange={(v: any) => setPaymentCategory(v)}>
-                                                <SelectTrigger className="w-full h-16 rounded-2xl bg-slate-50 border-2 border-transparent focus:border-primary/20 focus:bg-white focus:ring-4 focus:ring-primary/5 transition-all font-bold text-lg px-6">
-                                                    <SelectValue />
-                                                </SelectTrigger>
-                                                <SelectContent className="rounded-2xl border-none shadow-2xl">
-                                                    <SelectItem value={PaymentMethod.INCASH} className="font-bold">In-Cash (Manual)</SelectItem>
-                                                    <SelectItem value={PaymentMethod.TRANSFER} className="font-bold">Transfer (Manual)</SelectItem>
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
+                                    <div className="space-y-2">
+                                        <Label className="text-sm font-bold text-slate-800 ml-1">Payment Method</Label>
+                                        <Select value={paymentCategory} onValueChange={(v: any) => setPaymentCategory(v)}>
+                                            <SelectTrigger className="w-full h-14 bg-slate-100 border-none rounded-xl text-base px-4 font-bold text-slate-900 focus:ring-primary/20">
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent className="rounded-xl border-none shadow-xl">
+                                                <SelectItem value={PaymentMethod.INCASH} className="font-bold py-3">Cash Payment</SelectItem>
+                                                <SelectItem value={PaymentMethod.TRANSFER} className="font-bold py-3">Digital Transfer</SelectItem>
+                                            </SelectContent>
+                                        </Select>
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6 pt-10 border-t border-slate-50">
+                                <div className="grid grid-cols-2 gap-4 pt-6">
                                     <Button
                                         variant="ghost"
                                         onClick={() => setStep(0)}
-                                        className="w-full sm:w-auto h-14 px-8 rounded-2xl font-bold text-slate-400 flex items-center justify-center gap-2 hover:bg-primary/10 hover:text-primary transition-all order-2 sm:order-1"
+                                        className="h-14 rounded-xl font-bold text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all"
                                     >
-                                        <ChevronLeft className="h-5 w-5" /> Back
+                                        Back
                                     </Button>
-                                    <div className="w-full sm:w-auto order-1 sm:order-2">
-                                        <Button
-                                            onClick={() => {
-                                                if ((parking?.availableSpots ?? 0) === 0) {
-                                                    toast.error("No available spots. This parking is currently full.");
-                                                    return;
-                                                }
-                                                setStep(2);
-                                            }}
-                                            disabled={(parking?.availableSpots ?? 0) === 0}
-                                            className={cn(
-                                                "w-full h-14 px-10 rounded-2xl text-white font-black flex items-center justify-center gap-2.5 transition-all active:scale-95 uppercase tracking-widest border-none text-xs shadow-none",
-                                                (parking?.availableSpots ?? 0) === 0
-                                                    ? "bg-slate-300 cursor-not-allowed"
-                                                    : "bg-[#0066FF] hover:bg-[#0052CC]"
-                                            )}
-                                        >
-                                            Review Details
-                                            <ArrowRight className="h-4 w-4" />
-                                        </Button>
-                                    </div>
+                                    <Button
+                                        onClick={() => {
+                                            if ((parking?.availableSpots ?? 0) === 0) {
+                                                toast.error("No available spots.");
+                                                return;
+                                            }
+                                            setStep(2);
+                                        }}
+                                        className="h-14 bg-[#0066FF] hover:bg-[#0052CC] text-white rounded-xl font-bold text-lg shadow-lg active:scale-95 transition-all w-full"
+                                    >
+                                        Next
+                                    </Button>
                                 </div>
                             </div>
                         )}
@@ -821,9 +818,9 @@ function PortalContent() {
                                             <p className="text-slate-900 font-black text-sm">{bookingType} Plan</p>
                                         </div>
                                         <div className="p-5 bg-slate-50 rounded-2xl space-y-1 border border-transparent hover:border-slate-100 transition-all sm:col-span-2">
-                                            <p className="text-[8px] uppercase font-bold text-slate-400 tracking-[0.2em]">Time Window Allocation</p>
+                                            <p className="text-[8px] uppercase font-bold text-slate-400 tracking-[0.2em]">Session Start</p>
                                             <p className="text-slate-900 font-black text-xs">
-                                                {dayjs(startTime).format("MMM D, HH:mm")} — {dayjs(endTime).format("MMM D, HH:mm")}
+                                                {dayjs(startTime).format("MMM D, HH:mm")} — <span className="text-emerald-600">Open Session</span>
                                             </p>
                                         </div>
                                         <div className="p-6 bg-primary/[0.03] border border-primary/10 rounded-2xl space-y-1 sm:col-span-2 shadow-sm">
@@ -892,73 +889,61 @@ function ActiveSessionView({ booking, onEnd, onOpenExtend }: { booking: Booking;
     }, [booking.startTime]);
 
     const canCheckout = elapsedMinutes >= MIN_PARKING_MINUTES;
-    const remainingMinutes = Math.max(0, MIN_PARKING_MINUTES - elapsedMinutes);
 
     return (
-        <Card className="w-full max-w-lg border-none shadow-[0_40px_100px_rgba(0,0,0,0.1)] rounded-[2rem] sm:rounded-[3rem] overflow-hidden bg-white">
-            <div className="p-6 sm:p-10 text-center border-b border-slate-50 relative overflow-hidden">
-                <div className="h-16 w-16 sm:h-20 sm:w-20 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 text-slate-900 relative z-10">
-                    <Clock className="h-8 w-8 sm:h-10 sm:w-10 animate-pulse" />
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-1 tracking-tight relative z-10 flex items-center justify-center gap-3">
-                    Live Tracking
-                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                </h2>
-                <p className="text-slate-300 font-bold uppercase tracking-[0.3em] text-[8px] relative z-10">Syncing with Station Radar</p>
-            </div>
-            <CardContent className="p-6 sm:p-10 text-center space-y-8 sm:space-y-12">
-                <div className="relative py-8 sm:py-12">
-                    <CircularSessionCounter
-                        startTime={booking.startTime}
-                        endTime={booking.endTime || new Date().toISOString()}
-                        displayTime={elapsed}
-                        size={typeof window !== 'undefined' && window.innerWidth < 640 ? 220 : 300}
-                    />
-                </div>
-
-                <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                    <div className="space-y-2 text-left">
-                        <Label className="text-[8px] uppercase font-black text-slate-300 tracking-widest ml-1">Plate</Label>
-                        <Input disabled value={booking.plateNumber} className="h-12 bg-slate-50 border-none font-black text-slate-900 opacity-100 rounded-xl" />
-                    </div>
-                    <div className="space-y-2 text-left">
-                        <Label className="text-[8px] uppercase font-black text-slate-300 tracking-widest ml-1">Started At</Label>
-                        <Input disabled value={new Date(booking.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} className="h-12 bg-slate-50 border-none font-bold text-slate-400 opacity-100 rounded-xl" />
-                    </div>
-                </div>
-
-                <div className="space-y-4 pt-2">
-                    {!canCheckout && (
-                        <div className="bg-slate-50 text-slate-400 p-4 rounded-xl text-[9px] font-bold flex items-center justify-center gap-2.5">
-                            <Info className="h-3.5 w-3.5" />
-                            <span>Security Lock: {MIN_PARKING_MINUTES}m ({remainingMinutes}m left)</span>
+        <div className="flex flex-col h-full min-h-[80vh] bg-white text-center justify-between py-10 px-6">
+            <div className="space-y-8 flex flex-col items-center">
+                {/* Brand Header */}
+                <div className="space-y-6">
+                    <div className="flex items-center justify-center gap-2">
+                        <div className="h-8 w-8 bg-[#0066FF] rounded-lg flex items-center justify-center text-white font-black italic">
+                            P
                         </div>
-                    )}
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <Button
-                            variant="outline"
-                            className="h-16 rounded-2xl font-black text-xs uppercase tracking-[0.2em] border-2 border-slate-100 text-slate-400 hover:bg-slate-50 hover:text-slate-600 transition-all active:scale-95"
-                            onClick={onOpenExtend}
-                        >
-                            Extend Session
-                        </Button>
-                        <Button
-                            className={cn(
-                                "h-16 rounded-2xl font-black text-xs transition-all active:scale-95 border-none uppercase tracking-[0.2em] shadow-none",
-                                canCheckout
-                                    ? "bg-[#0066FF] hover:bg-[#0052CC] text-white group"
-                                    : "bg-slate-50 text-slate-200 cursor-not-allowed"
-                            )}
-                            onClick={onEnd}
-                            disabled={!canCheckout}
-                        >
-                            {canCheckout ? "Checkout" : "WAITING..."}
-                        </Button>
+                        <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+                            <span className="text-[#0066FF]">USP</span> PARKING
+                        </h1>
                     </div>
                 </div>
-            </CardContent>
-        </Card>
+
+                <div className="space-y-4">
+                    <h2 className="text-3xl font-bold text-slate-900">Parking session</h2>
+                    <p className="text-slate-500 font-medium text-sm">Your session has started!</p>
+                </div>
+            </div>
+
+            {/* Counter */}
+            <div className="flex-1 flex items-center justify-center py-12">
+                <CircularSessionCounter
+                    startTime={booking.startTime}
+                    endTime={booking.endTime || new Date().toISOString()}
+                    displayTime={elapsed}
+                    size={260}
+                />
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col gap-4 w-full max-w-sm mx-auto">
+                <Button
+                    className={cn(
+                        "w-full h-16 rounded-xl font-bold text-base transition-all active:scale-95 border-none shadow-xl shadow-primary/20",
+                        canCheckout
+                            ? "bg-[#0066FF] hover:bg-[#0052CC] text-white"
+                            : "bg-slate-100 text-slate-300 cursor-not-allowed"
+                    )}
+                    onClick={onEnd}
+                    disabled={!canCheckout}
+                >
+                    {canCheckout ? "Checkout" : "Initializing..."}
+                </Button>
+                <Button
+                    variant="ghost"
+                    onClick={onOpenExtend}
+                    className="text-slate-400 font-bold hover:text-slate-600 hover:bg-transparent"
+                >
+                    Extend Session
+                </Button>
+            </div>
+        </div>
     );
 }
 
