@@ -785,11 +785,12 @@ export default function ParkingDetailPage() {
                       <td className="px-6 py-4 text-center">
                         <Badge className={cn(
                           "font-bold uppercase text-[10px] tracking-wider border-none shadow-none px-3 h-7 rounded-full",
-                          booking.status === "PAID" || booking.status === "COMPLETED" ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200" :
-                            booking.status === "ACTIVE" ? "bg-blue-100 text-blue-700 hover:bg-blue-200" :
-                              booking.status === "PENDING" ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200" :
-                                booking.status === "CANCELLED" ? "bg-red-100 text-red-700 hover:bg-red-200" :
-                                  "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                          (booking.status as any) === "PAID" ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200" :
+                            booking.status === "WAITING_CONFIRMATION" ? "bg-amber-100 text-amber-700 hover:bg-amber-200" :
+                              booking.status === "ACTIVE" ? "bg-blue-100 text-blue-700 hover:bg-blue-200" :
+                                booking.status === "PENDING" ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200" :
+                                  booking.status === "CANCELLED" ? "bg-red-100 text-red-700 hover:bg-red-200" :
+                                    "bg-slate-100 text-slate-600 hover:bg-slate-200"
                         )}>
                           {booking.status}
                         </Badge>
