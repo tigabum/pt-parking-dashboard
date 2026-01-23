@@ -87,7 +87,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("user", JSON.stringify(validatedUser))
       }
     } catch (error: any) {
-      console.error("Login context error:", error);
+      const errorMessage = error?.response?.data?.message || error?.message || "Login failed";
+      console.error("Login context error:", errorMessage, error);
       throw error;
     }
   }

@@ -18,11 +18,8 @@ export enum BookingMethod {
 export enum BookingStatus {
   PENDING = "PENDING",
   ACTIVE = "ACTIVE",
-  COMPLETED = "COMPLETED",
   PAID = "PAID",
   CANCELLED = "CANCELLED",
-  EXPIRED = "EXPIRED",
-  REFUNDED = "REFUNDED",
 }
 
 export enum ParkingStatus {

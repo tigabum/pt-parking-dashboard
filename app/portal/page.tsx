@@ -131,7 +131,7 @@ function PortalContent() {
                             savedBookingId
                         );
 
-                        if (existingBooking && ['PENDING', 'ACTIVE', 'COMPLETED'].includes(existingBooking.status)) {
+                        if (existingBooking && ['PENDING', 'ACTIVE'].includes(existingBooking.status)) {
                             console.log("Resumed session via ID", existingBooking);
                             setActiveBooking(existingBooking);
                             if (existingBooking.customerPhone) {
@@ -160,7 +160,7 @@ function PortalContent() {
                     try {
                         const existingBooking = await portalService.getActiveBooking(finalPhone, parkingId);
 
-                        if (existingBooking && ['PENDING', 'ACTIVE', 'COMPLETED'].includes(existingBooking.status)) {
+                        if (existingBooking && ['PENDING', 'ACTIVE'].includes(existingBooking.status)) {
                             console.log("Resumed session via Phone", existingBooking);
                             setActiveBooking(existingBooking);
                             setPhoneNumber(savedPhone);
@@ -557,6 +557,7 @@ function PortalContent() {
                                 </Button>
 
                                 <Button
+                                    id="btn-portal-new-booking"
                                     onClick={() => {
                                         localStorage.removeItem("activeBookingId");
                                         setActiveBooking(null);

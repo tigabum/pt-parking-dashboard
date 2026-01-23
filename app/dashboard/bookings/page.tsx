@@ -252,7 +252,6 @@ export default function BookingsPage() {
                 <SelectItem value={BookingStatus.ACTIVE}>Active</SelectItem>
                 <SelectItem value={BookingStatus.PAID}>Paid</SelectItem>
                 <SelectItem value={BookingStatus.PENDING}>Pending</SelectItem>
-                <SelectItem value={BookingStatus.COMPLETED}>Completed</SelectItem>
                 <SelectItem value={BookingStatus.CANCELLED}>Cancelled</SelectItem>
               </SelectContent>
             </Select>

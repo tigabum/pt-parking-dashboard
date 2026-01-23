@@ -47,7 +47,7 @@ function BookingActions({ row, onDetail, onConfirmPayment, onConfirmArrival, onC
   isBusy?: boolean
 }) {
   const { hasPermission } = useAuth();
-  const showConfirmPayment = (row.status === 'PENDING' || row.status === 'COMPLETED') && hasPermission(PERMISSIONS.BOOKING_UPDATE);
+  const showConfirmPayment = (row.status === 'PENDING') && hasPermission(PERMISSIONS.BOOKING_UPDATE);
   const showConfirmArrival = row.status === 'PENDING' && hasPermission(PERMISSIONS.BOOKING_UPDATE);
   const showCancel = row.status === 'PENDING' && (hasPermission(PERMISSIONS.BOOKING_UPDATE) || hasPermission(PERMISSIONS.BOOKING_DELETE));
   const showDetail = hasPermission(PERMISSIONS.BOOKING_VIEW);
