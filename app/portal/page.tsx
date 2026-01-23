@@ -122,27 +122,52 @@ function PortalContent() {
                 const savedPhone = localStorage.getItem("guestPhone");
                 const savedBookingId = localStorage.getItem("activeBookingId");
 
-                // Priority 1: If we know the phone, check for ANY active/pending booking first
+                // Priority 1: Check by specific Booking ID (Most reliable)
+                if (savedBookingId) {
+                    try {
+                        const existingBooking = await portalService.getActiveBooking(
+                            savedPhone ? normalizePhone(savedPhone) : null,
+                            parkingId,
+                            savedBookingId
+                        );
+
+                        if (existingBooking && ['PENDING', 'ACTIVE', 'COMPLETED', 'PAID'].includes(existingBooking.status)) {
+                            console.log("Resumed session via ID", existingBooking);
+                            setActiveBooking(existingBooking);
+                            if (existingBooking.customerPhone) {
+                                setPhoneNumber(existingBooking.customerPhone);
+                                localStorage.setItem("guestPhone", existingBooking.customerPhone);
+                            }
+                            // Ensure persistence
+                            localStorage.setItem("activeBookingId", existingBooking.id);
+                            localStorage.setItem("guestPlate", existingBooking.plateNumber || "");
+
+                            if (mounted) setLoading(false);
+                            return; // Stop here, we found it
+                        }
+                    } catch (e) {
+                        console.warn("ID recovery failed, falling back to phone lookup", e);
+                        localStorage.removeItem("activeBookingId"); // Clear stale ID
+                    }
+                }
+
+                // Priority 2: Check by Phone Only (Fallback)
                 if (savedPhone) {
                     const finalPhone = normalizePhone(savedPhone);
                     try {
-                        // Check for existing session by Phone + Parking
                         const existingBooking = await portalService.getActiveBooking(finalPhone, parkingId);
 
-                        if (existingBooking && ['PENDING', 'ACTIVE', 'COMPLETED', 'PAID'].includes(existingBooking.status) && mounted) {
-                            console.log("Resumed existing session via Phone query", existingBooking);
+                        if (existingBooking && ['PENDING', 'ACTIVE', 'COMPLETED', 'PAID'].includes(existingBooking.status)) {
+                            console.log("Resumed session via Phone", existingBooking);
                             setActiveBooking(existingBooking);
                             setPhoneNumber(savedPhone);
                             setPlateNumber(existingBooking.plateNumber || "");
                             setFullName(existingBooking.customerName || "");
 
-                            // Re-save specific ID to ensure sync
                             localStorage.setItem("activeBookingId", existingBooking.id);
                             localStorage.setItem("guestPlate", existingBooking.plateNumber || "");
-
-                            toast.success("Active session found & resumed.");
-                        } else if (mounted) {
-                            // No active session found, but we know the user. Pre-fill profile.
+                        } else {
+                            // No session, but pre-fill profile
                             setPhoneNumber(savedPhone);
                             const savedPlate = localStorage.getItem("guestPlate");
                             if (savedPlate) setPlateNumber(savedPlate);
@@ -151,29 +176,10 @@ function PortalContent() {
                             if (result.exists) {
                                 setFullName(result.fullName || "");
                                 setIsExistingCustomer(true);
-                                // Note: We don't auto-fill vehicle here unless plate matches later
                             }
                         }
                     } catch (err) {
-                        console.error("Error checking active booking by phone", err);
-                    }
-                }
-                // Priority 2: Fallback to ID recovery if phone didn't work or wasn't saved (orphaned ID)
-                else if (savedBookingId) {
-                    try {
-                        const existingBooking = await portalService.getActiveBooking(null, parkingId, savedBookingId);
-                        if (existingBooking && mounted) {
-                            setActiveBooking(existingBooking);
-                            if (existingBooking.customerPhone) {
-                                setPhoneNumber(existingBooking.customerPhone);
-                                localStorage.setItem("guestPhone", existingBooking.customerPhone);
-                            }
-                            setPlateNumber(existingBooking.plateNumber || "");
-                            setFullName(existingBooking.customerName || "");
-                        }
-                    } catch (e) {
-                        console.error("Recovery by ID failed", e);
-                        localStorage.removeItem("activeBookingId"); // Clear invalid ID
+                        console.error("Phone recovery failed", err);
                     }
                 }
             } catch (e: any) {
@@ -604,8 +610,8 @@ function PortalContent() {
             {/* Premium Sticky Header */}
             <div className="sticky top-0 w-full flex items-center justify-between px-6 md:px-10 py-5 shrink-0 bg-white/80 backdrop-blur-md border-b shadow-sm z-30">
                 <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
-                        <ParkingCircle className="h-5 w-5" />
+                    <div className="h-9 w-9 rounded-xl flex items-center justify-center overflow-hidden shadow-lg shadow-primary/20">
+                        <img src="/login-brand.png" alt="Logo" className="w-full h-full object-cover" />
                     </div>
                     <h2 className="text-lg font-black text-slate-900 uppercase tracking-tight">
                         Gelagle Park
@@ -626,24 +632,15 @@ function PortalContent() {
 
                         {step === 0 && (
                             <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-sm mx-auto w-full">
-                                <div className="text-center space-y-2 mb-4">
-                                    <div className="flex justify-center mb-2 text-primary">
-                                        <ParkingCircle className="h-10 w-10" />
+                                <div className="text-center space-y-2 mb-8">
+                                    <div className="flex justify-center mb-2">
+                                        <div className="h-16 w-16 rounded-2xl overflow-hidden shadow-lg border border-slate-100">
+                                            <img src="/login-brand.png" alt="Logo" className="w-full h-full object-cover" />
+                                        </div>
                                     </div>
                                     <h1 className="text-2xl font-black text-slate-900 tracking-tight">
                                         {parking?.name || "Gelagle Park"}
                                     </h1>
-                                    <h2 className="text-lg font-bold text-slate-900">
-                                        Guest Check-in
-                                    </h2>
-                                </div>
-
-                                {/* "Parking Zone" Card Style */}
-                                <div className="bg-[#0066FF] w-full rounded-xl py-8 flex flex-col items-center justify-center text-white shadow-xl shadow-blue-900/10">
-                                    <p className="text-white/80 font-bold text-sm tracking-wide mb-1">Parking Location</p>
-                                    <h3 className="text-4xl font-black tracking-tighter uppercase">
-                                        {parking?.name ? parking.name.split(' ')[0] : 'GELAGLE'}
-                                    </h3>
                                 </div>
 
                                 <div className="space-y-4 pt-2">
@@ -931,13 +928,7 @@ function ActiveSessionView({ booking, onEnd, onOpenExtend }: { booking: Booking;
                 >
                     {canCheckout ? "Checkout" : "Initializing..."}
                 </Button>
-                <Button
-                    variant="ghost"
-                    onClick={onOpenExtend}
-                    className="text-slate-400 font-bold hover:text-slate-600 hover:bg-transparent"
-                >
-                    Extend Session
-                </Button>
+
             </div>
         </div>
     );
