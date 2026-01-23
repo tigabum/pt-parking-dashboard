@@ -37,7 +37,7 @@ const navigationItems = [
     showInParkingDashboard: false,
   },
   {
-    label: "Users",
+    label: "Parking Users",
     href: "/dashboard/parking-users",
     icon: UserCog,
     permission: PERMISSIONS.USER_VIEW,

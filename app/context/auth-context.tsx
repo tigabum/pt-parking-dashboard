@@ -58,10 +58,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const initAuth = async () => {
-      // 1. Check server status in background (don't block UI)
-      checkServer()
+      // 1. Check server status first
+      await checkServer()
 
-      // 2. Load stored user immediately
+      // 2. Load stored user
       const storedUser = localStorage.getItem("user")
       if (storedUser) {
         try {
@@ -85,9 +85,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (validatedUser) {
         setUser(validatedUser)
         localStorage.setItem("user", JSON.stringify(validatedUser))
-        // Ensure loading is cleared and server is marked active
-        setLoading(false);
-        setIsServerActive(true);
       }
     } catch (error: any) {
       console.error("Login context error:", error);
@@ -98,8 +95,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithData = (userData: User) => {
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
-    setLoading(false);
-    setIsServerActive(true);
   }
 
 
