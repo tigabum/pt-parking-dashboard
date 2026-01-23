@@ -80,7 +80,7 @@ export default function BookingDetailPage() {
                 const now = dayjs(); // Live count
 
                 // If booking is done but no duration saved yet (legacy or slight delay), use endTime if valid
-                if (booking.status === BookingStatus.PAID || booking.status === BookingStatus.CANCELLED || booking.status === BookingStatus.REFUNDED || booking.status === BookingStatus.EXPIRED) {
+                if (booking.status === BookingStatus.PAID || (booking.status as any) === "COMPLETED" || booking.status === BookingStatus.CANCELLED || booking.status === BookingStatus.REFUNDED || booking.status === BookingStatus.EXPIRED) {
                     if (booking.endTime) {
                         const end = dayjs(booking.endTime);
                         durationMinutes = end.diff(start, 'minute');
@@ -357,14 +357,14 @@ export default function BookingDetailPage() {
                             Checkout
                         </Button>
                     )}
-                    {canExtend && (booking.status === "PENDING" || booking.status === "COMPLETED") && (
+                    {canExtend && (booking.status === "PENDING" || booking.status === "WAITING_CONFIRMATION") && (
                         <Button
                             onClick={handleConfirmPayment}
                             disabled={isActionInProgress}
                             className="h-10 px-4 rounded-xl bg-green-600 hover:bg-green-500 text-white font-bold text-[10px] uppercase tracking-widest transition-all"
                         >
                             {isActionInProgress ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CreditCard className="h-4 w-4 mr-2" />}
-                            {booking.status === "COMPLETED" ? "Confirm Payment Request" : "Confirm Payment"}
+                            {booking.status === "WAITING_CONFIRMATION" ? "Confirm Booking" : "Confirm Payment"}
                         </Button>
                     )}
                     {canExtend && booking.status === "PENDING" && (
@@ -380,12 +380,13 @@ export default function BookingDetailPage() {
                     )}
                     <Badge
                         className={cn(
-                            (booking.status as any) === 'PAID' || (booking.status as any) === 'COMPLETED' ? 'bg-emerald-500 shadow-emerald-100 text-white' :
-                                (booking.status as any) === 'ACTIVE' ? 'bg-blue-600 shadow-blue-100 text-white' :
-                                    (booking.status as any) === 'CANCELLED' ? 'bg-red-500 shadow-red-100 text-white' :
-                                        (booking.status as any) === 'EXPIRED' ? 'bg-slate-500 shadow-slate-100 text-white' :
-                                            (booking.status as any) === 'REFUNDED' ? 'bg-indigo-500 shadow-indigo-100 text-white' :
-                                                'bg-amber-500 shadow-amber-100 text-white'
+                            (booking.status as any) === 'PAID' ? 'bg-emerald-500 shadow-emerald-100 text-white' :
+                                (booking.status as any) === 'WAITING_CONFIRMATION' ? 'bg-amber-500 shadow-amber-100 text-white' :
+                                    (booking.status as any) === 'ACTIVE' ? 'bg-blue-600 shadow-blue-100 text-white' :
+                                        (booking.status as any) === 'CANCELLED' ? 'bg-red-500 shadow-red-100 text-white' :
+                                            (booking.status as any) === 'EXPIRED' ? 'bg-slate-500 shadow-slate-100 text-white' :
+                                                (booking.status as any) === 'REFUNDED' ? 'bg-indigo-500 shadow-indigo-100 text-white' :
+                                                    'bg-slate-400 text-white'
                         )}
                     >
                         {booking.status}

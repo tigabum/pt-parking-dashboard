@@ -21,6 +21,8 @@ export enum BookingStatus {
   WAITING_CONFIRMATION = "WAITING_CONFIRMATION",
   PAID = "PAID",
   CANCELLED = "CANCELLED",
+  EXPIRED = "EXPIRED",
+  REFUNDED = "REFUNDED",
 }
 
 export enum ParkingStatus {

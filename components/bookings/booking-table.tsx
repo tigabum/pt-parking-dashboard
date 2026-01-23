@@ -162,14 +162,34 @@ export function BookingsTable({
     {
       key: "actions",
       header: "Actions",
-      render: (row) => <BookingActions
-        row={row}
-        onDetail={onDetail}
-        onConfirmPayment={onConfirmPayment}
-        onConfirmArrival={onConfirmArrival}
-        onCancel={onCancel}
-        isBusy={actionId === row.id}
-      />
+      render: (row) => (
+        <div className="flex items-center gap-2">
+          {row.status === 'WAITING_CONFIRMATION' && onConfirmPayment && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onConfirmPayment(row)}
+              disabled={actionId === row.id}
+              className="h-8 rounded-lg bg-emerald-50 text-emerald-600 border-emerald-100 hover:bg-emerald-100 hover:text-emerald-700 font-bold text-[10px] uppercase tracking-wider"
+            >
+              {actionId === row.id ? (
+                <Loader2 className="h-3 w-3 animate-spin mr-1" />
+              ) : (
+                <Banknote className="h-3 w-3 mr-1" />
+              )}
+              Confirm
+            </Button>
+          )}
+          <BookingActions
+            row={row}
+            onDetail={onDetail}
+            onConfirmPayment={onConfirmPayment}
+            onConfirmArrival={onConfirmArrival}
+            onCancel={onCancel}
+            isBusy={actionId === row.id}
+          />
+        </div>
+      )
     }
   ];
 

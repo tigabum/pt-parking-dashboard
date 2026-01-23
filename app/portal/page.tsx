@@ -56,6 +56,7 @@ import { cn } from "@/lib/utils";
 import dayjs from "dayjs";
 import { CircularSessionCounter } from "@/components/ui/circular-session-counter";
 import { RatingDialog } from "@/components/parkings/rating-dialog";
+import { RatingCard } from "@/components/parkings/rating-card";
 
 const SYSTEM_PRIMARY = "#0066FF";
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
@@ -219,7 +220,6 @@ function PortalContent() {
                     if (isNewFinalized) {
                         if (updated.status === 'PAID') {
                             toast.success("Payment confirmed! You may now exit.");
-                            setIsRatingOpen(true);
                         } else if (updated.status === 'CANCELLED') {
                             toast.error("Your booking has been cancelled.");
                         }
@@ -547,14 +547,12 @@ function PortalContent() {
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-3">
-                                <Button
-                                    onClick={() => setIsRatingOpen(true)}
-                                    className="w-full h-14 rounded-[1.25rem] bg-amber-500 hover:bg-amber-600 text-white font-black uppercase tracking-[0.2em] transition-all active:scale-95 border-none shadow-lg shadow-amber-200 text-[10px] flex items-center justify-center gap-3"
-                                >
-                                    <Sparkles className="h-4 w-4" />
-                                    Rate our Service
-                                </Button>
+                            <div className="space-y-6">
+                                <RatingCard
+                                    parkingId={parking!.id}
+                                    parkingName={parking!.name}
+                                    customerPhone={normalizePhone(phoneNumber)}
+                                />
 
                                 <Button
                                     id="btn-portal-new-booking"
