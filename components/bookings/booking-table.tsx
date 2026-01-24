@@ -251,14 +251,9 @@ export function BookingsTable({
     },
 
     {
-      key: "live",
-      header: "Live Session / Est. Price",
-      render: (row) => (
-        <LiveDurationCell
-          booking={row}
-          parking={parkings.find(p => p.id === row.parkingId)}
-        />
-      )
+      key: "totalAmount",
+      header: "Total",
+      render: (row) => formatMoney(Number(row.totalAmount)),
     },
 
     statusColumn<BookingResponse>(),
