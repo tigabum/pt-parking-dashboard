@@ -514,6 +514,18 @@ function PortalContent() {
         }
     };
 
+    const handleReset = () => {
+        localStorage.removeItem("activeBookingId");
+        setActiveBooking(null);
+        setStep(0);
+        // Reset form fields for next use
+        setPhoneNumber("");
+        setPlateNumber("");
+        setFullName("");
+        setBrand("");
+        setModel("");
+    };
+
     // --- RENDER HELPERS ---
 
     if (loading) {
@@ -596,16 +608,17 @@ function PortalContent() {
                                     parkingId={parking!.id}
                                     parkingName={parking!.name}
                                     customerPhone={normalizePhone(phoneNumber)}
+                                    onSuccess={() => {
+                                        toast.success("Thank you! Session will reset shortly.");
+                                        setTimeout(() => {
+                                            handleReset();
+                                        }, 3000);
+                                    }}
                                 />
 
                                 <Button
                                     id="btn-portal-new-booking"
-                                    onClick={() => {
-                                        localStorage.removeItem("activeBookingId");
-                                        setActiveBooking(null);
-                                        setStep(0);
-                                        toast.info("Session cleared. Safe travels!");
-                                    }}
+                                    onClick={handleReset}
                                     className="w-full h-16 rounded-[1.5rem] bg-[#0066FF] hover:bg-[#0052CC] text-white font-black uppercase tracking-[0.2em] transition-all active:scale-95 border-none shadow-none text-[10px] flex items-center justify-center gap-3"
                                 >
                                     <LogOut className="h-4 w-4" />
@@ -664,6 +677,12 @@ function PortalContent() {
                     parkingId={parking!.id}
                     parkingName={parking!.name}
                     customerPhone={normalizePhone(phoneNumber)}
+                    onSuccess={() => {
+                        toast.success("Thank you! Session will reset shortly.");
+                        setTimeout(() => {
+                            handleReset();
+                        }, 3000);
+                    }}
                 />
             </div>
         );
