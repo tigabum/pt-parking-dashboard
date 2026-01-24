@@ -176,9 +176,8 @@ export function BookingForm({
 
       const result = await onSave(payload as any);
       if (result) {
-        setCreatedBooking(result);
-        setStep(3); // Move to Active Session view
         toast.success("Session Started Successfully", { id: loadingToast });
+        onOpenChange(false); // Close modal and return to list
       } else {
         toast.dismiss(loadingToast);
       }

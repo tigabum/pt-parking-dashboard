@@ -128,7 +128,7 @@ export function RatingCard({
             <Button
                 onClick={handleSubmit}
                 disabled={submitting || rating === 0}
-                className="w-full h-14 rounded-2xl bg-slate-900 hover:bg-black text-white font-black uppercase tracking-[0.2em] transition-all active:scale-95 border-none text-[10px] shadow-xl shadow-slate-200 flex items-center justify-center gap-3"
+                className="w-full h-14 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-black uppercase tracking-[0.2em] transition-all active:scale-95 border-none text-[10px] shadow-xl shadow-slate-200 flex items-center justify-center gap-3"
             >
                 {submitting ? (
                     <Loader2 className="h-5 w-5 animate-spin" />

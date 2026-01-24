@@ -616,14 +616,8 @@ function PortalContent() {
                                     }}
                                 />
 
-                                <Button
-                                    id="btn-portal-new-booking"
-                                    onClick={handleReset}
-                                    className="w-full h-16 rounded-[1.5rem] bg-[#0066FF] hover:bg-[#0052CC] text-white font-black uppercase tracking-[0.2em] transition-all active:scale-95 border-none shadow-none text-[10px] flex items-center justify-center gap-3"
-                                >
-                                    <LogOut className="h-4 w-4" />
-                                    Close Portal / New Entry
-                                </Button>
+                                {/* "Close Portal" button removed as per request */}
+                                <p className="text-[9px] text-slate-300 text-center font-bold uppercase tracking-[0.2em] pt-4">Session ID: {activeBooking.id.substring(0, 8)}</p>
                                 <p className="text-[9px] text-slate-300 text-center font-bold uppercase tracking-[0.2em]">Session ID: {activeBooking.id.substring(0, 8)}</p>
                             </div>
                         </CardContent>

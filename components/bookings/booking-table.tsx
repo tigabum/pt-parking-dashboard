@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { MoreVertical, Eye, Banknote, PlayCircle, Loader2, Trash2 } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { cn, formatMoney } from "@/lib/utils";
 import { useAuth } from "@/app/context/auth-context";
 import { PERMISSIONS } from "@/lib/permissions";
 
@@ -22,12 +22,11 @@ import {
   Column,
 } from "@/components/tables";
 import { BookingResponse, ParkingResponse } from "@/components/types";
+import { LiveDurationCell } from "./live-duration-cell";
 
 const formatDateTime = (date?: string) =>
   date ? new Date(date).toLocaleString() : "—";
 
-const formatMoney = (amount?: number, currency = "ETB") =>
-  amount != null ? `${amount.toFixed(2)} ${currency}` : "—";
 
 type Props = {
   bookings: BookingResponse[];
@@ -250,9 +249,14 @@ export function BookingsTable({
     },
 
     {
-      key: "totalAmount",
-      header: "Total",
-      render: (row) => formatMoney(Number(row.totalAmount)),
+      key: "live",
+      header: "Live Session / Est. Price",
+      render: (row) => (
+        <LiveDurationCell
+          booking={row}
+          parking={parkings.find(p => p.id === row.parkingId)}
+        />
+      )
     },
 
     statusColumn<BookingResponse>(),

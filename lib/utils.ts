@@ -17,3 +17,8 @@ export function getImageUrl(path: string | null | undefined) {
 
   return `${baseUrl}/${cleanPath}`;
 }
+
+export function formatMoney(amount?: number | string, currency = "ETB") {
+  const val = Number(amount) || 0;
+  return `${val.toFixed(2)} ${currency}`;
+}

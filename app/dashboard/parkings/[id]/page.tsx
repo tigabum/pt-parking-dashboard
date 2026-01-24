@@ -51,14 +51,12 @@ import { DashboardPagination } from "@/components/tables/dashboard-pagination";
 import { DetailLayout, DetailSection, DetailItem } from "@/components/layouts/detail-layout";
 import { QrCodeDialog } from "@/components/parkings/qr-code-dialog";
 import { BookingStats } from "@/components/parkings/booking-stats";
-import { getImageUrl } from "@/lib/utils";
+import { formatMoney, getImageUrl } from "@/lib/utils";
+import { LiveDurationCell } from "@/components/bookings/live-duration-cell";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
-const formatMoney = (amount: number | undefined, currency: string | undefined) => {
-  return `${amount || 0} ${currency || "ETB"}`;
-};
 
 export default function ParkingDetailPage() {
   const { id } = useParams();
@@ -733,9 +731,8 @@ export default function ParkingDetailPage() {
                 <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 uppercase font-bold text-[10px] tracking-wider">
                   <tr>
                     <th className="px-6 py-4">Customer & Vehicle</th>
-                    <th className="px-6 py-4">Session Info</th>
+                    <th className="px-6 py-4">Session Pulse</th>
                     <th className="px-6 py-4">System Trace</th>
-                    <th className="px-6 py-4">Financials</th>
                     <th className="px-6 py-4 text-center">Status</th>
                   </tr>
                 </thead>
@@ -757,21 +754,10 @@ export default function ParkingDetailPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="space-y-1.5">
-                          <div className="flex items-center gap-2 text-slate-700 font-bold">
-                            <Clock className="h-3.5 w-3.5 text-slate-400" />
-                            {dayjs(booking.startTime).format("MMM D, HH:mm")}
-                          </div>
-                          <div className="text-[10px] text-slate-400 font-bold flex items-center gap-1 pl-5">
-                            <ArrowLeft className="h-2.5 w-2.5 rotate-180" />
-                            {booking.endTime ? dayjs(booking.endTime).format("MMM D, HH:mm") : "ONGOING"}
-                          </div>
-                          {booking.totalDurationMinutes && (
-                            <div className="text-[10px] font-black text-slate-900 bg-slate-100 w-fit px-1.5 py-0.5 rounded ml-5">
-                              {Math.floor(booking.totalDurationMinutes / 60)}h {booking.totalDurationMinutes % 60}m
-                            </div>
-                          )}
-                        </div>
+                        <LiveDurationCell
+                          booking={booking as any}
+                          parking={parking as any}
+                        />
                       </td>
                       <td className="px-6 py-4">
                         <div className="space-y-1.5">
@@ -789,12 +775,6 @@ export default function ParkingDetailPage() {
                               </span>
                             </div>
                           )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex flex-col">
-                          <div className="font-black text-slate-900 text-base">{formatMoney(Number(booking.totalAmount))}</div>
-                          <div className="text-[10px] font-bold text-slate-400 uppercase">{booking.paymentMethod || "Pending"}</div>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-center">
