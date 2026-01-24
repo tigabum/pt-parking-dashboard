@@ -124,7 +124,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const basicPermissions = [
         "DASHBOARD_VIEW",
         "DASHBOARD_TOTAL_BOOKINGS",
+        "DASHBOARD_TOTAL_REVENUE",
         "DASHBOARD_DAILY_STATS",
+        "DASHBOARD_MONTHLY_STATS",
+        "DASHBOARD_YEARLY_STATS",
         "REVENUE_VIEW",
         "BOOKING_VIEW",
         "SETTINGS_VIEW",
