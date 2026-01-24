@@ -466,12 +466,15 @@ export default function ParkingDetailPage() {
         <TabsContent value="details" className="space-y-16 animate-in slide-in-from-bottom-4 duration-500 pb-20">
           {/* Visual Live Capacity Summary */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col gap-4">
-              <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400">
+            <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col gap-4 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-amber-500">
+                <Box className="h-24 w-24" />
+              </div>
+              <div className="h-12 w-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600 font-black">
                 <Box className="h-6 w-6" />
               </div>
               <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Total Capacity</p>
+                <p className="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-1">Total Capacity</p>
                 <p className="text-4xl font-black text-slate-900">{parking.numberOfSpots} <span className="text-sm font-bold text-slate-300">Spots</span></p>
               </div>
             </div>
@@ -491,14 +494,14 @@ export default function ParkingDetailPage() {
 
             <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col gap-4 relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
-                <Car className="h-24 w-24 text-amber-500" />
+                <Car className="h-24 w-24 text-red-500" />
               </div>
-              <div className="h-12 w-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600">
+              <div className="h-12 w-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-600">
                 <Car className="h-6 w-6" />
               </div>
               <div>
-                <p className="text-[10px] font-black text-amber-600/60 uppercase tracking-[0.2em] mb-1">Currently Occupied</p>
-                <p className="text-4xl font-black text-amber-600">{parking.numberOfSpots - (parking.availableSpots ?? 0)} <span className="text-sm font-bold text-amber-600/30">Busy</span></p>
+                <p className="text-[10px] font-black text-red-600 uppercase tracking-[0.2em] mb-1">Currently Occupied</p>
+                <p className="text-4xl font-black text-red-600">{parking.numberOfSpots - (parking.availableSpots ?? 0)} <span className="text-sm font-bold text-red-600/30">Reserved</span></p>
               </div>
             </div>
           </div>

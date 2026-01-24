@@ -45,6 +45,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/app/context/auth-context";
 import { CircularSessionCounter } from "../ui/circular-session-counter";
 import { portalService } from "@/lib/services/portal-service";
+import { bookingService } from "@/lib/services/booking-service";
 
 dayjs.extend(duration);
 
@@ -189,12 +190,22 @@ export function BookingForm({
 
   const handleEndParking = async () => {
     if (!createdBooking) return;
-    const loadingToast = toast.loading("Ending session...");
+    const loadingToast = toast.loading("Finalizing session...");
     try {
-      // Use portal service or booking service to stop session
+      // If it's already in WAITING_CONFIRMATION (default for dashboard bookings), finalize it as PAID
+      if (createdBooking.status === 'WAITING_CONFIRMATION') {
+        const res = await bookingService.updateBookingStatus(createdBooking.id, 'PAID');
+        if (res.success) {
+          toast.success("Session Finalized & Release Authorized", { id: loadingToast });
+          onOpenChange(false);
+          return;
+        }
+      }
+
+      // Otherwise follow standard guest stop flow
       const response = await portalService.stopSession(createdBooking.id, booking.customerPhone, booking.paymentMethod);
       if (response) {
-        toast.success("Session Ended. Paid via " + booking.paymentMethod, { id: loadingToast });
+        toast.success("Session Ended. Awaiting Manager Confirmation.", { id: loadingToast });
         onOpenChange(false);
       }
     } catch (e: any) {
@@ -725,9 +736,9 @@ export function BookingForm({
                 <div className="w-full max-w-md flex flex-col gap-4">
                   <Button
                     onClick={handleEndParking}
-                    className="w-full h-16 rounded-[2rem] bg-red-500 hover:bg-black text-white font-black text-lg shadow-xl transition-all active:scale-95 uppercase tracking-[0.15em] border-none"
+                    className="w-full h-16 rounded-[2rem] bg-red-500 hover:bg-black text-white font-bold text-lg shadow-xl transition-all active:scale-95 uppercase tracking-[0.15em] border-none"
                   >
-                    TERMINATE SESSION
+                    {createdBooking.status === 'WAITING_CONFIRMATION' ? 'VERIFY PAYMENT & RELEASE' : 'TERMINATE SESSION'}
                   </Button>
                   <Button
                     variant="ghost"

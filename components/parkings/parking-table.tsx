@@ -65,16 +65,16 @@ export function ParkingSpacesTable({
       render: (row) => (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-black text-slate-900">{row.numberOfSpots}</span>
-            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tight">Total Spots</span>
+            <span className="text-xs font-black text-amber-600">{row.numberOfSpots}</span>
+            <span className="text-[9px] font-bold text-amber-600/50 uppercase tracking-tight">Total Spots</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-black text-emerald-600">{row.availableSpots}</span>
             <span className="text-[9px] font-bold text-emerald-600/50 uppercase tracking-tight">Available</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-black text-amber-600">{row.numberOfSpots - (row.availableSpots ?? 0)}</span>
-            <span className="text-[9px] font-bold text-amber-600/50 uppercase tracking-tight">Occupied</span>
+            <span className="text-xs font-black text-red-600">{row.numberOfSpots - (row.availableSpots ?? 0)}</span>
+            <span className="text-[9px] font-bold text-red-600/50 uppercase tracking-tight">Occupied</span>
           </div>
         </div>
       )

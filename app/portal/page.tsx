@@ -604,12 +604,12 @@ function PortalContent() {
                                         localStorage.removeItem("activeBookingId");
                                         setActiveBooking(null);
                                         setStep(0);
-                                        toast.info("Session cleared. You can now start a new booking if needed.");
+                                        toast.info("Session cleared. Safe travels!");
                                     }}
                                     className="w-full h-16 rounded-[1.5rem] bg-[#0066FF] hover:bg-[#0052CC] text-white font-black uppercase tracking-[0.2em] transition-all active:scale-95 border-none shadow-none text-[10px] flex items-center justify-center gap-3"
                                 >
                                     <LogOut className="h-4 w-4" />
-                                    New Booking / Leave
+                                    Close Portal / New Entry
                                 </Button>
                                 <p className="text-[9px] text-slate-300 text-center font-bold uppercase tracking-[0.2em]">Session ID: {activeBooking.id.substring(0, 8)}</p>
                             </div>
