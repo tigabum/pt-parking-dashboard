@@ -30,6 +30,7 @@ import {
   DetailItem,
 } from "@/components/layouts/detail-layout";
 import { PERMISSION_LABELS, PERMISSION_CATEGORIES } from "@/lib/permissions";
+import { Label } from "@/components/ui/label";
 
 export default function ParkingUserDetailPage() {
   const { id } = useParams();
@@ -154,8 +155,7 @@ export default function ParkingUserDetailPage() {
         </div>
       }
     >
-      {/* Profile Section */}
-      <DetailSection title="Manager Profile">
+      <DetailSection title="Parking Manager Detail">
         <div className="col-span-1 md:col-span-2 lg:col-span-1 row-span-2">
           <div className="relative aspect-square w-48 rounded-[2.5rem] overflow-hidden border-2 border-slate-100 shadow-xl bg-slate-50 mx-auto lg:mx-0 p-1">
             <Avatar className="h-full w-full rounded-[2.2rem]">
@@ -209,153 +209,7 @@ export default function ParkingUserDetailPage() {
             }
           />
         </div>
-      </DetailSection>
 
-      {/* Assigned Parking Section */}
-      <DetailSection title="Assigned Parking Facility">
-        {assignedParking ? (
-          <div className="col-span-full">
-            <div className="bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/20 rounded-3xl p-8">
-              <div className="flex items-start justify-between mb-6">
-                <div className="flex items-center gap-4">
-                  <div className="h-16 w-16 bg-primary rounded-2xl flex items-center justify-center shadow-lg">
-                    <ParkingCircle className="h-8 w-8 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-black text-slate-900 mb-1">
-                      {assignedParking.name}
-                    </h3>
-                    <Badge className="bg-green-100 text-green-700 border-none font-bold">
-                      <CheckCircle2 className="h-3 w-3 mr-1" />
-                      Active Assignment
-                    </Badge>
-                  </div>
-                </div>
-                <Button
-                  onClick={() =>
-                    router.push(`/dashboard/parkings/${assignedParking.id}`)
-                  }
-                  className="bg-white hover:bg-slate-50 text-primary rounded-xl font-bold shadow-lg"
-                >
-                  View Details
-                  <ExternalLink className="h-4 w-4 ml-2" />
-                </Button>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white/50">
-                  <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">
-                    <MapPin className="h-3 w-3" />
-                    Location
-                  </div>
-                  <p className="text-slate-900 font-bold text-sm">
-                    {[assignedParking.city, assignedParking.subCity, assignedParking.streetName].filter(Boolean).join(", ") || "Address not set"}
-                  </p>
-                </div>
-
-                <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white/50">
-                  <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">
-                    <Building className="h-3 w-3" />
-                    Capacity
-                  </div>
-                  <p className="text-slate-900 font-bold text-lg">
-                    {assignedParking.numberOfSpots || 0} Spots
-                  </p>
-                </div>
-
-                <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white/50">
-                  <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">
-                    <ParkingCircle className="h-3 w-3" />
-                    Parking ID
-                  </div>
-                  <p className="text-slate-900 font-mono font-bold text-sm">
-                    {assignedParking.id.substring(0, 12).toUpperCase()}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="col-span-full py-12 flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-200 rounded-3xl bg-slate-50/50">
-            <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center border border-slate-200 shadow-sm mb-4">
-              <ShieldCheck className="h-8 w-8 text-slate-300" />
-            </div>
-            <h4 className="text-slate-900 font-bold text-lg mb-2">
-              No Active Assignment
-            </h4>
-            <p className="text-slate-500 text-sm max-w-md mb-4">
-              This manager is currently in the standby pool and not assigned to any parking facility.
-            </p>
-            <Button
-              variant="outline"
-              className="font-bold"
-              onClick={() => router.push("/dashboard/parkings")}
-            >
-              Assign to Parking
-            </Button>
-          </div>
-        )}
-      </DetailSection>
-
-      {/* Permissions Section */}
-      <DetailSection title="Access Permissions">
-        <div className="col-span-full">
-          {userPermissions.length > 0 ? (
-            <div className="space-y-4">
-              {Object.entries(PERMISSION_CATEGORIES).map(([category, categoryPermissions]) => {
-                const userCategoryPerms = categoryPermissions.filter(p => userPermissions.includes(p));
-
-                if (userCategoryPerms.length === 0) return null;
-
-                return (
-                  <div key={category} className="border border-slate-100 rounded-2xl overflow-hidden bg-white">
-                    <div className="flex items-center justify-between p-4 bg-primary/5 border-b border-primary/10">
-                      <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <Shield className="h-4 w-4 text-primary" />
-                        </div>
-                        <span className="font-black text-slate-900">{category}</span>
-                      </div>
-                      <Badge variant="outline" className="font-bold text-xs">
-                        {userCategoryPerms.length}/{categoryPermissions.length} permissions
-                      </Badge>
-                    </div>
-
-                    <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {userCategoryPerms.map(permission => (
-                        <div
-                          key={permission}
-                          className="flex items-center gap-3 p-3 rounded-xl bg-green-50 border border-green-200"
-                        >
-                          <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0" />
-                          <span className="text-sm font-bold text-slate-700">
-                            {PERMISSION_LABELS[permission]}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="col-span-full py-12 flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
-              <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center border border-slate-200 shadow-sm mb-4">
-                <Shield className="h-8 w-8 text-slate-300" />
-              </div>
-              <h4 className="text-slate-900 font-bold text-lg mb-2">
-                No Specific Permissions Assigned
-              </h4>
-              <p className="text-slate-500 text-sm max-w-md">
-                This user may have role-based default permissions or requires permission assignment.
-              </p>
-            </div>
-          )}
-        </div>
-      </DetailSection>
-
-      {/* Account Status Section */}
-      <DetailSection title="Account Status">
         <DetailItem
           label="Account Status"
           value={
@@ -434,6 +288,145 @@ export default function ParkingUserDetailPage() {
             </div>
           }
         />
+
+        <div className="col-span-full mt-8">
+          <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 block">Assigned Parking Facility</Label>
+          {assignedParking ? (
+            <div className="bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/20 rounded-3xl p-8">
+              <div className="flex items-start justify-between mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="h-16 w-16 bg-primary rounded-2xl flex items-center justify-center shadow-lg">
+                    <ParkingCircle className="h-8 w-8 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-black text-slate-900 mb-1">
+                      {assignedParking.name}
+                    </h3>
+                    <Badge className="bg-green-100 text-green-700 border-none font-bold">
+                      <CheckCircle2 className="h-3 w-3 mr-1" />
+                      Active Assignment
+                    </Badge>
+                  </div>
+                </div>
+                <Button
+                  onClick={() =>
+                    router.push(`/dashboard/parkings/${assignedParking.id}`)
+                  }
+                  className="bg-white hover:bg-slate-50 text-primary rounded-xl font-bold shadow-lg"
+                >
+                  View Details
+                  <ExternalLink className="h-4 w-4 ml-2" />
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white/50">
+                  <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">
+                    <MapPin className="h-3 w-3" />
+                    Location
+                  </div>
+                  <p className="text-slate-900 font-bold text-sm">
+                    {[assignedParking.city, assignedParking.subCity, assignedParking.streetName].filter(Boolean).join(", ") || "Address not set"}
+                  </p>
+                </div>
+
+                <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white/50">
+                  <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">
+                    <Building className="h-3 w-3" />
+                    Capacity
+                  </div>
+                  <p className="text-slate-900 font-bold text-lg">
+                    {assignedParking.numberOfSpots || 0} Spots
+                  </p>
+                </div>
+
+                <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-white/50">
+                  <div className="flex items-center gap-2 text-slate-500 text-xs font-bold uppercase tracking-wider mb-2">
+                    <ParkingCircle className="h-3 w-3" />
+                    Parking ID
+                  </div>
+                  <p className="text-slate-900 font-mono font-bold text-sm">
+                    {assignedParking.id.substring(0, 12).toUpperCase()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="py-12 flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-200 rounded-3xl bg-slate-50/50">
+              <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center border border-slate-200 shadow-sm mb-4">
+                <ShieldCheck className="h-8 w-8 text-slate-300" />
+              </div>
+              <h4 className="text-slate-900 font-bold text-lg mb-2">
+                No Active Assignment
+              </h4>
+              <p className="text-slate-500 text-sm max-w-md mb-4">
+                This manager is currently in the standby pool and not assigned to any parking facility.
+              </p>
+              <Button
+                variant="outline"
+                className="font-bold"
+                onClick={() => router.push("/dashboard/parkings")}
+              >
+                Assign to Parking
+              </Button>
+            </div>
+          )}
+        </div>
+
+        <div className="col-span-full mt-8">
+          <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 block">Access Permissions</Label>
+          {userPermissions.length > 0 ? (
+            <div className="space-y-4">
+              {Object.entries(PERMISSION_CATEGORIES).map(([category, categoryPermissions]) => {
+                const userCategoryPerms = categoryPermissions.filter(p => userPermissions.includes(p));
+
+                if (userCategoryPerms.length === 0) return null;
+
+                return (
+                  <div key={category} className="border border-slate-100 rounded-2xl overflow-hidden bg-white">
+                    <div className="flex items-center justify-between p-4 bg-primary/5 border-b border-primary/10">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <Shield className="h-4 w-4 text-primary" />
+                        </div>
+                        <span className="font-black text-slate-900">{category}</span>
+                      </div>
+                      <Badge variant="outline" className="font-bold text-xs">
+                        {userCategoryPerms.length}/{categoryPermissions.length} permissions
+                      </Badge>
+                    </div>
+
+                    <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {userCategoryPerms.map(permission => (
+                        <div
+                          key={permission}
+                          className="flex items-center gap-3 p-3 rounded-xl bg-green-50 border border-green-200"
+                        >
+                          <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0" />
+                          <span className="text-sm font-bold text-slate-700">
+                            {PERMISSION_LABELS[permission]}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="col-span-full py-12 flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
+              <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center border border-slate-200 shadow-sm mb-4">
+                <Shield className="h-8 w-8 text-slate-300" />
+              </div>
+              <h4 className="text-slate-900 font-bold text-lg mb-2">
+                No Specific Permissions Assigned
+              </h4>
+              <p className="text-slate-500 text-sm max-w-md">
+                This user may have role-based default permissions or requires permission assignment.
+              </p>
+            </div>
+          )}
+        </div>
       </DetailSection>
     </DetailLayout>
   );

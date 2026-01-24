@@ -5,13 +5,11 @@ import { useParams, useRouter } from "next/navigation";
 import { customerService } from "@/lib/services/customer-service";
 import { bookingService } from "@/lib/services/booking-service";
 import { Customer, BookingResponse } from "@/components/types";
-import { ServiceResponse } from "@/lib/api-types";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
-import { ArrowLeft, User, Phone, Mail, Calendar, Hash, MapPin, CheckCircle2, XCircle, Layers, Car as CarIcon, Star, Info, Clock, Loader2, AlertCircle } from "lucide-react";
+import { User, Phone, Mail, Calendar, Hash, MapPin, CheckCircle2, XCircle, Layers, Car as CarIcon, Star, Info, Clock, Loader2, AlertCircle } from "lucide-react";
 import { getImageUrl } from "@/lib/utils";
 import dayjs from "dayjs";
 
@@ -86,9 +84,6 @@ export default function CustomerDetailPage() {
                     <Button
                         variant="ghost"
                         onClick={() => {
-                            // Logic to edit or toggle status could go here. 
-                            // For now, mirroring style. 
-                            // Maybe just a toast since there is no edit page mentioned yet?
                             toast.info("Edit functionality coming soon");
                         }}
                         className="bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-xl h-10 px-4 font-bold transition-all"
@@ -103,7 +98,7 @@ export default function CustomerDetailPage() {
                 </div>
             }
         >
-            <DetailSection title="Customer Profile">
+            <DetailSection title="Customer Detail">
                 <div className="col-span-1 md:col-span-2 lg:col-span-1 row-span-2">
                     <div className="relative aspect-square w-48 rounded-[2.5rem] overflow-hidden border-2 border-slate-100 shadow-xl bg-slate-50 mx-auto lg:mx-0 p-1">
                         <Avatar className="h-full w-full rounded-[2.2rem]">
@@ -134,9 +129,7 @@ export default function CustomerDetailPage() {
                         </div>
                     } />
                 </div>
-            </DetailSection>
 
-            <DetailSection title="Account & Security">
                 <DetailItem label="Account Status" value={customer.isActive ? "Active & Verified" : "Restricted"} />
                 <DetailItem label="Registered Since" value={formatDateTime(customer.createdAt)} />
                 <DetailItem label="Total Vehicles" value={`${customer.vehicles?.length || 0} Registered Assets`} />
@@ -144,7 +137,6 @@ export default function CustomerDetailPage() {
             </DetailSection>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Vehicles Section */}
                 <DetailSection title={`Registered Vehicles (${customer.vehicles?.length || 0})`} className="lg:col-span-1">
                     <div className="space-y-4 pt-2">
                         {customer.vehicles && customer.vehicles.length > 0 ? (
@@ -174,7 +166,6 @@ export default function CustomerDetailPage() {
                     </div>
                 </DetailSection>
 
-                {/* Recent Activity Section */}
                 <DetailSection title="Recent Activity" className="lg:col-span-1">
                     <div className="space-y-4 pt-2">
                         {recentBookings.length > 0 ? (

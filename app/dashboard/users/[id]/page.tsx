@@ -137,8 +137,7 @@ export default function UserDetailPage() {
         </div>
       }
     >
-      {/* Profile Section */}
-      <DetailSection title="Staff Profile">
+      <DetailSection title="Staff User Detail">
         <div className="col-span-1 md:col-span-2 lg:col-span-1 row-span-2">
           <div className="relative aspect-square w-48 rounded-[2.5rem] overflow-hidden border-2 border-slate-100 shadow-xl bg-slate-50 mx-auto lg:mx-0 p-1">
             <Avatar className="h-full w-full rounded-[2.2rem]">
@@ -199,67 +198,7 @@ export default function UserDetailPage() {
             }
           />
         </div>
-      </DetailSection>
 
-      {/* Permissions Section */}
-      <DetailSection title="Access Permissions">
-        <div className="col-span-full">
-          {userPermissions.length > 0 ? (
-            <div className="space-y-4">
-              {Object.entries(PERMISSION_CATEGORIES).map(([category, categoryPermissions]) => {
-                const userCategoryPerms = categoryPermissions.filter(p => userPermissions.includes(p));
-
-                if (userCategoryPerms.length === 0) return null;
-
-                return (
-                  <div key={category} className="border border-slate-100 rounded-2xl overflow-hidden bg-white">
-                    <div className="flex items-center justify-between p-4 bg-primary/5 border-b border-primary/10">
-                      <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <Shield className="h-4 w-4 text-primary" />
-                        </div>
-                        <span className="font-black text-slate-900">{category}</span>
-                      </div>
-                      <Badge variant="outline" className="font-bold text-xs">
-                        {userCategoryPerms.length}/{categoryPermissions.length} permissions
-                      </Badge>
-                    </div>
-
-                    <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-                      {userCategoryPerms.map(permission => (
-                        <div
-                          key={permission}
-                          className="flex items-center gap-3 p-3 rounded-xl bg-green-50 border border-green-200"
-                        >
-                          <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0" />
-                          <span className="text-sm font-bold text-slate-700">
-                            {PERMISSION_LABELS[permission]}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div className="col-span-full py-12 flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
-              <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center border border-slate-200 shadow-sm mb-4">
-                <Shield className="h-8 w-8 text-slate-300" />
-              </div>
-              <h4 className="text-slate-900 font-bold text-lg mb-2">
-                No Specific Permissions Assigned
-              </h4>
-              <p className="text-slate-500 text-sm max-w-md">
-                This user may have role-based default permissions or requires permission assignment.
-              </p>
-            </div>
-          )}
-        </div>
-      </DetailSection>
-
-      {/* Account Status Section */}
-      <DetailSection title="Account Status">
         <DetailItem
           label="Account Status"
           value={
@@ -334,7 +273,64 @@ export default function UserDetailPage() {
             </div>
           }
         />
+
+        <div className="col-span-full mt-8">
+          <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 block">Access Permissions</Label>
+          {userPermissions.length > 0 ? (
+            <div className="space-y-4">
+              {Object.entries(PERMISSION_CATEGORIES).map(([category, categoryPermissions]) => {
+                const userCategoryPerms = categoryPermissions.filter(p => userPermissions.includes(p));
+
+                if (userCategoryPerms.length === 0) return null;
+
+                return (
+                  <div key={category} className="border border-slate-100 rounded-2xl overflow-hidden bg-white">
+                    <div className="flex items-center justify-between p-4 bg-primary/5 border-b border-primary/10">
+                      <div className="flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <Shield className="h-4 w-4 text-primary" />
+                        </div>
+                        <span className="font-black text-slate-900">{category}</span>
+                      </div>
+                      <Badge variant="outline" className="font-bold text-xs">
+                        {userCategoryPerms.length}/{categoryPermissions.length} permissions
+                      </Badge>
+                    </div>
+
+                    <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {userCategoryPerms.map(permission => (
+                        <div
+                          key={permission}
+                          className="flex items-center gap-3 p-3 rounded-xl bg-green-50 border border-green-200"
+                        >
+                          <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0" />
+                          <span className="text-sm font-bold text-slate-700">
+                            {PERMISSION_LABELS[permission]}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="col-span-full py-12 flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
+              <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center border border-slate-200 shadow-sm mb-4">
+                <Shield className="h-8 w-8 text-slate-300" />
+              </div>
+              <h4 className="text-slate-900 font-bold text-lg mb-2">
+                No Specific Permissions Assigned
+              </h4>
+              <p className="text-slate-500 text-sm max-w-md">
+                This user may have role-based default permissions or requires permission assignment.
+              </p>
+            </div>
+          )}
+        </div>
       </DetailSection>
     </DetailLayout>
   );
 }
+
+import { Label } from "@/components/ui/label";

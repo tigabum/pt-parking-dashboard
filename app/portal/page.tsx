@@ -529,7 +529,7 @@ function PortalContent() {
                         <ShieldCheck className="h-8 w-8" />
                     </div>
                     <p className="text-slate-500 font-medium">{error}</p>
-                    <Button onClick={() => window.location.reload()} className="w-full h-12 rounded-xl bg-slate-900 border-none transition-transform active:scale-95">Retry</Button>
+                    <Button onClick={() => window.location.reload()} className="w-full h-12 rounded-xl bg-[#0066FF] border-none transition-transform active:scale-95">Retry</Button>
                 </div>
             </div>
         );
@@ -602,7 +602,7 @@ function PortalContent() {
                                         setStep(0);
                                         toast.info("Session cleared. You can now start a new booking if needed.");
                                     }}
-                                    className="w-full h-16 rounded-[1.5rem] bg-slate-900 hover:bg-black text-white font-black uppercase tracking-[0.2em] transition-all active:scale-95 border-none shadow-none text-[10px] flex items-center justify-center gap-3"
+                                    className="w-full h-16 rounded-[1.5rem] bg-[#0066FF] hover:bg-[#0052CC] text-white font-black uppercase tracking-[0.2em] transition-all active:scale-95 border-none shadow-none text-[10px] flex items-center justify-center gap-3"
                                 >
                                     <LogOut className="h-4 w-4" />
                                     New Booking / Leave

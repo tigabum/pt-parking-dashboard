@@ -394,7 +394,7 @@ export default function BookingDetailPage() {
                 </div>
             }
         >
-            <DetailSection title="Session Intelligence">
+            <DetailSection title="Booking Detail">
                 <DetailItem label="Status" value={
                     <Badge variant="outline" className="rounded-lg font-bold px-3 py-1 bg-white">
                         {booking.status}
@@ -420,9 +420,7 @@ export default function BookingDetailPage() {
                 <DetailItem label="Departure Time" value={booking.endTime ? formatDateTime(booking.endTime) : "Open Ended"} />
                 {booking.type && <DetailItem label="Booking Type" value={<Badge variant="secondary" className="font-bold">{booking.type}</Badge>} />}
                 {booking.bookingMethod && <DetailItem label="Booking Method" value={<Badge variant="outline" className="font-bold uppercase tracking-widest text-[9px]">{booking.bookingMethod}</Badge>} />}
-            </DetailSection>
 
-            <DetailSection title="Financial Reconciliation">
                 <DetailItem label="Final Amount" value={<span className="text-lg font-black text-slate-900">{formatMoney(booking.totalAmount)}</span>} />
                 {booking.commissionAmount !== null && <DetailItem label="Service Fee" value={formatMoney(booking.commissionAmount || 0)} className="text-primary" />}
                 {booking.vatAmount !== null && <DetailItem label="VAT Amount" value={formatMoney(booking.vatAmount || 0)} className="text-slate-500" />}
@@ -437,9 +435,7 @@ export default function BookingDetailPage() {
                 )}
                 <DetailItem label="Ref Number" value={<span className="font-mono text-xs font-bold text-slate-500">{booking.referenceNo}</span>} />
                 <DetailItem label="Settlement" value={<Badge className={booking.status === 'PAID' ? "bg-green-100 text-green-700 hover:bg-green-100" : "bg-amber-100 text-amber-700 hover:bg-amber-100"}>{booking.status === 'PAID' ? "SETTLED" : "OUTSTANDING"}</Badge>} />
-            </DetailSection>
 
-            <DetailSection title="Customer & Asset Registry">
                 {booking.customerName && <DetailItem label="Customer Name" value={booking.customerName} />}
                 {booking.customerPhone && <DetailItem label="Contact Phone" value={booking.customerPhone} />}
                 <DetailItem label="Plate Number" value={
@@ -450,9 +446,7 @@ export default function BookingDetailPage() {
                 {(booking.vehicleName || booking.vehicleBrand || booking.vehicleModel) && (
                     <DetailItem label="Vehicle Asset" value={`${booking.vehicleName || booking.vehicleBrand || ""} ${booking.vehicleModel || ""}`.trim() || "—"} />
                 )}
-            </DetailSection>
 
-            <DetailSection title="System Traceability">
                 <DetailItem label="Created At" value={dayjs(booking.createdAt).format("MMM D, YYYY HH:mm")} />
                 <DetailItem label="Last Change" value={dayjs(booking.updatedAt).format("MMM D, YYYY HH:mm")} />
                 {booking.createdBy && (

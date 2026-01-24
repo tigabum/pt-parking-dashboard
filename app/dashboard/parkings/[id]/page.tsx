@@ -271,7 +271,7 @@ export default function ParkingDetailPage() {
     }
   };
 
-  const DetailItem = ({ label, value, icon: Icon, className }: { label: string; value: React.ReactNode; icon?: any; className?: string }) => (
+  const DetailItemComp = ({ label, value, icon: Icon, className }: { label: string; value: React.ReactNode; icon?: any; className?: string }) => (
     <div className={cn("flex flex-col gap-1.5", className)}>
       <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">{label}</Label>
       <div className="flex items-center gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-100 min-h-[50px]">
@@ -502,144 +502,147 @@ export default function ParkingDetailPage() {
               </div>
             </div>
           </div>
-          <DetailSection title="Capacity & Availability Analysis" icon={<Info className="h-4 w-4" />}>
+
+          <DetailSection title="Parking Detail">
+            {/* Capacity Stats */}
             <DetailItem label="Total Capacity" value={`${parking.numberOfSpots} Spots`} />
             <DetailItem label="Available Spots" value={`${parking.availableSpots} Free`} className="text-emerald-600" />
-            <DetailItem label="Occupied Spots" value={`${parking.numberOfSpots - parking.availableSpots} Busy`} className="text-amber-600" />
-            <DetailItem label="Current Fill Rate" value={`${Math.round(((parking.numberOfSpots - parking.availableSpots) / (parking.numberOfSpots || 1)) * 100)}%`} className="text-primary" />
-          </DetailSection>
+            <DetailItem label="Occupied Spots" value={`${parking.numberOfSpots - (parking.availableSpots || 0)} Busy`} className="text-amber-600" />
+            <DetailItem label="Current Fill Rate" value={`${Math.round(((parking.numberOfSpots - (parking.availableSpots || 0)) / (parking.numberOfSpots || 1)) * 100)}%`} className="text-primary" />
 
-          <DetailSection title="System & Administrative Metadata" icon={<ShieldCheck className="h-4 w-4" />}>
-            <DetailItem label="Assigned Manager" value={parking.createdBy?.fullName} />
-            <DetailItem label="Commission Structure" value={parking.commissionConfig?.name} className="text-primary" />
-            <DetailItem label="VAT Number" value={parking.vatRegistrationNumber} />
-            <DetailItem label="TIN/Tax ID" value={parking.tinNumber} />
+            {/* System Info */}
+            <DetailItem label="Assigned Manager" value={parking.createdBy?.fullName || "—"} />
+            <DetailItem label="Commission Structure" value={parking.commissionConfig?.name || "—"} className="text-primary" />
+            <DetailItem label="VAT Number" value={parking.vatRegistrationNumber || "—"} />
+            <DetailItem label="TIN/Tax ID" value={parking.tinNumber || "—"} />
             <DetailItem label="Registration Date" value={dayjs(parking.createdAt).format("MMM D, YYYY HH:mm")} />
             <DetailItem label="Terminal Status" value={parking.status} />
-          </DetailSection>
 
-          <DetailSection title="Revenue & Pricing Configuration" icon={<CreditCard className="h-4 w-4" />}>
+            {/* Pricing */}
             <DetailItem label="Hourly Rate" value={formatMoney(parking.pricing?.hourly?.price, parking.pricing?.hourly?.currency)} />
             <DetailItem label="Daily Rate" value={formatMoney(parking.pricing?.daily?.price, parking.pricing?.daily?.currency)} />
             <DetailItem label="Monthly Plan" value={formatMoney(parking.pricing?.monthly?.price, parking.pricing?.monthly?.currency)} />
             <DetailItem label="Flat Fee" value={formatMoney(parking.pricing?.flat?.price, parking.pricing?.flat?.currency)} />
-          </DetailSection>
 
-          <DetailSection title="Facility Description & Service Amenities" icon={<FileText className="h-4 w-4" />}>
-            <div className="col-span-1 md:col-span-2 space-y-2">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Facility Overview</p>
-              <p className="text-sm font-medium text-slate-600 leading-relaxed">
-                {parking.description || "No facility description provided."}
-              </p>
-            </div>
-            <div className="col-span-1 md:col-span-2 space-y-3">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Available Services & Amenities</p>
-              <div className="flex flex-wrap gap-2 text-primary">
-                {(parking.amenities?.length > 0 || (parking as any).amenitiesList?.length > 0) ? (
-                  <>
-                    {/* Prefer the JSON amenities which have custom values */}
-                    {parking.amenities?.map((item, i) => (
-                      <div key={`json-${i}`} className="px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-[11px] font-black uppercase tracking-tight flex items-center gap-2">
-                        <Check className="h-3 w-3" />
-                        <span>
+            {/* Geographic */}
+            <DetailItem label="Region" value={parking.region || "—"} />
+            <DetailItem label="City" value={parking.city || "—"} />
+            <DetailItem label="Sub-City" value={parking.subCity || "—"} />
+            <DetailItem label="Woreda" value={parking.woreda || "—"} />
+            <DetailItem label="Kebele" value={parking.kebele || "—"} />
+            <DetailItem label="Street Name" value={parking.streetName || "—"} />
+            <DetailItem label="Country" value={parking.country || "—"} />
+
+            {/* Description & Amenities */}
+            <div className="col-span-full mt-8 grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="space-y-4">
+                <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Facility Overview</Label>
+                <p className="text-sm font-medium text-slate-600 leading-relaxed bg-slate-50 p-6 rounded-2xl border border-slate-100">
+                  {parking.description || "No facility description provided."}
+                </p>
+              </div>
+              <div className="space-y-4">
+                <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Available Services & Amenities</Label>
+                <div className="flex flex-wrap gap-2 text-primary p-2">
+                  {(parking.amenities?.length > 0 || (parking as any).amenitiesList?.length > 0) ? (
+                    <>
+                      {parking.amenities?.map((item, i) => (
+                        <div key={`json-${i}`} className="px-4 py-2 rounded-full bg-primary/5 border border-primary/10 text-[11px] font-black uppercase tracking-tight flex items-center gap-2">
+                          <Check className="h-3 w-3" />
+                          <span>
+                            {item.name}
+                            {item.value && <span className="text-primary/60 ml-1 font-bold normal-case">({item.value})</span>}
+                          </span>
+                        </div>
+                      ))}
+                      {(!parking.amenities || parking.amenities.length === 0) && (parking as any).amenitiesList?.map((item: any, i: number) => (
+                        <div key={`list-${i}`} className="px-4 py-2 rounded-full bg-primary/5 border border-primary/10 text-[11px] font-black uppercase tracking-tight flex items-center gap-2">
+                          <Check className="h-3 w-3" />
                           {item.name}
-                          {item.value && <span className="text-primary/60 ml-1 font-bold normal-case">({item.value})</span>}
-                        </span>
-                      </div>
-                    ))}
+                        </div>
+                      ))}
+                    </>
+                  ) : (
+                    <span className="text-slate-400 text-xs italic">No amenities listed.</span>
+                  )}
+                </div>
+              </div>
+            </div>
 
-                    {/* Fallback to amenitiesList if JSON amenities are missing but relation exists */}
-                    {(!parking.amenities || parking.amenities.length === 0) && (parking as any).amenitiesList?.map((item: any, i: number) => (
-                      <div key={`list-${i}`} className="px-4 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-[11px] font-black uppercase tracking-tight flex items-center gap-2">
-                        <Check className="h-3 w-3" />
-                        {item.name}
-                      </div>
-                    ))}
-                  </>
+            {/* Map */}
+            <div className="col-span-full mt-8">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">Exact Geographic Positioning</Label>
+              <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-sm relative bg-slate-50 h-[450px]">
+                {parking.lat && parking.lng ? (
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    frameBorder="0"
+                    style={{ border: 0 }}
+                    src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${parking.lat},${parking.lng}&zoom=17`}
+                    allowFullScreen
+                  />
                 ) : (
-                  <span className="text-slate-400 text-xs italic">No amenities listed.</span>
+                  <div className="flex items-center justify-center h-full text-slate-400 font-bold italic">Exact coordinates not provided.</div>
                 )}
               </div>
             </div>
-          </DetailSection>
 
-          <DetailSection title="Geographic & Address Details" icon={<MapPin className="h-4 w-4" />}>
-            <DetailItem label="Region" value={parking.region} />
-            <DetailItem label="City" value={parking.city} />
-            <DetailItem label="Sub-City" value={parking.subCity} />
-            <DetailItem label="Woreda" value={parking.woreda} />
-            <DetailItem label="Kebele" value={parking.kebele} />
-            <DetailItem label="Street Name" value={parking.streetName} />
-            <DetailItem label="Country" value={parking.country} />
-          </DetailSection>
-
-          <DetailSection title="Exact Geographic Positioning" icon={<Search className="h-4 w-4" />}>
-            <div className="col-span-full rounded-2xl overflow-hidden border border-slate-100 shadow-sm relative bg-slate-50 h-[450px]">
-              {parking.lat && parking.lng ? (
-                <iframe
-                  width="100%"
-                  height="100%"
-                  frameBorder="0"
-                  style={{ border: 0 }}
-                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${parking.lat},${parking.lng}&zoom=17`}
-                  allowFullScreen
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full text-slate-400 font-bold italic">Exact coordinates not provided.</div>
-              )}
+            {/* Documents */}
+            <div className="col-span-full mt-8">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">Legal Compliance & Certifications</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[
+                  ...(parking.licenseFiles || []).map((f, idx) => ({ url: f, type: 'Business License', label: `License #${idx + 1}` })),
+                  ...(parking.agreementDocuments || []).map((f, idx) => ({ url: f, type: 'Agreement Doc', label: `Agreement #${idx + 1}` }))
+                ].map((doc, i) => (
+                  <div
+                    key={i}
+                    onClick={() => setPreviewDoc({ url: getImageUrl(doc.url), title: doc.label })}
+                    className="group flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:bg-white hover:border-primary/30 hover:shadow-md transition-all cursor-pointer"
+                  >
+                    <div className="h-10 w-10 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                      <FileText className="h-5 w-5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-bold text-slate-900 truncate">
+                        {doc.label}
+                      </p>
+                      <p className="text-[9px] uppercase font-bold text-slate-400 mt-0.5 tracking-widest">
+                        {doc.type} • Click to view
+                      </p>
+                    </div>
+                  </div>
+                ))}
+                {[...(parking.licenseFiles || []), ...(parking.agreementDocuments || [])].length === 0 && (
+                  <div className="col-span-full py-8 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest opacity-60">No documents found in system records.</p>
+                  </div>
+                )}
+              </div>
             </div>
-          </DetailSection>
 
-          <DetailSection title="Legal Compliance & Certifications" icon={<ShieldCheck className="h-4 w-4" />}>
-            <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
-              {[
-                ...(parking.licenseFiles || []).map((f, idx) => ({ url: f, type: 'Business License', label: `License #${idx + 1}` })),
-                ...(parking.agreementDocuments || []).map((f, idx) => ({ url: f, type: 'Agreement Doc', label: `Agreement #${idx + 1}` }))
-              ].map((doc, i) => (
-                <div
-                  key={i}
-                  onClick={() => setPreviewDoc({ url: getImageUrl(doc.url), title: doc.label })}
-                  className="group flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:bg-white hover:border-primary/30 hover:shadow-md transition-all cursor-pointer"
-                >
-                  <div className="h-10 w-10 rounded-xl bg-white border border-slate-100 shadow-sm flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
-                    <FileText className="h-5 w-5" />
+            {/* Gallery */}
+            <div className="col-span-full mt-8">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">Visual Media & Facility Gallery</Label>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {parking.galleryImages && parking.galleryImages.length > 0 ? (
+                  parking.galleryImages.map((img, i) => (
+                    <div key={i} className="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 shadow-sm cursor-zoom-in transition-all hover:shadow-lg hover:border-primary/20">
+                      <img
+                        src={getImageUrl(img)}
+                        className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                        alt={`Gallery ${i}`}
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
+                    </div>
+                  ))
+                ) : (
+                  <div className="col-span-full h-32 flex items-center justify-center border-2 border-dashed rounded-2xl bg-slate-50 text-slate-400">
+                    <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">No visual media uploaded.</p>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-slate-900 truncate">
-                      {doc.label}
-                    </p>
-                    <p className="text-[9px] uppercase font-bold text-slate-400 mt-0.5 tracking-widest">
-                      {doc.type} • Click to view
-                    </p>
-                  </div>
-                </div>
-              ))}
-              {[...(parking.licenseFiles || []), ...(parking.agreementDocuments || [])].length === 0 && (
-                <div className="col-span-full py-8 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-                  <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest opacity-60">No documents found in system records.</p>
-                </div>
-              )}
-            </div>
-          </DetailSection>
-
-          <DetailSection title="Visual Media & Facility Gallery" icon={<ImageIcon className="h-4 w-4" />}>
-            <div className="col-span-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 pt-2">
-              {parking.galleryImages && parking.galleryImages.length > 0 ? (
-                parking.galleryImages.map((img, i) => (
-                  <div key={i} className="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 shadow-sm cursor-zoom-in transition-all hover:shadow-lg hover:border-primary/20">
-                    <img
-                      src={getImageUrl(img)}
-                      className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
-                      alt={`Gallery ${i}`}
-                    />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
-                  </div>
-                ))
-              ) : (
-                <div className="col-span-full h-32 flex items-center justify-center border-2 border-dashed rounded-2xl bg-slate-50 text-slate-400">
-                  <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">No visual media uploaded.</p>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </DetailSection>
         </TabsContent>
@@ -690,7 +693,6 @@ export default function ParkingDetailPage() {
                   </SelectContent>
                 </Select>
 
-                {/* Simple inputs for ID filters for now, can be improved with searchable selects later */}
                 <div className="relative">
                   <UserSquare className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <Input
@@ -799,211 +801,166 @@ export default function ParkingDetailPage() {
                   ))}
                   {bookings.length === 0 && !bookingsLoading && (
                     <tr>
-                      <td colSpan={5} className="px-6 py-20 text-center">
-                        <div className="flex flex-col items-center gap-3">
-                          <div className="h-16 w-16 rounded-full bg-slate-50 flex items-center justify-center text-slate-200">
-                            <Search className="h-8 w-8" />
-                          </div>
-                          <div className="text-slate-400 font-bold uppercase tracking-widest text-xs">No booking records found matching your filters.</div>
-                        </div>
-                      </td>
+                      <td colSpan={5} className="px-6 py-12 text-center text-slate-400 font-bold uppercase tracking-widest text-xs opacity-40">No activity recorded for this member.</td>
                     </tr>
                   )}
                 </tbody>
               </table>
             </div>
 
-            {bookingsTotalPages > 1 && (
-              <div className="p-4 border-t bg-slate-50/30">
-                <DashboardPagination
-                  page={bookingsPage}
-                  totalPages={bookingsTotalPages}
-                  total={bookingsTotal}
-                  onPageChange={setBookingsPage}
-                  limit={bookingsLimit}
-                  onLimitChange={setBookingsLimit}
-                />
-              </div>
-            )}
+            <div className="p-6 md:p-8 bg-slate-50 border-t border-slate-100">
+              <DashboardPagination
+                page={bookingsPage}
+                totalPages={bookingsTotalPages}
+                total={bookingsTotal}
+                onPageChange={setBookingsPage}
+                limit={bookingsLimit}
+                onLimitChange={setBookingsLimit}
+              />
+            </div>
           </div>
         </TabsContent>
 
         {/* TAB: REVIEWS */}
-        <TabsContent value="reviews" className="animate-in slide-in-from-bottom-4 duration-500">
-          <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border space-y-8">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2">
-                  <Star className="h-4 w-4 text-primary" />
-                  Customer Feedback
-                </h3>
-                <p className="text-sm text-slate-500 font-medium mt-1">Detailed ratings and comments from customers.</p>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="text-right">
-                  <div className="text-2xl font-black text-slate-900">{ratingStats?.averageRating != null ? Number(ratingStats.averageRating).toFixed(1) : "0.0"}</div>
-                  <div className="flex items-center gap-0.5 mt-0.5">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star key={s} className={cn("h-3 w-3", s <= (ratingStats?.averageRating || 0) ? "text-amber-400 fill-current" : "text-slate-200")} />
-                    ))}
-                  </div>
+        <TabsContent value="reviews" className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <div className="lg:col-span-1 space-y-6">
+              <div className="bg-white rounded-3xl p-8 border shadow-sm">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Sentiment Analysis</p>
+                <div className="flex items-end gap-3 mb-2">
+                  <span className="text-6xl font-black text-slate-900">{ratingStats?.averageRating != null ? Number(ratingStats.averageRating).toFixed(1) : "0.0"}</span>
+                  <Star className="h-10 w-10 text-amber-400 fill-current mb-2" />
                 </div>
-                <div className="h-10 w-px bg-slate-100" />
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">{ratingStats?.totalRatings || 0} Total Reviews</div>
+                <p className="text-sm font-bold text-slate-500 uppercase tracking-tight">Based on {ratingStats?.totalRatings || 0} reviews</p>
               </div>
             </div>
 
-            <div className="space-y-6">
-              {reviewsLoading ? (
-                <div className="flex flex-col items-center justify-center py-20 gap-3">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary opacity-20" />
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Loading Reviews...</p>
-                </div>
-              ) : reviews.length > 0 ? (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {reviews.map((review) => (
-                      <div key={review.id} className="p-6 rounded-2xl bg-slate-50 border border-slate-100 space-y-4 hover:bg-white hover:shadow-xl hover:shadow-slate-200/50 transition-all group">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-full bg-slate-200 overflow-hidden border-2 border-white shadow-sm">
-                              {review.customer?.profileImage ? (
-                                <img src={getImageUrl(review.customer.profileImage)} className="w-full h-full object-cover" />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs font-bold">
-                                  {review.customer?.fullName?.charAt(0) || "C"}
-                                </div>
-                              )}
-                            </div>
-                            <div>
-                              <div className="text-sm font-bold text-slate-900">{review.customer?.fullName || "Anonymous"}</div>
-                              <div className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">{dayjs(review.createdAt).fromNow()}</div>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-1 px-2 py-1 bg-white rounded-lg border shadow-sm">
-                            <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
-                            <span className="text-xs font-black text-slate-900">{review.rating != null ? Number(review.rating).toFixed(1) : "0.0"}</span>
-                          </div>
-                        </div>
-                        <p className="text-sm font-medium text-slate-600 italic leading-relaxed">
-                          "{review.comment || "No comment provided."}"
-                        </p>
-                      </div>
-                    ))}
+            <div className="lg:col-span-3 space-y-4">
+              {reviews.map((review, i) => (
+                <div key={i} className="bg-white rounded-3xl p-6 md:p-8 border shadow-sm flex flex-col md:flex-row gap-6">
+                  <div className="h-14 w-14 rounded-2xl bg-slate-50 flex items-center justify-center border border-slate-100 shrink-0 font-black text-primary text-xl shadow-sm">
+                    {review.rating}<Star size={16} className="ml-1 fill-current" />
                   </div>
-
-                  {reviewsTotalPages > 1 && (
-                    <div className="flex justify-center pt-4">
-                      <DashboardPagination
-                        page={reviewsPage}
-                        totalPages={reviewsTotalPages}
-                        total={ratingStats?.totalRatings || 0}
-                        limit={10}
-                        onPageChange={setReviewsPage}
-                        onLimitChange={() => { }}
-                      />
+                  <div className="flex-1 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="font-black text-slate-900">{review.customer?.fullName || "Anonymous Member"}</div>
+                      <div className="text-[10px] font-bold text-slate-400 uppercase">{dayjs(review.createdAt).fromNow()}</div>
                     </div>
-                  )}
-                </>
-              ) : (
-                <div className="flex flex-col items-center justify-center py-20 gap-3 border-2 border-dashed rounded-3xl bg-slate-50">
-                  <Star className="h-12 w-12 text-slate-200" />
-                  <div className="text-slate-400 font-bold uppercase tracking-widest text-xs">No customer reviews yet.</div>
+                    <p className="text-sm text-slate-600 font-medium leading-relaxed italic border-l-4 border-slate-100 pl-4 py-1">"{review.comment || "No written sentiment provided."}"</p>
+                  </div>
                 </div>
+              ))}
+              {reviews.length === 0 && !reviewsLoading && (
+                <div className="bg-white rounded-3xl p-16 border border-dashed text-center flex flex-col items-center justify-center gap-4">
+                  <Star className="h-12 w-12 text-slate-100" />
+                  <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No customer sentiments recorded yet.</p>
+                </div>
+              )}
+              {reviewsTotalPages > 1 && (
+                <DashboardPagination
+                  page={reviewsPage}
+                  totalPages={reviewsTotalPages}
+                  total={ratingStats?.totalRatings || 0}
+                  onPageChange={setReviewsPage}
+                  limit={10}
+                  onLimitChange={() => { }}
+                />
               )}
             </div>
           </div>
         </TabsContent>
 
-        <TabsContent value="wallet" className="animate-in slide-in-from-bottom-4 duration-500 space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="bg-white rounded-3xl p-8 shadow-sm border space-y-6 flex flex-col justify-center">
-              <div className="flex items-center gap-4">
-                <div className="h-14 w-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
-                  <WalletIcon size={30} />
-                </div>
+        {/* TAB: WALLET */}
+        <TabsContent value="wallet" className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl shadow-primary/20">
+              <div className="absolute top-0 right-0 p-8 opacity-10">
+                <WalletIcon className="h-32 w-32 -rotate-12" />
+              </div>
+              <div className="relative z-10 flex flex-col h-full justify-between gap-12">
                 <div>
-                  <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Wallet Balance</h3>
-                  <div className="text-3xl font-black text-slate-900 flex items-baseline gap-2 mt-1">
-                    {parking.wallet?.balance?.toLocaleString() || "0.00"}
-                    <span className="text-sm text-slate-400 font-bold uppercase">{parking.wallet?.currency || "ETB"}</span>
+                  <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-4">Terminal Liquidity</p>
+                  <h2 className="text-5xl font-black tracking-tighter tabular-nums">
+                    {Number(parking.wallet?.balance || 0).toLocaleString()} <span className="text-lg opacity-30 font-bold">ETB</span>
+                  </h2>
+                </div>
+                <div className="flex items-center gap-4 pt-4 border-t border-white/10">
+                  <div className="flex flex-col">
+                    <span className="text-[9px] uppercase font-bold text-white/30 tracking-widest">Wallet ID</span>
+                    <span className="text-xs font-mono font-bold text-white/60">PT-{parking.id.substring(0, 8).toUpperCase()}</span>
                   </div>
                 </div>
               </div>
-              <div className="h-px bg-slate-100" />
-              <div className="flex items-center justify-between text-xs font-bold uppercase tracking-wider">
-                <span className="text-slate-400">Wallet Status</span>
-                <Badge variant="outline" className={cn(
-                  "rounded-lg px-2 py-0.5 border-none",
-                  parking.wallet?.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                )}>
-                  {parking.wallet?.isActive ? "ACTIVE" : "INACTIVE"}
-                </Badge>
+            </div>
+
+            <div className="bg-white rounded-[2.5rem] p-8 border shadow-sm flex flex-col justify-between">
+              <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400">
+                <ArrowUpRight className="h-6 w-6" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Total Inbound</p>
+                <p className="text-3xl font-black text-slate-900">
+                  {transactions.filter(t => t.type === 'DEPOSIT').reduce((acc, curr) => acc + (curr.amount || 0), 0).toLocaleString()} <span className="text-sm font-bold opacity-30">ETB</span>
+                </p>
               </div>
             </div>
 
-            <div className="lg:col-span-2 bg-white rounded-3xl p-6 md:p-8 shadow-sm border space-y-6">
-              <div className="flex items-center justify-between border-b pb-6">
-                <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-primary" />
-                  Transaction History
-                </h3>
-                <div className="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">
-                  {transactions.length} Records
-                </div>
+            <div className="bg-white rounded-[2.5rem] p-8 border shadow-sm flex flex-col justify-between">
+              <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400">
+                <ArrowDownLeft className="h-6 w-6" />
               </div>
-
-              <div className="overflow-x-auto">
-                <ReusableTable
-                  data={transactions}
-                  columns={txColumns}
-                  getRowKey={(tx) => tx.id}
-                  isLoading={txLoading}
-                  emptyText="No transaction records found."
-                />
+              <div>
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Total Outbound</p>
+                <p className="text-3xl font-black text-slate-900">
+                  {transactions.filter(t => t.type === 'WITHDRAWAL').reduce((acc, curr) => acc + (curr.amount || 0), 0).toLocaleString()} <span className="text-sm font-bold opacity-30">ETB</span>
+                </p>
               </div>
             </div>
+          </div>
+
+          <div className="bg-white rounded-3xl overflow-hidden border shadow-sm mt-8">
+            <div className="p-8 border-b bg-slate-50/50">
+              <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Transaction History</h3>
+              <p className="text-sm text-slate-500 font-medium mt-1">Audit trail of all financial movements.</p>
+            </div>
+            <ReusableTable
+              data={transactions}
+              columns={txColumns}
+              getRowKey={(row) => row.id}
+              isLoading={txLoading}
+              emptyText="No transactions detected for this terminal."
+            />
           </div>
         </TabsContent>
       </Tabs>
 
-      {previewDoc && (
-        <Dialog open={!!previewDoc} onOpenChange={(open) => !open && setPreviewDoc(null)}>
-          <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-0 overflow-hidden bg-slate-950 border-slate-800">
-            <DialogHeader className="p-4 border-b border-slate-800 bg-slate-900 shrink-0">
-              <div className="flex items-center justify-between">
-                <DialogTitle className="text-white font-bold">{previewDoc.title}</DialogTitle>
-                <Button variant="ghost" size="icon" onClick={() => setPreviewDoc(null)} className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-800">
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            </DialogHeader>
-            <div className="flex-1 bg-slate-900 relative overflow-hidden flex items-center justify-center">
-              {previewDoc.url.match(/\.(pdf)($|\?)/i) || previewDoc.url.includes("blob") ? (
-                <iframe src={previewDoc.url} className="w-full h-full border-none" title="PDF Preview" />
-              ) : (
-                <img src={previewDoc.url} alt="Preview" className="max-w-full max-h-full object-contain shadow-2xl" />
-              )}
-            </div>
-            <div className="p-4 bg-slate-900 border-t border-slate-800 flex justify-end shrink-0">
-              <Button asChild variant="outline" className="rounded-full font-bold border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white">
-                <a href={previewDoc.url} download target="_blank" rel="noopener noreferrer">
-                  Download Document
-                </a>
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
+      {/* QR Code Dialog */}
+      <QrCodeDialog
+        open={isQrOpen}
+        onOpenChange={setIsQrOpen}
+        parkingId={parking.id}
+        parkingName={parking.name}
+      />
 
-      {isQrOpen && parking && (
-        <QrCodeDialog
-          open={isQrOpen}
-          onOpenChange={setIsQrOpen}
-          parkingId={parking.id}
-          parkingName={parking.name}
-        />
-      )}
+      {/* Doc Preview Dialog */}
+      <Dialog open={!!previewDoc} onOpenChange={() => setPreviewDoc(null)}>
+        <DialogContent className="max-w-4xl h-[80vh] p-0 overflow-hidden border-none shadow-2xl rounded-3xl">
+          <div className="absolute top-4 right-4 z-50">
+            <Button variant="ghost" size="icon" onClick={() => setPreviewDoc(null)} className="h-10 w-10 rounded-full bg-black/20 text-white hover:bg-black/40 backdrop-blur-md">
+              <X size={20} />
+            </Button>
+          </div>
+          <div className="w-full h-full bg-slate-100 flex items-center justify-center">
+            {previewDoc?.url ? (
+              previewDoc.url.toLowerCase().endsWith('.pdf') ? (
+                <iframe src={previewDoc.url} className="w-full h-full" />
+              ) : (
+                <img src={previewDoc.url} className="max-w-full max-h-full object-contain shadow-2xl" alt={previewDoc.title} />
+              )
+            ) : null}
+          </div>
+        </DialogContent>
+      </Dialog>
     </DetailLayout>
   );
 }

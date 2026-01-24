@@ -152,8 +152,6 @@ export default function BookingsPage() {
     if (!hasPermission(PERMISSIONS.BOOKING_UPDATE)) {
       return toast.error("Required permission: Update Booking");
     }
-    const confirm = window.confirm(`Confirm payment of ${row.totalAmount} ETB for ${row.plateNumber}?`);
-    if (!confirm) return;
 
     const loadingToast = toast.loading("Verifying payment...");
     try {
@@ -172,8 +170,6 @@ export default function BookingsPage() {
     if (!hasPermission(PERMISSIONS.BOOKING_UPDATE)) {
       return toast.error("Required permission: Update Booking");
     }
-    const confirm = window.confirm(`Confirm arrival of ${row.plateNumber}? Session will start now.`);
-    if (!confirm) return;
 
     const loadingToast = toast.loading("Confirming arrival...");
     try {
@@ -192,8 +188,6 @@ export default function BookingsPage() {
     if (!hasPermission(PERMISSIONS.BOOKING_UPDATE)) {
       return toast.error("Required permission: Update Booking");
     }
-    const confirm = window.confirm(`Are you sure you want to cancel booking ${row.referenceNo}? This will release the spot.`);
-    if (!confirm) return;
 
     const loadingToast = toast.loading("Cancelling booking...");
     try {
