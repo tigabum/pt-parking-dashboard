@@ -167,7 +167,7 @@ function BookingActions({ row, onDetail, onConfirmPayment, onConfirmArrival, onC
           onOpenChange={setIsArrivalOpen}
           title="Confirm Arrival"
           description={`Start parking session for ${row.plateNumber} now?`}
-          onConfirm={() => onConfirmArrival(row)}
+          onConfirm={() => onConfirmArrival?.(row)}
           trigger={<div />}
         />
         <ConfirmationPopup
@@ -175,7 +175,7 @@ function BookingActions({ row, onDetail, onConfirmPayment, onConfirmArrival, onC
           onOpenChange={setIsPaymentOpen}
           title="Confirm Payment"
           description={`Verify payment of ${Number(row.totalAmount).toFixed(2)} ETB for ${row.plateNumber}.`}
-          onConfirm={() => onConfirmPayment(row)}
+          onConfirm={() => onConfirmPayment?.(row)}
           trigger={<div />}
         />
         <ConfirmationPopup
@@ -185,7 +185,7 @@ function BookingActions({ row, onDetail, onConfirmPayment, onConfirmArrival, onC
           description={`Are you sure you want to cancel booking ${row.referenceNo}? This will release the spot.`}
           confirmText="Cancel Booking"
           confirmVariant="destructive"
-          onConfirm={() => onCancel(row)}
+          onConfirm={() => onCancel?.(row)}
           trigger={<div />}
         />
       </div>
@@ -266,7 +266,7 @@ export function BookingsTable({
             <ConfirmationPopup
               title="Confirm Payment"
               description={`Verify that payment of ${Number(row.totalAmount).toFixed(2)} ETB has been received for plate ${row.plateNumber}.`}
-              onConfirm={() => onConfirmPayment(row)}
+              onConfirm={() => onConfirmPayment?.(row)}
               trigger={
                 <Button
                   variant="outline"
