@@ -544,7 +544,18 @@ export function BookingForm({
               <div className="space-y-8 min-h-[550px] flex flex-col justify-between animate-in fade-in slide-in-from-right-4 duration-500 font-bold">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2 col-span-1 md:col-span-2">
-                    <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Driver Name *</Label>
+                    <div className="flex items-center justify-between">
+                      <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Driver Name *</Label>
+                      {customerFound ? (
+                        <span className="text-[9px] font-black text-emerald-500 uppercase flex items-center gap-1">
+                          <CheckCircle className="h-2 w-2" /> Registered Profile
+                        </span>
+                      ) : (
+                        <span className="text-[9px] font-black text-primary uppercase flex items-center gap-1">
+                          <Zap className="h-2 w-2" /> New Enrolment
+                        </span>
+                      )}
+                    </div>
                     <Input
                       value={booking.customerName}
                       onChange={(e) => {
@@ -566,7 +577,12 @@ export function BookingForm({
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Model</Label>
+                    <div className="flex items-center justify-between">
+                      <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Model</Label>
+                      {vehicleFound && (
+                        <span className="text-[9px] font-black text-emerald-500 uppercase">Recognized Plate</span>
+                      )}
+                    </div>
                     <Input
                       value={booking.vehicleName}
                       onChange={(e) => setBooking({ ...booking, vehicleName: e.target.value })}
