@@ -309,18 +309,20 @@ export function BookingForm({
       }));
 
       if (foundCustomer || foundVehicle) {
-        toast.success(`Profile Synchronized: ${updatedName}`);
+        // If BOTH found and vehicle explicitly belongs to this customer, skip to summary (Step 2)
+        // STRICT CHECK: The vehicle's owner ID must match the found customer's ID.
+        // If they don't match, or if vehicle has a different owner, we MUST Show Step 1 to verify.
+        const isStrictMatch = foundVehicle && foundCustomer && foundVehicle.customer?.id === foundCustomer.id;
 
-        // If BOTH found and vehicle belongs to this customer, skip to summary (Step 2)
-        const isMatch = foundVehicle && foundCustomer && foundVehicle.customer?.id === foundCustomer.id;
-        if (isMatch || (foundVehicle && !foundCustomer && foundVehicle.customer)) {
-          setStep(2); // Skip straight to summary if we have full data
+        if (isStrictMatch) {
+          toast.success(`Verified returning customer: ${updatedName}`);
+          setStep(2); // Skip straight to summary
           setSearching(false);
           return;
         }
-      } else {
-        toast.info("New entry detected - manual input required.");
       }
+      // Else: if partial match or no match or mismatch, go to Step 1 to review/edit details manually.
+      // No error toast needed.
 
       setStep(1);
     } catch (err) {
@@ -353,7 +355,8 @@ export function BookingForm({
         }));
         setCustomerFound(true);
         if (mainVehicle) setVehicleFound(true);
-        toast.success(`Profile Found: ${customer.fullName}`);
+
+        // Silent success - removed toast
       } else {
         setCustomerFound(false);
       }
@@ -384,7 +387,7 @@ export function BookingForm({
         toast.success(`Vehicle found: ${vehicle.brand} ${vehicle.model || vehicle.name || ''}`);
       } else {
         setVehicleFound(false);
-        toast.info("New vehicle - please enter details");
+        // Silent failure - removed toast
       }
     } catch {
       setVehicleFound(false);
