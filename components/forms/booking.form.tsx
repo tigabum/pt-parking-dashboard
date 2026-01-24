@@ -393,58 +393,7 @@ export function BookingForm({
     window.print();
   };
 
-  // SUCCESS VIEW
-  if (createdBooking) {
-    return (
-      <div className="w-full h-full flex flex-col items-center justify-center bg-white p-10 overflow-hidden">
-        <div className="max-w-3xl w-full mx-auto flex flex-col items-center text-center space-y-10 animate-in fade-in duration-500">
-          <div className="relative">
-            <div className="h-32 w-32 bg-green-100 rounded-[2.5rem] flex items-center justify-center animate-bounce shadow-2xl shadow-green-100">
-              <Check className="h-16 w-16 text-green-600" />
-            </div>
-            <div className="absolute -top-4 -right-4 h-12 w-12 bg-white rounded-2xl shadow-xl flex items-center justify-center border border-slate-50">
-              <Check className="h-6 w-6 text-primary" />
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <h2 className="text-4xl font-black text-slate-900 tracking-tight">Booking Finalized!</h2>
-            <p className="text-slate-400 font-medium text-lg">System has synchronized access credentials to the entry gates.</p>
-          </div>
-
-          <div className="bg-primary p-12 rounded-[3.5rem] shadow-2xl flex flex-col items-center gap-10 border-[6px] border-white/10 shadow-primary/20">
-            <div className="bg-white p-6 rounded-3xl shadow-xl">
-              <QRCode
-                value={JSON.stringify({ ref: createdBooking?.referenceNo || "N/A", customer: booking.customerName })}
-                size={240}
-                fgColor="#0066FF"
-              />
-            </div>
-            <div className="text-center space-y-1">
-              <div className="text-white/60 text-[10px] font-black uppercase tracking-widest">Transaction Reference</div>
-              <div className="text-white text-3xl font-mono font-black tracking-widest">{createdBooking?.referenceNo || "REF-ERROR"}</div>
-            </div>
-          </div>
-
-          <div className="flex gap-6 w-full max-w-lg">
-            <Button
-              variant="outline"
-              className="flex-1 h-14 rounded-2xl border-slate-200 font-bold flex items-center gap-2 hover:bg-slate-50"
-              onClick={handlePrint}
-            >
-              <Printer className="h-5 w-5" /> Print Receipt
-            </Button>
-            <Button
-              onClick={() => onOpenChange(false)}
-              className="flex-1 h-14 rounded-2xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-bold shadow-none border-none"
-            >
-              Done
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Success view block removed to allow direct transition to Step 3 (Pulse) after creation
 
   return (
     <div className="w-full h-full flex flex-col bg-slate-50 overflow-hidden">
@@ -687,39 +636,39 @@ export function BookingForm({
             )}
 
             {step === 2 && (
-              <div className="space-y-10 min-h-[550px] flex flex-col justify-between animate-in fade-in slide-in-from-right-4 duration-500 font-bold">
+              <div className="space-y-10 min-h-[550px] flex flex-col justify-between animate-in fade-in slide-in-from-right-4 duration-500">
                 <div className="space-y-8">
                   <div className="text-center space-y-2">
                     <div className="h-20 w-20 bg-primary/5 rounded-[2rem] flex items-center justify-center mx-auto text-primary mb-6">
                       <Clock className="h-10 w-10" />
                     </div>
-                    <h3 className="text-3xl font-black text-slate-900 tracking-tight">Booking Summary</h3>
-                    <p className="text-slate-400 font-medium">Review the session parameters before verification.</p>
+                    <h3 className="text-2xl font-bold text-slate-900 tracking-tight">Booking Summary</h3>
+                    <p className="text-slate-500 font-medium text-sm">Review the session parameters before verification.</p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="p-6 bg-slate-50 rounded-3xl space-y-2 border border-slate-100">
                       <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Driver Details</Label>
-                      <p className="text-slate-900 text-lg">{booking.customerName}</p>
-                      <p className="text-slate-400 text-sm">{booking.customerPhone}</p>
+                      <p className="text-slate-900 font-bold text-base">{booking.customerName}</p>
+                      <p className="text-slate-500 text-xs font-medium">{booking.customerPhone}</p>
                     </div>
                     <div className="p-6 bg-slate-50 rounded-3xl space-y-2 border border-slate-100">
                       <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Vehicle</Label>
-                      <p className="text-slate-900 text-lg uppercase font-mono tracking-widest">{booking.plateNumber}</p>
-                      <p className="text-slate-400 text-sm">{booking.vehicleBrand} {booking.vehicleName}</p>
+                      <p className="text-slate-900 font-bold text-base uppercase font-mono tracking-widest">{booking.plateNumber}</p>
+                      <p className="text-slate-500 text-xs font-medium">{booking.vehicleBrand} {booking.vehicleName}</p>
                     </div>
                     <div className="p-6 bg-slate-50 rounded-3xl space-y-2 border border-slate-100">
                       <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Session Time</Label>
-                      <p className="text-slate-900 text-sm">{dayjs(booking.startTime).format("MMM D, HH:mm")}</p>
-                      <p className="text-slate-400 text-sm">Until {dayjs(booking.endTime).format("HH:mm")}</p>
+                      <p className="text-slate-900 font-bold text-sm">{dayjs(booking.startTime).format("MMM D, HH:mm")}</p>
+                      <p className="text-slate-500 text-xs font-medium">Until {dayjs(booking.endTime).format("HH:mm")}</p>
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-center justify-center p-8 bg-primary/5 border-2 border-primary/10 rounded-[2.5rem] space-y-2">
-                    <Label className="text-[10px] uppercase font-black text-primary tracking-[0.4em]">Est. Total Amount</Label>
+                  <div className="flex flex-col items-center justify-center p-8 bg-slate-50/50 border-2 border-slate-100 rounded-[2.5rem] space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-slate-400 tracking-[0.4em]">Est. Total Amount</Label>
                     <div className="flex items-baseline gap-2">
-                      <span className="text-5xl font-black text-primary tabular-nums tracking-tighter">{getPriceEstimate()}</span>
-                      <span className="text-sm font-black text-primary/60 uppercase">ETB</span>
+                      <span className="text-4xl font-bold text-slate-900 tabular-nums tracking-tighter">{getPriceEstimate()}</span>
+                      <span className="text-xs font-bold text-slate-400 uppercase">ETB</span>
                     </div>
                   </div>
                 </div>

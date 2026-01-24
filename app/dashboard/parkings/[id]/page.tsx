@@ -517,8 +517,8 @@ export default function ParkingDetailPage() {
               value={
                 <div className="flex items-center gap-2">
                   <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <span>{parking.averageRating != null ? Number(parking.averageRating).toFixed(1) : "0.0"} / 5.0</span>
-                  <span className="text-slate-400 font-medium">({parking.ratingsCount || 0} reviews)</span>
+                  <span>{parking.ratingsCount > 0 ? `${Number(parking.averageRating).toFixed(1)} / 5.0` : "New / No ratings"}</span>
+                  {parking.ratingsCount > 0 && <span className="text-slate-400 font-medium">({parking.ratingsCount} reviews)</span>}
                 </div>
               }
             />
