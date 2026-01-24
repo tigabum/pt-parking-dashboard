@@ -731,6 +731,7 @@ export default function ParkingDetailPage() {
                 <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 uppercase font-bold text-[10px] tracking-wider">
                   <tr>
                     <th className="px-6 py-4">Customer & Vehicle</th>
+                    <th className="px-6 py-4">Date & Time</th>
                     <th className="px-6 py-4">Session Pulse</th>
                     <th className="px-6 py-4">System Trace</th>
                     <th className="px-6 py-4 text-center">Status</th>
@@ -751,6 +752,20 @@ export default function ParkingDetailPage() {
                               {booking.plateNumber}
                             </Badge>
                           </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center gap-2 text-slate-700 font-bold min-w-[120px]">
+                            <Clock className="h-3.5 w-3.5 text-slate-400" />
+                            {dayjs(booking.startTime).format("MMM D, HH:mm")}
+                          </div>
+                          {booking.endTime && (
+                            <div className="text-[10px] text-slate-400 font-bold flex items-center gap-1 pl-5">
+                              <ArrowLeft className="h-2.5 w-2.5 rotate-180" />
+                              {dayjs(booking.endTime).format("HH:mm")}
+                            </div>
+                          )}
                         </div>
                       </td>
                       <td className="px-6 py-4">

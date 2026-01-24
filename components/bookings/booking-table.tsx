@@ -243,6 +243,14 @@ export function BookingsTable({
 
 
     {
+      key: "time",
+      header: "Parking Time",
+      render: (row) =>
+        `${formatDateTime(row.startTime)} → ${row.endTime ? formatDateTime(row.endTime) : "Ongoing"
+        }`,
+    },
+
+    {
       key: "live",
       header: "Live Session / Est. Price",
       render: (row) => (
