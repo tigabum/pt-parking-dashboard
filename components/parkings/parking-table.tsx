@@ -105,7 +105,7 @@ export function ParkingSpacesTable({
       )
     },
 
-    {
+    /* {
       key: "reviews",
       header: "Reviews",
       render: (row) => (
@@ -117,7 +117,7 @@ export function ParkingSpacesTable({
           <span className="text-[10px] text-slate-400 font-medium">({row.ratingsCount || 0})</span>
         </div>
       )
-    },
+    }, */
     {
       key: "qr",
       header: "QR",

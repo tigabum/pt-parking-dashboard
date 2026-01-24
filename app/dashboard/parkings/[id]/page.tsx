@@ -512,6 +512,16 @@ export default function ParkingDetailPage() {
 
             {/* System Info */}
             <DetailItem label="Assigned Manager" value={parking.createdBy?.fullName || "—"} />
+            <DetailItem
+              label="Customer Satisfaction"
+              value={
+                <div className="flex items-center gap-2">
+                  <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
+                  <span>{parking.averageRating != null ? Number(parking.averageRating).toFixed(1) : "0.0"} / 5.0</span>
+                  <span className="text-slate-400 font-medium">({parking.ratingsCount || 0} reviews)</span>
+                </div>
+              }
+            />
             <DetailItem label="Commission Structure" value={parking.commissionConfig?.name || "—"} className="text-primary" />
             <DetailItem label="VAT Number" value={parking.vatRegistrationNumber || "—"} />
             <DetailItem label="TIN/Tax ID" value={parking.tinNumber || "—"} />

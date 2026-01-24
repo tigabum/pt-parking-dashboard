@@ -320,6 +320,10 @@ function PortalContent() {
                 if (vehicle) {
                     setBrand(vehicle.brand || "");
                     setModel(vehicle.model || "");
+                    toast.success(`Welcome back, ${result.fullName}! Details pre-filled.`);
+                    setStep(2); // Move to verification directly for efficiency
+                    setSearching(false);
+                    return;
                 }
                 toast.success(`Profile found! Welcome back, ${result.fullName}`);
             } else {
@@ -328,7 +332,7 @@ function PortalContent() {
                 setBrand("");
                 setModel("");
             }
-            setStep(1); // Move to full form for new booking
+            setStep(1); // Move to details form if vehicle is new or customer is new
         } catch (e) {
             console.error("Lookup failed", e);
             setStep(1); // Proceed anyway to let user entry manually

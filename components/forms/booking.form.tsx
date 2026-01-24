@@ -300,6 +300,14 @@ export function BookingForm({
 
       if (foundCustomer || foundVehicle) {
         toast.success(`Profile Synchronized: ${updatedName}`);
+
+        // If BOTH found and vehicle belongs to this customer, skip to summary (Step 2)
+        const isMatch = foundVehicle && foundCustomer && foundVehicle.customer?.id === foundCustomer.id;
+        if (isMatch || (foundVehicle && !foundCustomer && foundVehicle.customer)) {
+          setStep(2); // Skip straight to summary if we have full data
+          setSearching(false);
+          return;
+        }
       } else {
         toast.info("New entry detected - manual input required.");
       }
@@ -558,12 +566,13 @@ export function BookingForm({
                     </div>
                     <Input
                       value={booking.customerName}
+                      readOnly={customerFound}
                       onChange={(e) => {
                         setBooking({ ...booking, customerName: e.target.value });
                         if (errors.customerName) setErrors({ ...errors, customerName: "" });
                       }}
                       placeholder="Enter Driver Name"
-                      className={`h-12 rounded-xl bg-slate-50 border-none font-bold ${errors.customerName ? "border-2 border-red-500 bg-red-50" : ""}`}
+                      className={`h-12 rounded-xl bg-slate-50 border-none font-bold ${errors.customerName ? "border-2 border-red-500 bg-red-50" : ""} ${customerFound ? "bg-emerald-50 text-emerald-900" : ""}`}
                     />
                     {errors.customerName && <p className="text-xs text-red-500 font-medium">{errors.customerName}</p>}
                   </div>
@@ -571,9 +580,10 @@ export function BookingForm({
                     <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">Vehicle Brand</Label>
                     <Input
                       value={booking.vehicleBrand}
+                      readOnly={vehicleFound}
                       onChange={(e) => setBooking({ ...booking, vehicleBrand: e.target.value })}
                       placeholder="Enter Vehicle Brand"
-                      className="h-12 rounded-xl bg-slate-50 border-none font-bold"
+                      className={`h-12 rounded-xl bg-slate-50 border-none font-bold ${vehicleFound ? "bg-emerald-50 text-emerald-900" : ""}`}
                     />
                   </div>
                   <div className="space-y-2">
@@ -585,9 +595,10 @@ export function BookingForm({
                     </div>
                     <Input
                       value={booking.vehicleName}
+                      readOnly={vehicleFound}
                       onChange={(e) => setBooking({ ...booking, vehicleName: e.target.value })}
                       placeholder="Enter Model"
-                      className="h-12 rounded-xl bg-slate-50 border-none font-bold"
+                      className={`h-12 rounded-xl bg-slate-50 border-none font-bold ${vehicleFound ? "bg-emerald-50 text-emerald-900" : ""}`}
                     />
                   </div>
                 </div>
