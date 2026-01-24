@@ -126,6 +126,28 @@ export function BookingForm({
     }
   }, [initialData, user?.orgId, parkings]);
 
+  // Proactive search for customer
+  useEffect(() => {
+    const phone = booking.customerPhone;
+    if (phone && phone.length >= 9 && !customerFound) {
+      const timer = setTimeout(() => {
+        searchCustomer_action(phone);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [booking.customerPhone]);
+
+  // Proactive search for vehicle
+  useEffect(() => {
+    const plate = booking.plateNumber;
+    if (plate && plate.length >= 4 && !vehicleFound) {
+      const timer = setTimeout(() => {
+        searchVehicle_action(plate);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [booking.plateNumber]);
+
   const validateStep2 = () => {
     const newErrors: Record<string, string> = {};
     if (!booking.parkingId) newErrors.parkingId = "Parking selection is required";
@@ -253,32 +275,34 @@ export function BookingForm({
       let foundCustomer: any = null;
       let foundVehicle: any = null;
 
-      if (cRes.status === 'fulfilled' && cRes.value.success && cRes.value.data) {
-        foundCustomer = cRes.value.data;
+      if (cRes.status === 'fulfilled' && (cRes.value.success || cRes.value.id)) {
+        foundCustomer = cRes.value.data || cRes.value;
         setCustomerFound(true);
-        toast.success(`Profile Found: ${foundCustomer.fullName}`);
-      } else {
-        setCustomerFound(false);
-        toast.info("New customer profile - please enter details in the next step.");
       }
 
-      if (vRes.status === 'fulfilled' && vRes.value && vRes.value.id) {
-        foundVehicle = vRes.value;
+      if (vRes.status === 'fulfilled' && (vRes.value.success || vRes.value.id)) {
+        foundVehicle = vRes.value.data || vRes.value;
         setVehicleFound(true);
-        toast.success(`Vehicle Found: ${foundVehicle.brand}`);
-      } else {
-        setVehicleFound(false);
-        toast.info("New vehicle - please enter details in the next step.");
       }
+
+      const updatedName = foundCustomer?.fullName || foundVehicle?.customer?.fullName || booking.customerName;
+      const updatedPhone = foundCustomer?.phoneNumber || foundVehicle?.customer?.phoneNumber || booking.customerPhone;
+      const updatedBrand = foundVehicle?.brand || booking.vehicleBrand;
+      const updatedModel = foundVehicle?.model || foundVehicle?.name || booking.vehicleName;
 
       setBooking(prev => ({
         ...prev,
-        customerName: foundCustomer?.fullName || foundVehicle?.customer?.fullName || prev.customerName,
-        customerPhone: foundCustomer?.phoneNumber || foundVehicle?.customer?.phoneNumber || prev.customerPhone,
-        vehicleBrand: foundVehicle?.brand || prev.vehicleBrand,
-        vehicleName: foundVehicle?.model || prev.vehicleName || foundVehicle?.brand || "",
-        plateNumber: foundVehicle?.plateNumber || prev.plateNumber,
+        customerName: updatedName,
+        customerPhone: updatedPhone,
+        vehicleBrand: updatedBrand,
+        vehicleName: updatedModel,
       }));
+
+      if (foundCustomer || foundVehicle) {
+        toast.success(`Profile Synchronized: ${updatedName}`);
+      } else {
+        toast.info("New entry detected - manual input required.");
+      }
 
       setStep(1);
     } catch (err) {
@@ -296,17 +320,18 @@ export function BookingForm({
     setSearching(true);
     try {
       const res = await customerService.searchByPhone(phone);
-      if (res.success && res.data) {
-        const customer = res.data;
+      const customer = res.data || res;
+
+      if (customer && customer.id) {
         const mainVehicle = customer.vehicles?.[0];
 
         setBooking((prev: CreateBooking) => ({
           ...prev,
-          customerName: customer.fullName || "",
-          customerPhone: customer.phoneNumber || "",
-          plateNumber: mainVehicle?.plateNumber || prev.plateNumber || "",
-          vehicleBrand: mainVehicle?.brand || prev.vehicleBrand || "",
-          vehicleName: (mainVehicle?.name || prev.vehicleName || mainVehicle?.brand || "") as string,
+          customerName: customer.fullName || prev.customerName,
+          customerPhone: customer.phoneNumber || prev.customerPhone,
+          plateNumber: prev.plateNumber || mainVehicle?.plateNumber || "",
+          vehicleBrand: prev.vehicleBrand || mainVehicle?.brand || "",
+          vehicleName: prev.vehicleName || mainVehicle?.model || mainVehicle?.name || "",
         }));
         setCustomerFound(true);
         if (mainVehicle) setVehicleFound(true);
@@ -326,15 +351,19 @@ export function BookingForm({
     setSearching(true);
     try {
       const res = await vehicleService.searchByPlate(plate);
-      if (res && res.id) {
+      const vehicle = res.data || res;
+      if (vehicle && vehicle.id) {
         setBooking((prev: CreateBooking) => ({
           ...prev,
-          vehicleBrand: res.brand,
-          vehicleName: res.name || res.brand,
-          plateNumber: res.plateNumber,
+          vehicleBrand: vehicle.brand || prev.vehicleBrand,
+          vehicleName: vehicle.model || vehicle.name || prev.vehicleName,
+          plateNumber: vehicle.plateNumber || prev.plateNumber,
+          customerName: vehicle.customer?.fullName || prev.customerName,
+          customerPhone: vehicle.customer?.phoneNumber || prev.customerPhone,
         }));
         setVehicleFound(true);
-        toast.success(`Vehicle found: ${res.brand} ${res.name || ''}`);
+        if (vehicle.customer) setCustomerFound(true);
+        toast.success(`Vehicle found: ${vehicle.brand} ${vehicle.model || vehicle.name || ''}`);
       } else {
         setVehicleFound(false);
         toast.info("New vehicle - please enter details");
