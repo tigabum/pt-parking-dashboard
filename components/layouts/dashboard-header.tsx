@@ -16,6 +16,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getImageUrl } from "@/lib/utils";
 
 export function DashboardHeader() {
   const { user, logout } = useAuth();
@@ -56,16 +58,20 @@ export function DashboardHeader() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                variant="secondary"
-                size="icon"
-                className="rounded-full h-9 w-9 overflow-hidden border border-gray-200"
+                variant="ghost"
+                className="relative h-10 w-10 rounded-full"
               >
-                <User className="h-5 w-5 text-gray-500" />
+                <Avatar className="h-10 w-10 border border-gray-200">
+                  <AvatarImage src={getImageUrl(user?.profileImage)} alt={user?.fullName} />
+                  <AvatarFallback className="bg-primary/10 text-primary font-bold">
+                    {user?.fullName?.charAt(0) || "U"}
+                  </AvatarFallback>
+                </Avatar>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/dashboard/settings")}>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
               </DropdownMenuItem>

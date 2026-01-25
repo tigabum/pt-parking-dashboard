@@ -187,7 +187,7 @@ export default function DashboardPage() {
             icon={<Users className="w-5 h-5" />}
           />
         )}
-        {hasPermission(PERMISSIONS.PARKING_VIEW) && (
+        {hasPermission(PERMISSIONS.PARKING_VIEW) && user?.role !== UserRole.PARKING_SUPER_ADMIN && (
           <EnterpriseStat
             label="Parking Spaces"
             value={stats.activeParkings}

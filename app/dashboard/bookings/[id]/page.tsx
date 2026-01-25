@@ -422,7 +422,6 @@ export default function BookingDetailPage() {
                 {booking.bookingMethod && <DetailItem label="Booking Method" value={<Badge variant="outline" className="font-bold uppercase tracking-widest text-[9px]">{booking.bookingMethod}</Badge>} />}
 
                 <DetailItem label="Final Amount" value={<span className="text-lg font-black text-slate-900">{formatMoney(booking.totalAmount)}</span>} />
-                {booking.commissionAmount !== null && <DetailItem label="Service Fee" value={formatMoney(booking.commissionAmount || 0)} className="text-primary" />}
                 {booking.vatAmount !== null && <DetailItem label="VAT Amount" value={formatMoney(booking.vatAmount || 0)} className="text-slate-500" />}
                 <DetailItem label="VAT Status" value={booking.isVatIncluded ? "Included" : "Excluded"} />
                 {booking.paymentMethod && (
@@ -465,9 +464,90 @@ export default function BookingDetailPage() {
                         </div>
                     } />
                 )}
-                {parking?.name && <DetailItem label="Parking Terminal" value={parking?.name} />}
-                {(parking?.city || parking?.subCity) && <DetailItem label="Terminal Addr" value={[parking?.city, parking?.subCity, parking?.woreda].filter(Boolean).join(", ")} />}
+                <DetailItem label="Parking Terminal" value={parking?.name} />
             </DetailSection>
+
+            {parking && (
+                <DetailSection title="Facility Assets & Documentation">
+                    {/* Address Detail */}
+                    <div className="col-span-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-4">
+                        <DetailItem label="Region" value={parking.region || "—"} />
+                        <DetailItem label="City" value={parking.city || "—"} />
+                        <DetailItem label="Sub-City" value={parking.subCity || "—"} />
+                        <DetailItem label="Woreda" value={parking.woreda || "—"} />
+                        <DetailItem label="Kebele" value={parking.kebele || "—"} />
+                        <DetailItem label="Street Name" value={parking.streetName || "—"} />
+                    </div>
+
+                    {/* Feature Image */}
+                    {parking.featureImage && (
+                        <div className="col-span-full space-y-2">
+                            <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Primary Feature Asset</Label>
+                            <div className="h-64 w-full rounded-2xl overflow-hidden border border-slate-100 shadow-sm relative group bg-slate-50">
+                                <img
+                                    src={getImageUrl(parking.featureImage)}
+                                    alt="Feature"
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                />
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Gallery Grid */}
+                    <div className="col-span-full space-y-2 mt-4">
+                        <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Gallery Showcase</Label>
+                        {parking.galleryImages && parking.galleryImages.length > 0 ? (
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {parking.galleryImages.map((img, i) => (
+                                    <div key={i} className="aspect-square rounded-xl overflow-hidden border border-slate-100 bg-slate-50 group relative shadow-sm">
+                                        <img
+                                            src={getImageUrl(img)}
+                                            alt={`Gallery ${i}`}
+                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="p-6 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                No gallery assets available
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Documents List */}
+                    <div className="col-span-full space-y-2 mt-4">
+                        <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">Compliance Documents</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {[
+                                ...(parking.licenseFiles || []).map((f, idx) => ({ url: f, type: 'License', label: `License #${idx + 1}` })),
+                                ...(parking.agreementDocuments || []).map((f, idx) => ({ url: f, type: 'Agreement', label: `Agreement #${idx + 1}` }))
+                            ].map((doc, i) => (
+                                <a
+                                    key={i}
+                                    href={getImageUrl(doc.url)}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-4 p-4 rounded-xl bg-white border border-slate-100 shadow-sm hover:shadow-md transition-all group"
+                                >
+                                    <div className="h-10 w-10 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center shrink-0 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                                        <CreditCard className="h-5 w-5" />
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-sm text-slate-900">{doc.label}</p>
+                                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-wider group-hover:text-orange-500 transition-colors">{doc.type}</p>
+                                    </div>
+                                </a>
+                            ))}
+                            {(!parking.licenseFiles?.length && !parking.agreementDocuments?.length) && (
+                                <div className="col-span-full p-6 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">
+                                    No compliance documents on file
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </DetailSection>
+            )}
 
             {/* Redesigned Extension Dialog */}
             <Dialog open={isExtendOpen} onOpenChange={setIsExtendOpen}>

@@ -448,7 +448,7 @@ export default function ParkingDetailPage() {
       <Tabs defaultValue="details" className="w-full space-y-12" onValueChange={setActiveTab}>
         <div className="bg-slate-100/50 p-1.5 rounded-2xl w-fit">
           <TabsList className="bg-transparent p-0 h-auto gap-1">
-            {["Details", "Bookings", "Reviews", "Wallet"].map((tab) => (
+            {["Details", "Reviews", "Wallet"].map((tab) => (
               <TabsTrigger
                 key={tab}
                 value={tab.toLowerCase()}

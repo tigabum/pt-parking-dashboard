@@ -12,7 +12,13 @@ export function getImageUrl(path: string | null | undefined) {
     return path;
   }
 
-  const baseUrl = API_CONFIG.BASE_URL.replace(/\/$/, "");
+  let baseUrl = API_CONFIG.BASE_URL.replace(/\/$/, "");
+
+  // If the base URL ends with /api, remove it to serve static files from root
+  if (baseUrl.endsWith("/api")) {
+    baseUrl = baseUrl.slice(0, -4);
+  }
+
   const cleanPath = path.replace(/^\//, "");
 
   return `${baseUrl}/${cleanPath}`;
