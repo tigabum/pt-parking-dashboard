@@ -1,5 +1,5 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Outfit } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
@@ -15,8 +15,6 @@ export const metadata: Metadata = {
   description: "Professional parking management system",
   generator: "v0.app",
   manifest: "/manifest.json", // Add manifest
-  themeColor: "#0066FF",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0", // Mobile optimization
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -39,6 +37,14 @@ export const metadata: Metadata = {
     ],
     apple: "/apple-icon.png",
   },
+}
+
+export const viewport: Viewport = {
+  themeColor: "#0066FF",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
 
 import { ClientProviders } from "@/components/providers/client-providers"
