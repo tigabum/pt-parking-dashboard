@@ -13,6 +13,7 @@ import { useAuth } from "@/app/context/auth-context";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ReusableTable, Column } from "@/components/tables";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -288,6 +289,67 @@ export default function ParkingDetailPage() {
       </div>
     </div>
   );
+
+  const reviewColumns: Column<Rating>[] = [
+    {
+      key: "customer",
+      header: "Customer",
+      render: (review) => (
+        <div className="flex items-center gap-3">
+          <Avatar className="h-8 w-8 border border-slate-100">
+            <AvatarFallback className="bg-primary/5 text-primary text-[10px] font-black uppercase">
+              {(review.customer?.fullName || "A").charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <span className="font-bold text-slate-900 text-sm truncate max-w-[150px]">
+              {review.customer?.fullName || "Anonymous Member"}
+            </span>
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-tighter">Verified User</span>
+          </div>
+        </div>
+      )
+    },
+    {
+      key: "rating",
+      header: "Sentiment",
+      render: (review) => (
+        <div className="flex items-center gap-1">
+          <Badge className="bg-amber-50 text-amber-600 border border-amber-100 font-black text-xs px-2 h-7 rounded-lg group-hover:bg-amber-100 transition-colors">
+            {review.rating}<Star size={10} className="ml-1 fill-current stroke-[3px]" />
+          </Badge>
+          <div className="flex items-center gap-0.5 ml-1 hidden md:flex">
+            {[1, 2, 3, 4, 5].map((s) => (
+              <Star key={s} size={8} className={cn("fill-current", s <= review.rating ? "text-amber-400" : "text-slate-100")} />
+            ))}
+          </div>
+        </div>
+      )
+    },
+    {
+      key: "comment",
+      header: "Comment",
+      render: (review) => (
+        <p className="text-sm font-medium text-slate-500 line-clamp-1 max-w-sm italic">
+          "{review.comment || "No written sentiment provided."}"
+        </p>
+      )
+    },
+    {
+      key: "createdAt",
+      header: "Observed",
+      render: (review) => (
+        <div className="flex flex-col text-right lg:text-left">
+          <span className="font-bold text-slate-700 text-xs">
+            {dayjs(review.createdAt).format("MMM D, YYYY")}
+          </span>
+          <span className="text-[9px] text-slate-400 font-bold uppercase">
+            {dayjs(review.createdAt).fromNow()}
+          </span>
+        </div>
+      )
+    }
+  ];
 
   const txColumns: Column<any>[] = [
     {
@@ -839,40 +901,42 @@ export default function ParkingDetailPage() {
 
         {/* TAB: REVIEWS */}
         <TabsContent value="reviews" className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <div className="lg:col-span-1 space-y-6">
-              <div className="bg-white rounded-3xl p-8 border shadow-sm">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4">Sentiment Analysis</p>
-                <div className="flex items-end gap-3 mb-2">
-                  <span className="text-6xl font-black text-slate-900">{ratingStats?.averageRating != null ? Number(ratingStats.averageRating).toFixed(1) : "0.0"}</span>
-                  <Star className="h-10 w-10 text-amber-400 fill-current mb-2" />
+          <div className="bg-white rounded-3xl overflow-hidden border shadow-sm">
+            <div className="p-8 border-b bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Sentiment Registry</h3>
+                <p className="text-[11px] text-slate-500 font-bold uppercase tracking-tight opacity-70">Log of member reviews and facility ratings</p>
+              </div>
+
+              <div className="flex items-center gap-6 pr-4">
+                <div className="flex flex-col items-end px-6 py-2 border-r border-slate-200">
+                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Satisfactory Score</p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-2xl font-black text-slate-900 tabular-nums">
+                      {ratingStats?.averageRating != null ? Number(ratingStats.averageRating).toFixed(1) : "0.0"}
+                    </span>
+                    <Star className="h-4 w-4 text-amber-400 fill-current mb-0.5" />
+                  </div>
                 </div>
-                <p className="text-sm font-bold text-slate-500 uppercase tracking-tight">Based on {ratingStats?.totalRatings || 0} reviews</p>
+                <div className="flex flex-col items-end">
+                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Total Signals</p>
+                  <p className="text-2xl font-black text-slate-900 tabular-nums">
+                    {ratingStats?.totalRatings || 0}
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="lg:col-span-3 space-y-4">
-              {reviews.map((review, i) => (
-                <div key={i} className="bg-white rounded-3xl p-6 md:p-8 border shadow-sm flex flex-col md:flex-row gap-6">
-                  <div className="h-14 w-14 rounded-2xl bg-slate-50 flex items-center justify-center border border-slate-100 shrink-0 font-black text-primary text-xl shadow-sm">
-                    {review.rating}<Star size={16} className="ml-1 fill-current" />
-                  </div>
-                  <div className="flex-1 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="font-black text-slate-900">{review.customer?.fullName || "Anonymous Member"}</div>
-                      <div className="text-[10px] font-bold text-slate-400 uppercase">{dayjs(review.createdAt).fromNow()}</div>
-                    </div>
-                    <p className="text-sm text-slate-600 font-medium leading-relaxed italic border-l-4 border-slate-100 pl-4 py-1">"{review.comment || "No written sentiment provided."}"</p>
-                  </div>
-                </div>
-              ))}
-              {reviews.length === 0 && !reviewsLoading && (
-                <div className="bg-white rounded-3xl p-16 border border-dashed text-center flex flex-col items-center justify-center gap-4">
-                  <Star className="h-12 w-12 text-slate-100" />
-                  <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">No customer sentiments recorded yet.</p>
-                </div>
-              )}
-              {reviewsTotalPages > 1 && (
+            <ReusableTable
+              data={reviews}
+              columns={reviewColumns}
+              getRowKey={(row) => row.id}
+              isLoading={reviewsLoading}
+              emptyText="No customer sentiments recorded for this terminal."
+            />
+
+            {reviewsTotalPages > 1 && (
+              <div className="p-6 md:p-8 bg-slate-50 border-t border-slate-100">
                 <DashboardPagination
                   page={reviewsPage}
                   totalPages={reviewsTotalPages}
@@ -881,8 +945,8 @@ export default function ParkingDetailPage() {
                   limit={10}
                   onLimitChange={() => { }}
                 />
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </TabsContent>
 
@@ -905,7 +969,7 @@ export default function ParkingDetailPage() {
                 {(user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.PARKING_SUPER_ADMIN) && (
                   <Button
                     onClick={() => setIsTopupOpen(true)}
-                    className="bg-slate-900 hover:bg-black text-white rounded-xl h-12 px-8 text-xs font-black uppercase tracking-widest shadow-xl shadow-slate-200 transition-all hover:-translate-y-0.5 active:translate-y-0"
+                    className="bg-[#0066FF] hover:bg-[#0052CC] text-white rounded-xl h-12 px-8 text-xs font-black uppercase tracking-widest shadow-xl shadow-primary/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <Plus className="h-4 w-4 mr-2 stroke-[3px]" />
                     Topup Wallet
@@ -918,7 +982,7 @@ export default function ParkingDetailPage() {
               columns={txColumns}
               getRowKey={(row) => row.id}
               isLoading={txLoading}
-              emptyText="No transactions detected for this terminal."
+              emptyText={!parking?.wallet ? "No wallet initialization detected for this terminal." : "No transactions recorded yet."}
             />
           </div>
         </TabsContent>
