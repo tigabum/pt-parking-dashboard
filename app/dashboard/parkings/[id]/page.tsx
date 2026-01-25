@@ -166,8 +166,9 @@ export default function ParkingDetailPage() {
       const res = await walletService.getTransactions(id as string);
       setTransactions(Array.isArray(res) ? res : []);
     } catch (err: any) {
-      // If wallet not found (404), just show empty transactions
-      if (err?.response?.status !== 404) {
+      // Silence wallet not found errors (404)
+      const is404 = err?.response?.status === 404 || err?.status === 404;
+      if (!is404) {
         toast.error("Failed to load transactions");
       }
       setTransactions([]);
@@ -887,27 +888,29 @@ export default function ParkingDetailPage() {
 
         <TabsContent value="wallet" className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
           <div className="bg-white rounded-3xl overflow-hidden border shadow-sm">
-            <div className="p-8 border-b bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div className="flex flex-col md:flex-row md:items-center gap-6">
-                <div>
-                  <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Transaction History</h3>
-                  <p className="text-sm text-slate-500 font-medium mt-1">Audit trail of all financial movements.</p>
+            <div className="p-8 border-b bg-slate-50/50 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div className="space-y-1">
+                <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Transaction History</h3>
+                <p className="text-[11px] text-slate-500 font-bold uppercase tracking-tight opacity-70">Audit trail of all financial movements</p>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-end gap-3 md:gap-6">
+                <div className="flex flex-col items-end px-6 py-2 border-r border-slate-200">
+                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Current Balance</p>
+                  <p className="text-2xl font-black text-slate-900 tabular-nums">
+                    {Number(parking.wallet?.balance || 0).toLocaleString()} <span className="text-[10px] opacity-40 font-black uppercase">ETB</span>
+                  </p>
                 </div>
+
                 {(user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.PARKING_SUPER_ADMIN) && (
                   <Button
                     onClick={() => setIsTopupOpen(true)}
-                    className="bg-primary hover:bg-primary/90 text-white rounded-xl h-11 px-6 text-xs font-bold shadow-md shadow-primary/20"
+                    className="bg-slate-900 hover:bg-black text-white rounded-xl h-12 px-8 text-xs font-black uppercase tracking-widest shadow-xl shadow-slate-200 transition-all hover:-translate-y-0.5 active:translate-y-0"
                   >
-                    <Plus className="h-4 w-4 mr-2" />
+                    <Plus className="h-4 w-4 mr-2 stroke-[3px]" />
                     Topup Wallet
                   </Button>
                 )}
-              </div>
-              <div className="flex flex-col items-end">
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Current Balance</p>
-                <p className="text-2xl font-black text-slate-900 tabular-nums">
-                  {Number(parking.wallet?.balance || 0).toLocaleString()} <span className="text-xs opacity-60 font-bold uppercase">ETB</span>
-                </p>
               </div>
             </div>
             <ReusableTable
