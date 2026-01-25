@@ -884,48 +884,24 @@ export default function ParkingDetailPage() {
 
         {/* TAB: WALLET */}
         <TabsContent value="wallet" className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl shadow-primary/20">
+          <div className="grid grid-cols-1 gap-8">
+            <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl shadow-primary/20 max-w-md">
               <div className="absolute top-0 right-0 p-8 opacity-10">
                 <WalletIcon className="h-32 w-32 -rotate-12" />
               </div>
               <div className="relative z-10 flex flex-col h-full justify-between gap-12">
                 <div>
-                  <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-4">Terminal Liquidity</p>
+                  <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-4">Current Wallet Balance</p>
                   <h2 className="text-5xl font-black tracking-tighter tabular-nums">
                     {Number(parking.wallet?.balance || 0).toLocaleString()} <span className="text-lg opacity-30 font-bold">ETB</span>
                   </h2>
                 </div>
                 <div className="flex items-center gap-4 pt-4 border-t border-white/10">
                   <div className="flex flex-col">
-                    <span className="text-[9px] uppercase font-bold text-white/30 tracking-widest">Wallet ID</span>
+                    <span className="text-[9px] uppercase font-bold text-white/30 tracking-widest">Wallet Reference</span>
                     <span className="text-xs font-mono font-bold text-white/60">PT-{parking.id.substring(0, 8).toUpperCase()}</span>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-[2.5rem] p-8 border shadow-sm flex flex-col justify-between">
-              <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400">
-                <ArrowUpRight className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Total Inbound</p>
-                <p className="text-3xl font-black text-slate-900">
-                  {transactions.filter(t => t.type === 'DEPOSIT').reduce((acc, curr) => acc + (curr.amount || 0), 0).toLocaleString()} <span className="text-sm font-bold opacity-30">ETB</span>
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-[2.5rem] p-8 border shadow-sm flex flex-col justify-between">
-              <div className="h-12 w-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400">
-                <ArrowDownLeft className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Total Outbound</p>
-                <p className="text-3xl font-black text-slate-900">
-                  {transactions.filter(t => t.type === 'WITHDRAWAL').reduce((acc, curr) => acc + (curr.amount || 0), 0).toLocaleString()} <span className="text-sm font-bold opacity-30">ETB</span>
-                </p>
               </div>
             </div>
           </div>

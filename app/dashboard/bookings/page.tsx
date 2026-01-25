@@ -228,14 +228,14 @@ export default function BookingsPage() {
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 w-full bg-white p-1 rounded-2xl">
 
           {/* Left Side: Search & Filters Group */}
-          <div className="flex flex-1 flex-col lg:flex-row gap-3 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
+          <div className="flex flex-1 flex-col lg:flex-row flex-wrap gap-3 pb-2 lg:pb-0">
 
             {/* Search */}
-            <div className="relative min-w-[240px] lg:w-[320px]">
+            <div className="relative flex-grow lg:flex-grow-0 lg:w-[320px]">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
                 placeholder="Search..."
-                className="pl-10 h-10 rounded-xl border-slate-200 bg-slate-50 focus:bg-white transition-all shadow-sm"
+                className="pl-10 h-10 rounded-xl border-slate-200 bg-slate-50 focus:bg-white transition-all shadow-sm w-full"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -245,7 +245,7 @@ export default function BookingsPage() {
             <div className="hidden lg:block w-px h-10 bg-slate-100 mx-1" />
 
             {/* Filters Row */}
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-[140px] h-10 rounded-xl border-slate-200 font-bold text-xs">
                   <div className="flex items-center gap-2 truncate">
@@ -292,13 +292,6 @@ export default function BookingsPage() {
               <Button onClick={clearFilters} variant="ghost" size="sm" className="h-10 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-700">
                 <X className="h-4 w-4 mr-2" />
                 Clear
-              </Button>
-            )}
-
-            {hasPermission(PERMISSIONS.REVENUE_EXPORT) && (
-              <Button onClick={exportToCSV} variant="outline" size="sm" className="h-10 rounded-xl gap-2 font-bold text-slate-600 border-slate-200 shadow-sm">
-                <Download className="h-4 w-4" />
-                Export
               </Button>
             )}
 
