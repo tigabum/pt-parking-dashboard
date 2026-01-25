@@ -161,9 +161,13 @@ export default function ParkingDetailPage() {
     try {
       setTxLoading(true);
       const res = await walletService.getTransactions(id as string);
-      setTransactions(res || []);
-    } catch (err) {
-      toast.error("Failed to load transactions");
+      setTransactions(Array.isArray(res) ? res : []);
+    } catch (err: any) {
+      // If wallet not found (404), just show empty transactions
+      if (err?.response?.status !== 404) {
+        toast.error("Failed to load transactions");
+      }
+      setTransactions([]);
     } finally {
       setTxLoading(false);
     }

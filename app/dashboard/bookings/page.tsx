@@ -222,94 +222,93 @@ export default function BookingsPage() {
       <PageHeader
         title="Active Bookings"
         description="Oversee reservations, subscriptions, and real-time space utilization."
+        className="mb-2"
       >
-        <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between w-full gap-4 mt-2">
-          {/* Left: Search */}
-          <div className="relative w-full xl:w-72 shrink-0">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <Input
-              placeholder="Search by Plate, Ref or Customer..."
-              className="pl-10 h-11 rounded-xl border-slate-200 w-full"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
+        {/* Single Row Layout Container */}
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 w-full bg-white p-1 rounded-2xl">
 
-          {/* Middle: Filters */}
-          <div className="flex flex-wrap items-center gap-2 md:gap-3 flex-1 lg:justify-start xl:justify-center">
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[130px] h-11 rounded-xl border-slate-200 bg-white">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent className="rounded-xl">
-                <SelectItem value="ALL">All Status</SelectItem>
-                <SelectItem value={BookingStatus.ACTIVE}>Active</SelectItem>
-                <SelectItem value={BookingStatus.WAITING_CONFIRMATION}>Waiting Confirmation</SelectItem>
-                <SelectItem value={BookingStatus.PAID}>Paid</SelectItem>
-                <SelectItem value={BookingStatus.PENDING}>Pending</SelectItem>
-                <SelectItem value={BookingStatus.CANCELLED}>Cancelled</SelectItem>
-              </SelectContent>
-            </Select>
+          {/* Left Side: Search & Filters Group */}
+          <div className="flex flex-1 flex-col lg:flex-row gap-3 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide">
 
-            {/* Manager Filter - Only for Super Admins */}
-            {(user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.PARKING_SUPER_ADMIN) && managers.length > 0 && (
-              <Select value={managerFilter} onValueChange={setManagerFilter}>
-                <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[180px] h-11 rounded-xl border-slate-200 bg-white">
+            {/* Search */}
+            <div className="relative min-w-[240px] lg:w-[320px]">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Input
+                placeholder="Search..."
+                className="pl-10 h-10 rounded-xl border-slate-200 bg-slate-50 focus:bg-white transition-all shadow-sm"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+
+            {/* Divider for visual separation on large screens */}
+            <div className="hidden lg:block w-px h-10 bg-slate-100 mx-1" />
+
+            {/* Filters Row */}
+            <div className="flex items-center gap-2">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-[140px] h-10 rounded-xl border-slate-200 font-bold text-xs">
                   <div className="flex items-center gap-2 truncate">
-                    <UserIcon className="h-4 w-4 text-slate-400 shrink-0" />
-                    <SelectValue placeholder="All Managers" />
+                    {statusFilter === "ALL" ? <CheckCircle2 className="h-3.5 w-3.5 text-slate-400" /> : <div className="h-2 w-2 rounded-full bg-primary" />}
+                    <span className="truncate">{statusFilter === "ALL" ? "All Status" : statusFilter}</span>
                   </div>
                 </SelectTrigger>
                 <SelectContent className="rounded-xl">
-                  <SelectItem value="ALL">All Managers</SelectItem>
-                  {managers.map((m: any) => (
-                    <SelectItem key={m.id} value={m.id}>
-                      {m.fullName}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="ALL">All Status</SelectItem>
+                  <SelectItem value={BookingStatus.ACTIVE}>Active</SelectItem>
+                  <SelectItem value={BookingStatus.WAITING_CONFIRMATION}>Waiting</SelectItem>
+                  <SelectItem value={BookingStatus.PAID}>Paid</SelectItem>
+                  <SelectItem value={BookingStatus.PENDING}>Pending</SelectItem>
+                  <SelectItem value={BookingStatus.CANCELLED}>Cancelled</SelectItem>
                 </SelectContent>
               </Select>
-            )}
 
-            <div className="w-full sm:w-auto flex-1 sm:flex-none">
-              <DatePickerWithRange date={dateRange} setDate={setDateRange} />
+              {(user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.PARKING_SUPER_ADMIN) && managers.length > 0 && (
+                <Select value={managerFilter} onValueChange={setManagerFilter}>
+                  <SelectTrigger className="w-[160px] h-10 rounded-xl border-slate-200 font-bold text-xs">
+                    <div className="flex items-center gap-2 truncate">
+                      <UserIcon className="h-3.5 w-3.5 text-slate-400" />
+                      <span className="truncate">{managers.find(m => m.id === managerFilter)?.fullName || "All Managers"}</span>
+                    </div>
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl">
+                    <SelectItem value="ALL">All Managers</SelectItem>
+                    {managers.map((m: any) => (
+                      <SelectItem key={m.id} value={m.id}>{m.fullName}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+
+              <div className="w-[240px]">
+                <DatePickerWithRange date={dateRange} setDate={setDateRange} className="h-10" />
+              </div>
             </div>
+          </div>
 
-            {hasPermission(PERMISSIONS.REVENUE_EXPORT) && (
-              <Button
-                variant="outline"
-                onClick={exportToCSV}
-                className="h-11 rounded-xl px-4 border-slate-200 bg-white hover:bg-slate-50 font-bold flex-1 sm:flex-none"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button>
-            )}
-
-            {(searchQuery !== "" || statusFilter !== "ALL" || managerFilter !== "ALL" || dateRange?.from) && (
-              <Button variant="ghost" size="icon" onClick={clearFilters} className="h-11 w-11 rounded-xl hidden sm:flex">
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-
-            {(searchQuery !== "" || statusFilter !== "ALL" || managerFilter !== "ALL" || dateRange?.from) && (
-              <Button variant="outline" onClick={clearFilters} className="h-11 rounded-xl sm:hidden flex-1 border-slate-200">
+          {/* Right Side: Actions */}
+          <div className="flex items-center gap-2 shrink-0 border-t xl:border-t-0 pt-3 xl:pt-0 border-slate-50">
+            {(searchQuery || statusFilter !== "ALL" || managerFilter !== "ALL" || dateRange?.from) && (
+              <Button onClick={clearFilters} variant="ghost" size="sm" className="h-10 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-700">
                 <X className="h-4 w-4 mr-2" />
                 Clear
               </Button>
             )}
-          </div>
 
-          {/* Right: Add Button */}
-          {hasPermission(PERMISSIONS.BOOKING_CREATE) && (user?.role === UserRole.PARKING_MANAGER || user?.role === UserRole.PARKING_SUPER_ADMIN) && (
-            <Button
-              onClick={handleAdd}
-              className="h-11 rounded-xl px-6 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 shrink-0 w-full xl:w-auto"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              New Booking
-            </Button>
-          )}
+            {hasPermission(PERMISSIONS.REVENUE_EXPORT) && (
+              <Button onClick={exportToCSV} variant="outline" size="sm" className="h-10 rounded-xl gap-2 font-bold text-slate-600 border-slate-200 shadow-sm">
+                <Download className="h-4 w-4" />
+                Export
+              </Button>
+            )}
+
+            {hasPermission(PERMISSIONS.BOOKING_CREATE) && (user?.role === UserRole.PARKING_MANAGER || user?.role === UserRole.PARKING_SUPER_ADMIN) && (
+              <Button onClick={handleAdd} size="sm" className="h-10 rounded-xl bg-primary hover:opacity-90 shadow-lg shadow-primary/20 font-bold px-5">
+                <Plus className="h-4 w-4 mr-2" />
+                New Booking
+              </Button>
+            )}
+          </div>
         </div>
       </PageHeader>
 

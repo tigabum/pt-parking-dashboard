@@ -127,7 +127,7 @@ export default function DashboardPage() {
     }))
 
   return (
-    <div className="p-6 md:p-8 space-y-8 max-w-[1600px] mx-auto">
+    <div className="p-6 md:p-8 space-y-8 w-full mx-auto">
       <PageHeader
         title="Enterprise Overview"
         description="Real-time operational analytics and financial performance."
@@ -165,7 +165,7 @@ export default function DashboardPage() {
       </PageHeader>
 
       {/* PRIMARY STATS GRID */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm divide-y md:divide-y-0 md:divide-x divide-slate-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm divide-y sm:divide-y-0 sm:divide-x divide-slate-100 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 w-full">
         {hasPermission(PERMISSIONS.DASHBOARD_TOTAL_REVENUE) && (
           <EnterpriseStat
             label="Total Revenue"
