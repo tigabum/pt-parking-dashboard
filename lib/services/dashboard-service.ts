@@ -4,6 +4,7 @@ import { ServiceResponse } from '../api-types';
 export interface DashboardStats {
     totalBookings: number;
     activeBookings: number;
+    paidBookings: number;
     revenue: number;
     commission: number;
     totalCapacity: number;

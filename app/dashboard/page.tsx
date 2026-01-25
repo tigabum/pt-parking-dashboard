@@ -180,6 +180,13 @@ export default function DashboardPage() {
             icon={<Calendar className="w-5 h-5" />}
           />
         )}
+        {hasPermission(PERMISSIONS.DASHBOARD_TOTAL_BOOKINGS) && (
+          <EnterpriseStat
+            label="Paid Bookings"
+            value={stats.paidBookings}
+            icon={<CheckCircle2 className="w-5 h-5" />}
+          />
+        )}
         {hasPermission(PERMISSIONS.USER_VIEW) && (
           <EnterpriseStat
             label="Total Users"
