@@ -44,6 +44,7 @@ import {
   ArrowDownLeft,
   Settings2,
   DollarSign,
+  Plus,
 } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
@@ -53,6 +54,7 @@ import { QrCodeDialog } from "@/components/parkings/qr-code-dialog";
 import { BookingStats } from "@/components/parkings/booking-stats";
 import { formatMoney, getImageUrl } from "@/lib/utils";
 import { LiveDurationCell } from "@/components/bookings/live-duration-cell";
+import { WalletTopupForm } from "@/components/forms/wallet-topup-form";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
@@ -68,6 +70,7 @@ export default function ParkingDetailPage() {
   const [approving, setApproving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isQrOpen, setIsQrOpen] = useState(false);
+  const [isTopupOpen, setIsTopupOpen] = useState(false);
   const [previewDoc, setPreviewDoc] = useState<{ url: string; title: string } | null>(null);
 
   // Bookings Pagination & Filter State
@@ -885,9 +888,20 @@ export default function ParkingDetailPage() {
         <TabsContent value="wallet" className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
           <div className="bg-white rounded-3xl overflow-hidden border shadow-sm">
             <div className="p-8 border-b bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Transaction History</h3>
-                <p className="text-sm text-slate-500 font-medium mt-1">Audit trail of all financial movements.</p>
+              <div className="flex flex-col md:flex-row md:items-center gap-6">
+                <div>
+                  <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Transaction History</h3>
+                  <p className="text-sm text-slate-500 font-medium mt-1">Audit trail of all financial movements.</p>
+                </div>
+                {(user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.PARKING_SUPER_ADMIN) && (
+                  <Button
+                    onClick={() => setIsTopupOpen(true)}
+                    className="bg-primary hover:bg-primary/90 text-white rounded-xl h-11 px-6 text-xs font-bold shadow-md shadow-primary/20"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Topup Wallet
+                  </Button>
+                )}
               </div>
               <div className="flex flex-col items-end">
                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Current Balance</p>
@@ -906,6 +920,25 @@ export default function ParkingDetailPage() {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Topup Dialog */}
+      <Dialog open={isTopupOpen} onOpenChange={setIsTopupOpen}>
+        <DialogContent className="max-w-md p-6 rounded-3xl border-none shadow-2xl overflow-hidden">
+          <DialogHeader className="mb-4">
+            <DialogTitle className="text-xl font-bold text-slate-900">Topup Terminal Wallet</DialogTitle>
+          </DialogHeader>
+          <WalletTopupForm
+            parkingId={parking.id}
+            parkingName={parking.name}
+            onSuccess={() => {
+              setIsTopupOpen(false);
+              loadData();
+              loadTransactions();
+            }}
+            onCancel={() => setIsTopupOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
 
       {/* QR Code Dialog */}
       <QrCodeDialog
