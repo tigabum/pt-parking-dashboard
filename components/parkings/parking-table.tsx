@@ -93,17 +93,7 @@ export function ParkingSpacesTable({
       header: "Base Rate",
       render: (row) => formatMoney(row.pricing?.hourly?.price || row.pricing?.flat?.price)
     },
-    {
-      key: "commission",
-      header: "Commission",
-      render: (row) => row.commissionConfig ? (
-        <span className="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-lg">
-          {row.commissionConfig.name}
-        </span>
-      ) : (
-        <span className="text-[10px] text-slate-400">—</span>
-      )
-    },
+
 
     /* {
       key: "reviews",

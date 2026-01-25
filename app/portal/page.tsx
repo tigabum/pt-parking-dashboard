@@ -321,18 +321,17 @@ function PortalContent() {
                     setBrand(vehicle.brand || "");
                     setModel(vehicle.model || "");
                     toast.success(`Welcome back, ${result.fullName}! Details pre-filled.`);
-                    setStep(2); // Move to verification directly for efficiency
-                    setSearching(false);
-                    return;
+                } else {
+                    toast.success(`Profile found! Welcome back, ${result.fullName}`);
                 }
-                toast.success(`Profile found! Welcome back, ${result.fullName}`);
             } else {
                 setIsExistingCustomer(false);
                 setFullName("");
                 setBrand("");
                 setModel("");
             }
-            setStep(1); // Move to details form if vehicle is new or customer is new
+            // Always go to step 1 to allow users to select booking type and review details
+            setStep(1);
         } catch (e) {
             console.error("Lookup failed", e);
             setStep(1); // Proceed anyway to let user entry manually
@@ -816,6 +815,7 @@ function PortalContent() {
                                             <SelectContent className="rounded-xl border-none shadow-xl">
                                                 <SelectItem value="HOURLY" className="font-bold py-3">Hourly Billing</SelectItem>
                                                 <SelectItem value="DAILY" className="font-bold py-3">Daily Pass</SelectItem>
+                                                <SelectItem value="MONTHLY" className="font-bold py-3">Monthly Plan</SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>

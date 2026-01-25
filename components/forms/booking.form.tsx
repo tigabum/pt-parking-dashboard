@@ -309,21 +309,14 @@ export function BookingForm({
       }));
 
       if (foundCustomer || foundVehicle) {
-        // If BOTH found and vehicle explicitly belongs to this customer, skip to summary (Step 2)
-        // STRICT CHECK: The vehicle's owner ID must match the found customer's ID.
-        // If they don't match, or if vehicle has a different owner, we MUST Show Step 1 to verify.
-        const isStrictMatch = foundVehicle && foundCustomer && foundVehicle.customer?.id === foundCustomer.id;
-
-        if (isStrictMatch) {
+        // Pre-fill details but always show step 1 to allow booking type selection
+        // Users can review and modify details including booking type before proceeding
+        if (foundCustomer && foundVehicle && foundVehicle.customer?.id === foundCustomer.id) {
           toast.success(`Verified returning customer: ${updatedName}`);
-          setStep(2); // Skip straight to summary
-          setSearching(false);
-          return;
         }
       }
-      // Else: if partial match or no match or mismatch, go to Step 1 to review/edit details manually.
-      // No error toast needed.
 
+      // Always go to Step 1 to allow users to select booking type and review details
       setStep(1);
     } catch (err) {
       console.error("Search failed", err);
@@ -686,6 +679,7 @@ export function BookingForm({
                   </div>
                 </div>
 
+
                 <div className="flex justify-between items-center pt-8 border-t border-slate-100">
                   <Button
                     variant="ghost"
@@ -694,14 +688,42 @@ export function BookingForm({
                   >
                     <ChevronLeft className="h-5 w-5" /> Back
                   </Button>
-                  <Button
-                    onClick={handleSaveAction}
-                    disabled={isLoading}
-                    className="h-16 px-16 rounded-[2rem] bg-[#0066FF] hover:bg-[#0052CC] text-white font-black transition-all active:scale-95 flex items-center gap-4 text-lg uppercase tracking-widest shadow-none border-none"
-                  >
-                    {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : <Zap className="h-6 w-6 fill-white" />}
-                    Confirm & Start
-                  </Button>
+                  {(() => {
+                    // For monthly bookings, only show confirm button when the month is reached
+                    const isMonthly = booking.type === BookingType.MONTHLY;
+                    const startDate = dayjs(booking.startTime);
+                    const now = dayjs();
+                    const monthReached = now.isSame(startDate, 'month') || now.isAfter(startDate, 'month');
+
+                    // Show button for non-monthly or when month is reached
+                    const showButton = !isMonthly || monthReached;
+
+                    if (!showButton) {
+                      return (
+                        <div className="flex flex-col items-end gap-2">
+                          <p className="text-xs font-bold text-amber-600 uppercase tracking-wider">Monthly booking confirmation available from {startDate.format("MMMM YYYY")}</p>
+                          <Button
+                            disabled
+                            className="h-16 px-16 rounded-[2rem] bg-slate-200 text-slate-400 font-black flex items-center gap-4 text-lg uppercase tracking-widest shadow-none border-none cursor-not-allowed"
+                          >
+                            <Clock className="h-6 w-6" />
+                            Confirm Available {startDate.format("MMM D")}
+                          </Button>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <Button
+                        onClick={handleSaveAction}
+                        disabled={isLoading}
+                        className="h-16 px-16 rounded-[2rem] bg-[#0066FF] hover:bg-[#0052CC] text-white font-black transition-all active:scale-95 flex items-center gap-4 text-lg uppercase tracking-widest shadow-none border-none"
+                      >
+                        {isLoading ? <Loader2 className="h-6 w-6 animate-spin" /> : <Zap className="h-6 w-6 fill-white" />}
+                        Confirm & Start
+                      </Button>
+                    );
+                  })()}
                 </div>
               </div>
             )}

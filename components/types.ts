@@ -538,6 +538,7 @@ export interface Commission {
   aboveCommission: number;
   includeVAT: boolean;
   isActive: boolean;
+  parkingId?: string;
   createdAt: string;
   updatedAt: string;
 }

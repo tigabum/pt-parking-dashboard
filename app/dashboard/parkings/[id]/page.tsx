@@ -104,7 +104,7 @@ export default function ParkingDetailPage() {
   }, [id]);
 
   useEffect(() => {
-    if (id && activeTab === "bookings") {
+    if (id && activeTab === "parking-booking") {
       loadBookings();
     }
     if (id && activeTab === "reviews") {
@@ -518,10 +518,10 @@ export default function ParkingDetailPage() {
       <Tabs defaultValue="details" className="w-full space-y-12" onValueChange={setActiveTab}>
         <div className="bg-slate-100/50 p-1.5 rounded-2xl w-fit">
           <TabsList className="bg-transparent p-0 h-auto gap-1">
-            {["Details", "Reviews", "Wallet"].map((tab) => (
+            {["Details", "Reviews", "Wallet", ...(canAccess([UserRole.SYSTEM_SUPER_ADMIN]) ? ["Parking Booking"] : [])].map((tab) => (
               <TabsTrigger
                 key={tab}
-                value={tab.toLowerCase()}
+                value={tab.toLowerCase().replace(" ", "-")}
                 className="rounded-xl px-6 py-2.5 text-xs font-bold uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all"
               >
                 {tab}
@@ -728,8 +728,8 @@ export default function ParkingDetailPage() {
           </DetailSection>
         </TabsContent>
 
-        {/* TAB: BOOKINGS */}
-        <TabsContent value="bookings" className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
+        {/* TAB: PARKING BOOKING (Only for Super Admin) */}
+        <TabsContent value="parking-booking" className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
           {canAccess([UserRole.SYSTEM_SUPER_ADMIN]) && (
             <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border">
               <BookingStats parkingId={parking.id} />

@@ -21,9 +21,13 @@ import {
     Trash2,
     X,
     Wallet,
-    AlertCircle
+    AlertCircle,
+    Building2,
+    LayoutGrid
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { parkingService } from "@/lib/services/parking-service";
+import { ParkingResponse } from '@/components/types';
 
 interface CommissionFormProps {
     initialData?: any;
@@ -47,8 +51,26 @@ export function CommissionForm({
         aboveCommission: 0,
         includeVAT: false,
         isActive: true,
+        parkingId: undefined, // Default to Global
     });
+    const [parkings, setParkings] = useState<ParkingResponse[]>([]);
+    const [fetchingParkings, setFetchingParkings] = useState(true);
     const [errors, setErrors] = useState<Record<string, string>>({});
+
+    useEffect(() => {
+        const fetchParkings = async () => {
+            try {
+                // Fetch all parkings without pagination limit if possible or sufficiently large
+                const res = await parkingService.getAllParking({ limit: 100 });
+                setParkings(res.data || []);
+            } catch (e) {
+                console.error("Failed to load parkings", e);
+            } finally {
+                setFetchingParkings(false);
+            }
+        };
+        fetchParkings();
+    }, []);
 
     useEffect(() => {
         if (initialData) {
@@ -223,8 +245,56 @@ export function CommissionForm({
                                     </SelectContent>
                                 </Select>
                             </div>
+                            <div className="space-y-3">
+                                <Label className="text-sm font-bold text-slate-700 uppercase tracking-widest text-[10px]">Assigned Parking (Optional)</Label>
+                                <Select
+                                    disabled={fetchingParkings}
+                                    value={form.parkingId || "global"}
+                                    onValueChange={(val) => setForm({ ...form, parkingId: val === "global" ? undefined : val })}
+                                >
+                                    <SelectTrigger className="h-12 w-full rounded-xl border-slate-200 bg-slate-50/50 font-bold focus:ring-[#0066FF]">
+                                        <SelectValue placeholder="Select Parking" />
+                                    </SelectTrigger>
+                                    <SelectContent className="rounded-xl max-h-[300px]">
+                                        <SelectItem value="global" className="font-bold text-primary">
+                                            <div className="flex items-center gap-2">
+                                                <LayoutGrid className="h-4 w-4" />
+                                                <span>All Parkings / Global Rule</span>
+                                            </div>
+                                        </SelectItem>
+                                        {parkings.map(parking => (
+                                            <SelectItem key={parking.id} value={parking.id} className="font-medium">
+                                                <div className="flex items-center gap-2">
+                                                    <Building2 className="h-4 w-4 text-slate-400" />
+                                                    <span>{parking.name}</span>
+                                                </div>
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            {form.type !== CommissionType.TIER && (
+                                <div className="space-y-3">
+                                    <Label className="text-sm font-bold text-slate-700 uppercase tracking-widest text-[10px]">
+                                        {form.type === CommissionType.PERCENTAGE ? 'Percentage Value (%)' : 'Flat Amount (ETB)'}*
+                                    </Label>
+                                    <div className="relative">
+                                        <Input
+                                            type="number"
+                                            className={`h-12 rounded-xl border-slate-200 bg-slate-50/50 font-bold ${errors.value ? "border-red-500 bg-red-50" : ""}`}
+                                            placeholder="Enter Value"
+                                            value={form.value}
+                                            onChange={(e) => {
+                                                setForm({ ...form, value: +e.target.value });
+                                                if (errors.value) setErrors({ ...errors, value: "" });
+                                            }}
+                                            required
+                                        />
+                                        {errors.value && <p className="text-xs text-red-500 font-medium">{errors.value}</p>}
+                                    </div>
+                                </div>
+                            )}
                         </div>
-
 
                         {/* VAT & TAX SECTION */}
                         <div className="p-8 rounded-3xl bg-primary/5 border border-primary/10 flex items-center justify-between relative transition-all hover:bg-primary/10">
@@ -319,32 +389,8 @@ export function CommissionForm({
                             </div>
                         )}
 
-                        {/* Single Value Calculation (Percentage/Flat) */}
-                        {form.type !== CommissionType.TIER && (
-                            <div className="p-10 rounded-[2.5rem] bg-primary/5 border border-primary/10 space-y-6">
-                                <div className="flex items-center gap-3 text-primary/70 font-black text-sm uppercase tracking-[0.2em]">
-                                    <AlertCircle className="h-5 w-5" />
-                                    Platform Revenue Cut
-                                </div>
-                                <div className="space-y-3">
-                                    <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Set Flat Fee or Percentage</Label>
-                                    <div className="relative">
-                                        <Input
-                                            type="number"
-                                            className={`h-24 rounded-3xl border-indigo-200 bg-white text-6xl font-black text-primary px-10 tracking-tighter ${errors.value ? "border-red-500 bg-red-50" : ""}`}
-                                            value={form.value}
-                                            onChange={(e) => {
-                                                setForm({ ...form, value: +e.target.value });
-                                                if (errors.value) setErrors({ ...errors, value: "" });
-                                            }}
-                                        />
-                                        <span className="absolute right-10 top-1/2 -translate-y-1/2 text-3xl font-black text-primary/10 select-none">
-                                            {form.type === CommissionType.PERCENTAGE ? '%' : 'ETB'}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                        {/* Single Value Calculation (Percentage/Flat) - MOVED TO TOP GRID */}
+                        {/* Removed the large Platform Revenue Cut card as per request */}
 
                         {/* Above Some Value Section - OUTSIDE loop */}
                         {form.type === CommissionType.TIER && (
