@@ -77,7 +77,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   }, [])
 
-  // ... (Inactivity Timer useEffect stays here)
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const resetTimer = () => {
+      if (timeoutId) clearTimeout(timeoutId);
+      if (user) {
+        timeoutId = setTimeout(() => {
+          console.warn("User inactive for 10 minutes. Logging out.");
+          logout();
+          window.location.href = "/";
+        }, 10 * 60 * 1000); // 10 minutes
+      }
+    };
+
+    const events = ["mousedown", "mousemove", "keypress", "scroll", "touchstart"];
+    const handleActivity = () => resetTimer();
+
+    if (user) {
+      events.forEach((event) => window.addEventListener(event, handleActivity));
+      resetTimer();
+    }
+
+    return () => {
+      events.forEach((event) => window.removeEventListener(event, handleActivity));
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [user]);
 
   const login = async (email?: string, password: string = "", phoneNumber?: string) => {
     try {

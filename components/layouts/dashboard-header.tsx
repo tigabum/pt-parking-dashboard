@@ -69,15 +69,15 @@ export function DashboardHeader() {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => router.push("/dashboard/settings")}>
+            <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-2xl border-slate-100">
+              <DropdownMenuLabel className="font-bold text-slate-400 uppercase text-[10px] px-2 py-1.5 tracking-widest">My Account</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => router.push("/dashboard/settings")} className="rounded-lg font-bold text-slate-600 focus:bg-slate-50 cursor-pointer">
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
               </DropdownMenuItem>
-              <DropdownMenuSeparator />
+              <DropdownMenuSeparator className="my-1 bg-slate-50" />
               <DropdownMenuItem
-                className="text-red-600 focus:text-red-600"
+                className="text-red-500 focus:text-red-600 focus:bg-red-50 rounded-lg font-bold cursor-pointer"
                 onClick={() => {
                   logout();
                   router.push("/");
@@ -88,9 +88,14 @@ export function DashboardHeader() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <div className="text-left hidden sm:block">
-            <p className="text-xs md:text-sm font-medium leading-none">{user?.fullName}</p>
-            <p className="text-[10px] md:text-xs text-muted-foreground mt-1">{user?.email}</p>
+          <div className="text-left hidden sm:block space-y-0.5">
+            <p className="text-xs md:text-sm font-bold text-slate-900 leading-tight truncate max-w-[150px]">{user?.fullName}</p>
+            <div className="flex flex-col">
+              <p className="text-[9px] md:text-[10px] text-slate-400 font-bold leading-none">{user?.email}</p>
+              {user?.phoneNumber && (
+                <p className="text-[9px] md:text-[10px] text-primary/70 font-black mt-0.5 leading-none">{user.phoneNumber}</p>
+              )}
+            </div>
           </div>
         </div>
       </div>

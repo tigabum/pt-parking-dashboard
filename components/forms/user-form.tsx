@@ -276,19 +276,19 @@ export function UserForm({
                         value={role}
                         onValueChange={(val) => setRole(val as UserRole)}
                       >
-                        <SelectTrigger className="h-12 w-full rounded-xl border-slate-200 bg-white font-bold transition-all hover:border-[#0066FF]/50">
+                        <SelectTrigger className="h-12 w-full rounded-xl border-slate-200 bg-white font-bold transition-all hover:border-slate-400/50">
                           <SelectValue placeholder="Enter Role Selection" />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl shadow-2xl border-slate-100">
                           <SelectItem
                             value={UserRole.SYSTEM_SUPER_ADMIN}
-                            className="h-10 font-bold text-primary"
+                            className="h-10 font-bold uppercase"
                           >
                             System Super Admin
                           </SelectItem>
                           <SelectItem
                             value={UserRole.SYSTEM_ADMIN}
-                            className="h-10 font-bold"
+                            className="h-10 font-bold uppercase"
                           >
                             System Admin
                           </SelectItem>

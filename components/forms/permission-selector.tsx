@@ -82,19 +82,19 @@ export function PermissionSelector({
                         variant="outline"
                         role="combobox"
                         aria-expanded={open}
-                        className="w-full justify-between h-auto min-h-14 px-4 py-2 rounded-2xl border-slate-200 hover:border-primary/30 hover:bg-slate-50/50 transition-all text-left"
+                        className="w-full justify-between h-auto min-h-14 px-4 py-3 rounded-2xl border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 transition-all text-left flex items-start"
                     >
-                        <div className="flex flex-wrap gap-1.5 items-center">
+                        <div className="flex flex-wrap gap-1.5 items-center flex-1 max-h-24 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-200">
                             {permissions.length === 0 && (
                                 <span className="text-slate-400 font-medium">
                                     {placeholder}
                                 </span>
                             )}
-                            {permissions.slice(0, 3).map((p) => (
+                            {permissions.map((p) => (
                                 <Badge
                                     key={p}
                                     variant="secondary"
-                                    className="bg-primary/10 text-primary border-none font-bold text-[10px] px-2 py-0.5 rounded-lg flex items-center gap-1"
+                                    className="bg-slate-100 text-slate-700 border-none font-bold text-[10px] px-2 py-0.5 rounded-lg flex items-center gap-1 shrink-0"
                                 >
                                     {PERMISSION_LABELS[p] || p}
                                     <X
@@ -106,32 +106,23 @@ export function PermissionSelector({
                                     />
                                 </Badge>
                             ))}
-                            {permissions.length > 3 && (
-                                <Badge
-                                    variant="secondary"
-                                    className="bg-slate-100 text-slate-500 border-none font-bold text-[10px] px-2 py-0.5 rounded-lg"
-                                >
-                                    +{permissions.length - 3} more
-                                </Badge>
-                            )}
                         </div>
-                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50 mt-1" />
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent
-                    className="w-[var(--radix-popover-trigger-width)] min-w-[320px] md:min-w-[480px] p-0 rounded-2xl shadow-2xl border-primary/20 overflow-hidden z-[9999] flex flex-col max-h-[400px]"
+                    className="w-[var(--radix-popover-trigger-width)] min-w-[320px] md:min-w-[480px] p-0 rounded-2xl shadow-2xl border-slate-200 overflow-hidden z-[9999] flex flex-col"
                     align="start"
                     side="bottom"
-                    sideOffset={8}
-                    avoidCollisions={true}
-                    collisionPadding={20}
+                    sideOffset={4}
+                    avoidCollisions={false}
                 >
                     <div className="p-4 border-b bg-slate-50/50 space-y-3">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                             <Input
                                 placeholder="Search capabilities..."
-                                className="pl-10 h-11 rounded-xl border-slate-200 bg-white focus:ring-primary/20 font-bold text-sm"
+                                className="pl-10 h-11 rounded-xl border-slate-200 bg-white focus:ring-slate-400/20 font-bold text-sm"
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
@@ -142,13 +133,13 @@ export function PermissionSelector({
                             </span>
                             <button
                                 onClick={() => onPermissionsChange([])}
-                                className="text-[10px] font-black text-primary hover:text-primary/80 uppercase tracking-widest transition-colors"
+                                className="text-[10px] font-black text-slate-600 hover:text-slate-900 uppercase tracking-widest transition-colors"
                             >
                                 Clear All
                             </button>
                         </div>
                     </div>
-                    <ScrollArea className="max-h-[300px] overflow-y-auto">
+                    <ScrollArea className="h-[300px] overflow-y-auto">
                         <div className="p-2 space-y-4">
                             {Object.entries(filteredCategories).map(
                                 ([category, perms]) => {
@@ -165,7 +156,7 @@ export function PermissionSelector({
                                                 className={cn(
                                                     "flex items-center justify-between px-3 py-2 rounded-xl transition-colors cursor-pointer group",
                                                     allSelected
-                                                        ? "bg-primary/5"
+                                                        ? "bg-slate-100"
                                                         : "hover:bg-white"
                                                 )}
                                                 onClick={() => toggleCategory(perms)}
@@ -185,13 +176,13 @@ export function PermissionSelector({
                                                         onClick={(e) =>
                                                             e.stopPropagation()
                                                         }
-                                                        className="h-4 w-4 rounded border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                                        className="h-4 w-4 rounded border-slate-300 data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900"
                                                     />
-                                                    <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+                                                    <span className="text-[10px] font-black text-slate-900 uppercase tracking-widest leading-none">
                                                         {category}
                                                     </span>
                                                 </div>
-                                                <span className="text-[10px] font-bold text-slate-400 group-hover:text-primary transition-colors">
+                                                <span className="text-[10px] font-bold text-slate-400 group-hover:text-slate-900 transition-colors">
                                                     {
                                                         perms.filter((p) =>
                                                             permissions.includes(p)
@@ -210,8 +201,8 @@ export function PermissionSelector({
                                                             className={cn(
                                                                 "flex items-center gap-2 p-2 rounded-lg transition-all cursor-pointer",
                                                                 isChecked
-                                                                    ? "bg-white shadow-sm text-primary"
-                                                                    : "hover:bg-white text-slate-600"
+                                                                    ? "bg-white shadow-sm text-slate-900"
+                                                                    : "hover:bg-white text-slate-500"
                                                             )}
                                                             onClick={() =>
                                                                 togglePermission(p)
@@ -225,7 +216,7 @@ export function PermissionSelector({
                                                                 onClick={(e) =>
                                                                     e.stopPropagation()
                                                                 }
-                                                                className="h-3.5 w-3.5 rounded-sm border-slate-300 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                                                className="h-3.5 w-3.5 rounded-sm border-slate-300 data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900"
                                                             />
                                                             <span className="text-[11px] font-bold truncate">
                                                                 {PERMISSION_LABELS[p] ||
@@ -241,12 +232,12 @@ export function PermissionSelector({
                             )}
                         </div>
                     </ScrollArea>
-                    <div className="p-4 bg-primary border-t border-white/10 flex items-center gap-3 shrink-0">
+                    <div className="p-4 bg-slate-900 border-t border-slate-800 flex items-center gap-3 shrink-0">
                         <div className="h-8 w-8 rounded-lg bg-white/10 flex items-center justify-center text-white shrink-0">
                             <Shield className="h-4 w-4" />
                         </div>
-                        <p className="text-[9px] text-white/70 font-bold leading-tight uppercase tracking-widest">
-                            Capabilities define operational access scope.
+                        <p className="text-[9px] text-white/50 font-bold leading-tight uppercase tracking-widest">
+                            Access capabilities define operational scope.
                         </p>
                     </div>
                 </PopoverContent>

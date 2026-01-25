@@ -349,12 +349,12 @@ export function ParkingUserForm({
                                                 setRole(val as UserRole);
                                                 if (errors.role) setErrors({ ...errors, role: "" });
                                             }}>
-                                                <SelectTrigger className={`h-12 w-full rounded-xl border-slate-200 bg-white font-bold transition-all hover:border-primary/50 ${errors.role ? "border-red-500 bg-red-50" : ""}`}>
+                                                <SelectTrigger className={`h-12 w-full rounded-xl border-slate-200 bg-white font-bold transition-all hover:border-slate-400/50 ${errors.role ? "border-red-500 bg-red-50" : ""}`}>
                                                     <SelectValue placeholder="Select role" />
                                                 </SelectTrigger>
                                                 <SelectContent className="rounded-xl shadow-2xl border-slate-100">
-                                                    <SelectItem value={UserRole.PARKING_SUPER_ADMIN} className="h-10 font-bold">PARKING SUPER ADMIN</SelectItem>
-                                                    <SelectItem value={UserRole.PARKING_MANAGER} className="h-10 font-bold">PARKING MANAGER</SelectItem>
+                                                    <SelectItem value={UserRole.PARKING_SUPER_ADMIN} className="h-10 font-bold uppercase">Parking Super Admin</SelectItem>
+                                                    <SelectItem value={UserRole.PARKING_MANAGER} className="h-10 font-bold uppercase">Parking Manager</SelectItem>
                                                 </SelectContent>
                                             </Select>
                                         </div>

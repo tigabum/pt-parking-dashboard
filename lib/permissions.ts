@@ -74,88 +74,81 @@ export const PERMISSIONS = {
 
 export const PERMISSION_LABELS: Record<string, string> = {
     // Parking
-    [PERMISSIONS.PARKING_VIEW]: "View Parkings",
+    [PERMISSIONS.PARKING_VIEW]: "View Parking",
     [PERMISSIONS.PARKING_CREATE]: "Create Parking",
     [PERMISSIONS.PARKING_UPDATE]: "Update Parking",
     [PERMISSIONS.PARKING_DELETE]: "Delete Parking",
     [PERMISSIONS.PARKING_APPROVE]: "Approve Parking",
 
     // Booking
-    [PERMISSIONS.BOOKING_VIEW]: "View Bookings",
-    [PERMISSIONS.BOOKING_CREATE]: "Create Bookings",
-    [PERMISSIONS.BOOKING_UPDATE]: "Update/Manage Bookings",
-    [PERMISSIONS.BOOKING_DELETE]: "Delete Bookings",
-    [PERMISSIONS.BOOKING_CONFIRM]: "Confirm Bookings",
-    [PERMISSIONS.BOOKING_CANCEL]: "Cancel Bookings",
+    [PERMISSIONS.BOOKING_VIEW]: "View Booking",
+    [PERMISSIONS.BOOKING_CREATE]: "Create Booking",
+    [PERMISSIONS.BOOKING_UPDATE]: "Update Booking",
+    [PERMISSIONS.BOOKING_DELETE]: "Delete Booking",
+    [PERMISSIONS.BOOKING_CONFIRM]: "Confirm Booking",
+    [PERMISSIONS.BOOKING_CANCEL]: "Cancel Booking",
 
     // User
-    [PERMISSIONS.USER_VIEW]: "View Users",
-    [PERMISSIONS.USER_CREATE]: "Create Users",
-    [PERMISSIONS.USER_UPDATE]: "Update Users",
-    [PERMISSIONS.USER_DELETE]: "Delete Users",
-    [PERMISSIONS.USER_DISABLE]: "Disable Users",
-    [PERMISSIONS.USER_ENABLE]: "Enable Users",
+    [PERMISSIONS.USER_VIEW]: "View User",
+    [PERMISSIONS.USER_CREATE]: "Create User",
+    [PERMISSIONS.USER_UPDATE]: "Update User",
+    [PERMISSIONS.USER_DELETE]: "Delete User",
+    [PERMISSIONS.USER_DISABLE]: "Disable User",
+    [PERMISSIONS.USER_ENABLE]: "Enable User",
 
     // Customer
-    [PERMISSIONS.CUSTOMER_VIEW]: "View Customers",
-    [PERMISSIONS.CUSTOMER_CREATE]: "Create Customers",
-    [PERMISSIONS.CUSTOMER_UPDATE]: "Update Customers",
-    [PERMISSIONS.CUSTOMER_DELETE]: "Delete Customers",
+    [PERMISSIONS.CUSTOMER_VIEW]: "View Customer",
+    [PERMISSIONS.CUSTOMER_CREATE]: "Create Customer",
+    [PERMISSIONS.CUSTOMER_UPDATE]: "Update Customer",
+    [PERMISSIONS.CUSTOMER_DELETE]: "Delete Customer",
 
     // Vehicle
-    [PERMISSIONS.VEHICLE_VIEW]: "View Vehicles",
-    [PERMISSIONS.VEHICLE_CREATE]: "Create Vehicles",
-    [PERMISSIONS.VEHICLE_UPDATE]: "Update Vehicles",
-    [PERMISSIONS.VEHICLE_DELETE]: "Delete Vehicles",
+    [PERMISSIONS.VEHICLE_VIEW]: "View Vehicle",
+    [PERMISSIONS.VEHICLE_CREATE]: "Create Vehicle",
+    [PERMISSIONS.VEHICLE_UPDATE]: "Update Vehicle",
+    [PERMISSIONS.VEHICLE_DELETE]: "Delete Vehicle",
 
     // Wallet
-    [PERMISSIONS.WALLET_VIEW]: "View Wallet Details",
-    [PERMISSIONS.WALLET_LIST]: "List All Wallets",
-    [PERMISSIONS.WALLET_DEPOSIT]: "Make Wallet Deposits",
-    [PERMISSIONS.WALLET_WITHDRAW]: "Process Withdrawals",
-    [PERMISSIONS.WALLET_TRANSACTION_HISTORY]: "View Transaction History",
+    [PERMISSIONS.WALLET_VIEW]: "View Wallet",
+    [PERMISSIONS.WALLET_LIST]: "List Wallet",
+    [PERMISSIONS.WALLET_DEPOSIT]: "Deposit",
+    [PERMISSIONS.WALLET_WITHDRAW]: "Withdrawal",
+    [PERMISSIONS.WALLET_TRANSACTION_HISTORY]: "History",
 
     // Rating & Reviews
-    [PERMISSIONS.RATING_VIEW]: "View Ratings & Reviews",
-    [PERMISSIONS.RATING_LIST]: "List All Ratings",
-    [PERMISSIONS.RATING_MODERATE]: "Moderate Reviews",
-    [PERMISSIONS.RATING_DELETE]: "Delete Ratings/Reviews",
+    [PERMISSIONS.RATING_VIEW]: "View Rating",
+    [PERMISSIONS.RATING_LIST]: "List Rating",
+    [PERMISSIONS.RATING_MODERATE]: "Moderate Rating",
+    [PERMISSIONS.RATING_DELETE]: "Delete Rating",
 
     // Configuration
-    [PERMISSIONS.CONFIGURATION_VIEW]: "View Configurations",
-    [PERMISSIONS.CONFIGURATION_CREATE]: "Create Configurations",
-    [PERMISSIONS.CONFIGURATION_UPDATE]: "Update Configurations",
-    [PERMISSIONS.CONFIGURATION_DELETE]: "Delete Configurations",
+    [PERMISSIONS.CONFIGURATION_VIEW]: "View Config",
+    [PERMISSIONS.CONFIGURATION_CREATE]: "Create Config",
+    [PERMISSIONS.CONFIGURATION_UPDATE]: "Update Config",
+    [PERMISSIONS.CONFIGURATION_DELETE]: "Delete Config",
 
     // Dashboard & Analytics
     [PERMISSIONS.DASHBOARD_VIEW]: "View Dashboard",
-    [PERMISSIONS.DASHBOARD_TOTAL_BOOKINGS]: "View Total Bookings Stats",
-    [PERMISSIONS.DASHBOARD_TOTAL_REVENUE]: "View Total Revenue Stats",
-    [PERMISSIONS.DASHBOARD_DAILY_STATS]: "View Daily Statistics",
-    [PERMISSIONS.DASHBOARD_MONTHLY_STATS]: "View Monthly Statistics",
-    [PERMISSIONS.DASHBOARD_YEARLY_STATS]: "View Yearly Statistics",
+    [PERMISSIONS.DASHBOARD_TOTAL_BOOKINGS]: "Total Booking Stats",
+    [PERMISSIONS.DASHBOARD_TOTAL_REVENUE]: "Total Revenue Stats",
+    [PERMISSIONS.DASHBOARD_DAILY_STATS]: "Daily Stats",
+    [PERMISSIONS.DASHBOARD_MONTHLY_STATS]: "Monthly Stats",
+    [PERMISSIONS.DASHBOARD_YEARLY_STATS]: "Yearly Stats",
 
     // Financial
-    [PERMISSIONS.REVENUE_VIEW]: "View Revenue/Financials",
-    [PERMISSIONS.REVENUE_EXPORT]: "Export Revenue Reports",
+    [PERMISSIONS.REVENUE_VIEW]: "View Revenue",
+    [PERMISSIONS.REVENUE_EXPORT]: "Export Revenue",
 
     // Settings
-    [PERMISSIONS.SETTINGS_VIEW]: "View Settings",
-    [PERMISSIONS.SETTINGS_UPDATE]: "Update Settings",
-    [PERMISSIONS.SETTINGS_RESET_PASSWORD]: "Reset User Passwords",
-    [PERMISSIONS.SETTINGS_CHANGE_PASSWORD]: "Change Own Password",
+    [PERMISSIONS.SETTINGS_VIEW]: "View Setting",
+    [PERMISSIONS.SETTINGS_UPDATE]: "Update Setting",
+    [PERMISSIONS.SETTINGS_RESET_PASSWORD]: "Reset Password",
+    [PERMISSIONS.SETTINGS_CHANGE_PASSWORD]: "Change Password",
 };
 
-// Categorized permissions for better UI organization
+// Categorized permissions for better UI organization (System Admins)
 export const PERMISSION_CATEGORIES = {
-    "Parking Management": [
-        PERMISSIONS.PARKING_VIEW,
-        PERMISSIONS.PARKING_CREATE,
-        PERMISSIONS.PARKING_UPDATE,
-        PERMISSIONS.PARKING_DELETE,
-        PERMISSIONS.PARKING_APPROVE,
-    ],
-    "Booking Management": [
+    "booking": [
         PERMISSIONS.BOOKING_VIEW,
         PERMISSIONS.BOOKING_CREATE,
         PERMISSIONS.BOOKING_UPDATE,
@@ -163,7 +156,14 @@ export const PERMISSION_CATEGORIES = {
         PERMISSIONS.BOOKING_CONFIRM,
         PERMISSIONS.BOOKING_CANCEL,
     ],
-    "User Management": [
+    "parking": [
+        PERMISSIONS.PARKING_VIEW,
+        PERMISSIONS.PARKING_CREATE,
+        PERMISSIONS.PARKING_UPDATE,
+        PERMISSIONS.PARKING_DELETE,
+        PERMISSIONS.PARKING_APPROVE,
+    ],
+    "user": [
         PERMISSIONS.USER_VIEW,
         PERMISSIONS.USER_CREATE,
         PERMISSIONS.USER_UPDATE,
@@ -171,38 +171,7 @@ export const PERMISSION_CATEGORIES = {
         PERMISSIONS.USER_DISABLE,
         PERMISSIONS.USER_ENABLE,
     ],
-    "Customer Management": [
-        PERMISSIONS.CUSTOMER_VIEW,
-        PERMISSIONS.CUSTOMER_CREATE,
-        PERMISSIONS.CUSTOMER_UPDATE,
-        PERMISSIONS.CUSTOMER_DELETE,
-    ],
-    "Vehicle Management": [
-        PERMISSIONS.VEHICLE_VIEW,
-        PERMISSIONS.VEHICLE_CREATE,
-        PERMISSIONS.VEHICLE_UPDATE,
-        PERMISSIONS.VEHICLE_DELETE,
-    ],
-    "Wallet & Transactions": [
-        PERMISSIONS.WALLET_VIEW,
-        PERMISSIONS.WALLET_LIST,
-        PERMISSIONS.WALLET_DEPOSIT,
-        PERMISSIONS.WALLET_WITHDRAW,
-        PERMISSIONS.WALLET_TRANSACTION_HISTORY,
-    ],
-    "Reviews & Ratings": [
-        PERMISSIONS.RATING_VIEW,
-        PERMISSIONS.RATING_LIST,
-        PERMISSIONS.RATING_MODERATE,
-        PERMISSIONS.RATING_DELETE,
-    ],
-    "Configuration Management": [
-        PERMISSIONS.CONFIGURATION_VIEW,
-        PERMISSIONS.CONFIGURATION_CREATE,
-        PERMISSIONS.CONFIGURATION_UPDATE,
-        PERMISSIONS.CONFIGURATION_DELETE,
-    ],
-    "Dashboard & Analytics": [
+    "dashboard": [
         PERMISSIONS.DASHBOARD_VIEW,
         PERMISSIONS.DASHBOARD_TOTAL_BOOKINGS,
         PERMISSIONS.DASHBOARD_TOTAL_REVENUE,
@@ -210,61 +179,73 @@ export const PERMISSION_CATEGORIES = {
         PERMISSIONS.DASHBOARD_MONTHLY_STATS,
         PERMISSIONS.DASHBOARD_YEARLY_STATS,
     ],
-    "Financial Access": [
-        PERMISSIONS.REVENUE_VIEW,
-        PERMISSIONS.REVENUE_EXPORT,
+    "wallet": [
+        PERMISSIONS.WALLET_VIEW,
+        PERMISSIONS.WALLET_LIST,
+        PERMISSIONS.WALLET_DEPOSIT,
+        PERMISSIONS.WALLET_WITHDRAW,
+        PERMISSIONS.WALLET_TRANSACTION_HISTORY,
     ],
-    "System Settings & Security": [
+    "setting": [
         PERMISSIONS.SETTINGS_VIEW,
         PERMISSIONS.SETTINGS_UPDATE,
-        PERMISSIONS.SETTINGS_RESET_PASSWORD,
         PERMISSIONS.SETTINGS_CHANGE_PASSWORD,
+    ],
+    "reset": [
+        PERMISSIONS.SETTINGS_RESET_PASSWORD,
+    ],
+    "customer": [
+        PERMISSIONS.CUSTOMER_VIEW,
+        PERMISSIONS.CUSTOMER_CREATE,
+        PERMISSIONS.CUSTOMER_UPDATE,
+        PERMISSIONS.CUSTOMER_DELETE,
+    ],
+    "vehicle": [
+        PERMISSIONS.VEHICLE_VIEW,
+        PERMISSIONS.VEHICLE_CREATE,
+        PERMISSIONS.VEHICLE_UPDATE,
+        PERMISSIONS.VEHICLE_DELETE,
     ],
 };
 
 // Parking Dashboard specific permissions (for parking staff users)
 export const PARKING_DASHBOARD_PERMISSIONS = {
-    "Booking Operations": [
+    "dashboard": [
+        PERMISSIONS.DASHBOARD_VIEW,
+        PERMISSIONS.DASHBOARD_TOTAL_BOOKINGS,
+        PERMISSIONS.DASHBOARD_DAILY_STATS,
+        PERMISSIONS.DASHBOARD_MONTHLY_STATS,
+        PERMISSIONS.DASHBOARD_TOTAL_REVENUE,
+    ],
+    "booking": [
         PERMISSIONS.BOOKING_VIEW,
         PERMISSIONS.BOOKING_CREATE,
         PERMISSIONS.BOOKING_UPDATE,
         PERMISSIONS.BOOKING_CONFIRM,
         PERMISSIONS.BOOKING_CANCEL,
     ],
-    "Customer & Vehicle": [
-        PERMISSIONS.CUSTOMER_VIEW,
-        PERMISSIONS.CUSTOMER_CREATE,
-        PERMISSIONS.CUSTOMER_UPDATE,
-        PERMISSIONS.VEHICLE_VIEW,
-        PERMISSIONS.VEHICLE_CREATE,
-        PERMISSIONS.VEHICLE_UPDATE,
+    "parking": [
+        PERMISSIONS.PARKING_VIEW,
+        PERMISSIONS.PARKING_UPDATE,
     ],
-    "Financial & Wallet": [
-        PERMISSIONS.WALLET_VIEW,
-        PERMISSIONS.WALLET_TRANSACTION_HISTORY,
-        PERMISSIONS.REVENUE_VIEW,
-        PERMISSIONS.DASHBOARD_TOTAL_REVENUE,
-    ],
-    "Dashboard & Reports": [
-        PERMISSIONS.DASHBOARD_VIEW,
-        PERMISSIONS.DASHBOARD_TOTAL_BOOKINGS,
-        PERMISSIONS.DASHBOARD_DAILY_STATS,
-        PERMISSIONS.DASHBOARD_MONTHLY_STATS,
-    ],
-    "Reviews Management": [
-        PERMISSIONS.RATING_VIEW,
-        PERMISSIONS.RATING_LIST,
-    ],
-    "Staff Management": [
+    "user": [
         PERMISSIONS.USER_VIEW,
         PERMISSIONS.USER_CREATE,
         PERMISSIONS.USER_UPDATE,
         PERMISSIONS.USER_DISABLE,
         PERMISSIONS.USER_ENABLE,
     ],
-    "Settings": [
+    "wallet": [
+        PERMISSIONS.WALLET_VIEW,
+        PERMISSIONS.WALLET_TRANSACTION_HISTORY,
+        PERMISSIONS.REVENUE_VIEW,
+    ],
+    "setting": [
         PERMISSIONS.SETTINGS_VIEW,
         PERMISSIONS.SETTINGS_CHANGE_PASSWORD,
+    ],
+    "reset": [
+        PERMISSIONS.SETTINGS_RESET_PASSWORD,
     ],
 };
 
