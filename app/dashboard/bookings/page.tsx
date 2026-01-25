@@ -90,7 +90,7 @@ export default function BookingsPage() {
         type: typeFilter === "ALL" ? undefined : typeFilter,
         startDate: dateRange?.from ? format(dateRange.from, "yyyy-MM-dd") : undefined,
         endDate: dateRange?.to ? format(dateRange.to, "yyyy-MM-dd") : undefined,
-        parkingId: user?.orgId || undefined,
+        parkingId: (user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.SYSTEM_ADMIN) ? undefined : (user?.orgId || undefined),
         managerUserId: managerFilter === "ALL" ? undefined : managerFilter,
         sortBy: sortBy as any,
         sortOrder: sortOrder
