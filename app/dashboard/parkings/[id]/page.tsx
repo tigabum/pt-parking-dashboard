@@ -164,7 +164,7 @@ export default function ParkingDetailPage() {
   const loadTransactions = async () => {
     try {
       setTxLoading(true);
-      const res = await walletService.getTransactions(id as string);
+      const res = await walletService.getTransactions(id as string, { skipToast: true } as any);
       setTransactions(Array.isArray(res) ? res : []);
     } catch (err: any) {
       // Silence wallet not found errors (404)
@@ -958,20 +958,20 @@ export default function ParkingDetailPage() {
                 <p className="text-[11px] text-slate-500 font-bold uppercase tracking-tight opacity-70">Audit trail of all financial movements</p>
               </div>
 
-              <div className="flex flex-wrap items-center justify-end gap-3 md:gap-6">
-                <div className="flex flex-col items-end px-6 py-2 border-r border-slate-200">
-                  <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">Current Balance</p>
-                  <p className="text-2xl font-black text-slate-900 tabular-nums">
-                    {Number(parking.wallet?.balance || 0).toLocaleString()} <span className="text-[10px] opacity-40 font-black uppercase">ETB</span>
+              <div className="flex flex-wrap items-center justify-end gap-3 md:gap-6 shrink-0">
+                <div className="flex flex-col items-end px-6 py-1.5 border-r border-slate-200">
+                  <p className="text-[10px] font-black text-slate-900 uppercase tracking-[0.1em] mb-0.5">Current Balance</p>
+                  <p className="text-3xl font-black text-primary tabular-nums tracking-tighter">
+                    {Number(parking.wallet?.balance || 0).toLocaleString()} <span className="text-xs opacity-50 font-black uppercase">ETB</span>
                   </p>
                 </div>
 
                 {(user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.PARKING_SUPER_ADMIN) && (
                   <Button
                     onClick={() => setIsTopupOpen(true)}
-                    className="bg-[#0066FF] hover:bg-[#0052CC] text-white rounded-xl h-12 px-8 text-xs font-black uppercase tracking-widest shadow-xl shadow-primary/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
+                    className="bg-primary hover:opacity-90 text-white rounded-xl h-12 px-8 text-[11px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
                   >
-                    <Plus className="h-4 w-4 mr-2 stroke-[3px]" />
+                    <Plus className="h-4 w-4 mr-2 stroke-[4px]" />
                     Topup Wallet
                   </Button>
                 )}

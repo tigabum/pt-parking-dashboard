@@ -11,8 +11,8 @@ export const walletService = {
         return response.data;
     },
 
-    getTransactions: async (parkingId: string) => {
-        const response = await apiClient.get(`/wallets/parking/${parkingId}/transactions`);
+    getTransactions: async (parkingId: string, config?: any) => {
+        const response = await apiClient.get(`/wallets/parking/${parkingId}/transactions`, config);
         return response.data;
     },
 

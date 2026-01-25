@@ -146,8 +146,9 @@ apiClient.interceptors.response.use(
             errorMessage = error.message;
         }
 
-        // Only show toast if not 401 (handled above) or if refresh failed explicitly
-        if (error.response?.status !== 401) {
+        // Only show toast if not 401 (handled above), if refresh failed explicitly,
+        // and if skipToast is not set in the request config
+        if (error.response?.status !== 401 && !originalRequest?.skipToast) {
             toast.error(errorMessage);
         }
 
