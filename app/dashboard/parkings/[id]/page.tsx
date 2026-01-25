@@ -882,34 +882,19 @@ export default function ParkingDetailPage() {
           </div>
         </TabsContent>
 
-        {/* TAB: WALLET */}
         <TabsContent value="wallet" className="space-y-8 animate-in slide-in-from-bottom-4 duration-500">
-          <div className="grid grid-cols-1 gap-8">
-            <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl shadow-primary/20 max-w-md">
-              <div className="absolute top-0 right-0 p-8 opacity-10">
-                <WalletIcon className="h-32 w-32 -rotate-12" />
+          <div className="bg-white rounded-3xl overflow-hidden border shadow-sm">
+            <div className="p-8 border-b bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Transaction History</h3>
+                <p className="text-sm text-slate-500 font-medium mt-1">Audit trail of all financial movements.</p>
               </div>
-              <div className="relative z-10 flex flex-col h-full justify-between gap-12">
-                <div>
-                  <p className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-4">Current Wallet Balance</p>
-                  <h2 className="text-5xl font-black tracking-tighter tabular-nums">
-                    {Number(parking.wallet?.balance || 0).toLocaleString()} <span className="text-lg opacity-30 font-bold">ETB</span>
-                  </h2>
-                </div>
-                <div className="flex items-center gap-4 pt-4 border-t border-white/10">
-                  <div className="flex flex-col">
-                    <span className="text-[9px] uppercase font-bold text-white/30 tracking-widest">Wallet Reference</span>
-                    <span className="text-xs font-mono font-bold text-white/60">PT-{parking.id.substring(0, 8).toUpperCase()}</span>
-                  </div>
-                </div>
+              <div className="flex flex-col items-end">
+                <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Current Balance</p>
+                <p className="text-2xl font-black text-slate-900 tabular-nums">
+                  {Number(parking.wallet?.balance || 0).toLocaleString()} <span className="text-xs opacity-60 font-bold uppercase">ETB</span>
+                </p>
               </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-3xl overflow-hidden border shadow-sm mt-8">
-            <div className="p-8 border-b bg-slate-50/50">
-              <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">Transaction History</h3>
-              <p className="text-sm text-slate-500 font-medium mt-1">Audit trail of all financial movements.</p>
             </div>
             <ReusableTable
               data={transactions}
