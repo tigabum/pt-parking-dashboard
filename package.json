@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build --webpack",
-    "dev": "next dev",
+    "build": "rm -rf .next && next build --webpack",
+    "dev": "next dev --webpack",
+    "clean": "rm -rf .next",
     "lint": "next lint",
     "start": "next start"
   },
