@@ -15,6 +15,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn, formatMoney } from "@/lib/utils";
 import { useAuth } from "@/app/context/auth-context";
 import { PERMISSIONS } from "@/lib/permissions";
+import { UserRole } from "@/lib/auth";
 
 import {
   ReusableTable,
@@ -108,13 +109,16 @@ function BookingActions({ row, onDetail, onConfirmPayment, onConfirmArrival, onC
   onCancel?: (r: BookingResponse) => void,
   isBusy?: boolean
 }) {
-  const { hasPermission } = useAuth();
+  const { hasPermission, user } = useAuth();
   const [isCancelOpen, setIsCancelOpen] = useState(false);
   const [isArrivalOpen, setIsArrivalOpen] = useState(false);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
 
-  const showConfirmPayment = (row.status === 'PENDING' || row.status === 'WAITING_CONFIRMATION') && hasPermission(PERMISSIONS.BOOKING_UPDATE);
-  const showConfirmArrival = row.status === 'PENDING' && hasPermission(PERMISSIONS.BOOKING_UPDATE);
+  // System Super Admin cannot confirm bookings (only Parking Admin/Manager)
+  const isSystemAdmin = user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.SYSTEM_ADMIN;
+
+  const showConfirmPayment = (row.status === 'PENDING' || row.status === 'WAITING_CONFIRMATION') && hasPermission(PERMISSIONS.BOOKING_UPDATE) && !isSystemAdmin;
+  const showConfirmArrival = row.status === 'PENDING' && hasPermission(PERMISSIONS.BOOKING_UPDATE) && !isSystemAdmin;
   const showCancel = (row.status === 'PENDING' || row.status === 'ACTIVE' || row.status === 'WAITING_CONFIRMATION') && (hasPermission(PERMISSIONS.BOOKING_UPDATE) || hasPermission(PERMISSIONS.BOOKING_DELETE));
   const showDetail = hasPermission(PERMISSIONS.BOOKING_VIEW);
 
@@ -202,9 +206,12 @@ export function BookingsTable({
   actionId,
 }: Props) {
   const router = useRouter();
+  const { user } = useAuth();
   const onDetail = (booking: BookingResponse) => router.push(`/dashboard/bookings/${booking.id}`);
   const geParkingName = (parkingId: string) =>
     parkings.find((s) => s.id === parkingId)?.name || "Unknown Space";
+
+  const isSystemAdmin = user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.SYSTEM_ADMIN;
 
   const columns: Column<BookingResponse>[] = [
     {
@@ -263,7 +270,7 @@ export function BookingsTable({
       header: "Actions",
       render: (row) => (
         <div className="flex items-center gap-2">
-          {row.status === 'WAITING_CONFIRMATION' && onConfirmPayment && (
+          {row.status === 'WAITING_CONFIRMATION' && onConfirmPayment && !isSystemAdmin && (
             <ConfirmationPopup
               title="Confirm Payment"
               description={`Verify that payment of ${Number(row.totalAmount).toFixed(2)} ETB has been received for plate ${row.plateNumber}.`}
