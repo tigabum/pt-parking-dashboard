@@ -32,7 +32,9 @@ export default function ParkingPage() {
 
   useEffect(() => {
     // If it's a parking user, redirect to their own parking detail page
-    const isParkingUser = user?.role === UserRole.PARKING_SUPER_ADMIN || user?.role === UserRole.PARKING_MANAGER;
+    const isParkingUser =
+      user?.role === UserRole.PARKING_SUPER_ADMIN ||
+      user?.role === UserRole.PARKING_MANAGER;
     if (isParkingUser && user?.orgId) {
       router.replace(`/dashboard/parkings/${user.orgId}`);
     }
@@ -56,7 +58,16 @@ export default function ParkingPage() {
 
   useEffect(() => {
     loadSpaces(page);
-  }, [page, searchQuery, typeFilter, statusFilter, dateRange, sortBy, sortOrder, limit]);
+  }, [
+    page,
+    searchQuery,
+    typeFilter,
+    statusFilter,
+    dateRange,
+    sortBy,
+    sortOrder,
+    limit,
+  ]);
 
   const loadSpaces = async (targetPage = 1) => {
     try {
@@ -67,10 +78,12 @@ export default function ParkingPage() {
         q: searchQuery || undefined,
         type: typeFilter === "ALL" ? undefined : typeFilter,
         status: statusFilter === "ALL" ? undefined : statusFilter,
-        startDate: dateRange?.from ? format(dateRange.from, "yyyy-MM-dd") : undefined,
+        startDate: dateRange?.from
+          ? format(dateRange.from, "yyyy-MM-dd")
+          : undefined,
         endDate: dateRange?.to ? format(dateRange.to, "yyyy-MM-dd") : undefined,
         sortBy: sortBy as any,
-        sortOrder: sortOrder
+        sortOrder: sortOrder,
       });
 
       if (response && response.data) {
@@ -86,7 +99,8 @@ export default function ParkingPage() {
   };
 
   const handleAdd = () => router.push("/dashboard/parkings/create");
-  const handleEdit = (parking: ParkingResponse) => router.push(`/dashboard/parkings/${parking.id}/edit`);
+  const handleEdit = (parking: ParkingResponse) =>
+    router.push(`/dashboard/parkings/${parking.id}/edit`);
 
   const handleDelete = async (parking: ParkingResponse) => {
     if (!hasPermission(PERMISSIONS.PARKING_DELETE)) {
@@ -99,34 +113,53 @@ export default function ParkingPage() {
       toast.success("Parking deleted successfully", { id: loadingToast });
       loadSpaces();
     } catch (err: any) {
-      toast.error(err?.message || "Failed to delete parking", { id: loadingToast });
+      toast.error(err?.message || "Failed to delete parking", {
+        id: loadingToast,
+      });
     }
   };
 
   const exportToCSV = () => {
     if (!parkings.length) return toast.error("No data to export");
-    const headers = ["Name", "Code", "Region", "City", "Sub-City", "Woreda", "Kebele", "Spots", "Available", "Status", "Created At"];
+    const headers = [
+      "Name",
+      "Code",
+      "Region",
+      "City",
+      "Sub-City",
+      "Woreda",
+      "Kebele",
+      "Spots",
+      "Available",
+      "Status",
+      "Created At",
+    ];
     const csvContent = [
       headers.join(","),
-      ...parkings.map(p => [
-        `"${p.name}"`,
-        `"${p.parkingCode || 'N/A'}"`,
-        `"${p.region || '—'}"`,
-        `"${p.city || '—'}"`,
-        `"${p.subCity || '—'}"`,
-        `"${p.woreda || '—'}"`,
-        `"${p.kebele || '—'}"`,
-        p.numberOfSpots,
-        p.availableSpots,
-        p.status,
-        format(new Date(p.createdAt), "yyyy-MM-dd")
-      ].join(","))
+      ...parkings.map((p) =>
+        [
+          `"${p.name}"`,
+          `"${p.parkingCode || "N/A"}"`,
+          `"${p.region || "—"}"`,
+          `"${p.city || "—"}"`,
+          `"${p.subCity || "—"}"`,
+          `"${p.woreda || "—"}"`,
+          `"${p.kebele || "—"}"`,
+          p.numberOfSpots,
+          p.availableSpots,
+          p.status,
+          format(new Date(p.createdAt), "yyyy-MM-dd"),
+        ].join(","),
+      ),
     ].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `parkings_export_${format(new Date(), "yyyyMMdd")}.csv`);
+    link.setAttribute(
+      "download",
+      `parkings_export_${format(new Date(), "yyyyMMdd")}.csv`,
+    );
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -163,7 +196,7 @@ export default function ParkingPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
               placeholder="Search parkings..."
-              className="pl-10 h-11 rounded-xl border-slate-200 w-full"
+              className="pl-10 h-11 rounded border-slate-200 w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -172,23 +205,27 @@ export default function ParkingPage() {
           {/* Middle: Filters */}
           <div className="flex flex-wrap items-center gap-2 md:gap-3 flex-1 lg:justify-start xl:justify-center">
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[140px] h-11 rounded-xl border-slate-200 bg-white">
+              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[140px] h-11 rounded border-slate-200 bg-white">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
-              <SelectContent className="rounded-xl">
+              <SelectContent className="rounded">
                 <SelectItem value="ALL">All Types</SelectItem>
                 <SelectItem value={ParkingType.PUBLIC}>Public</SelectItem>
                 <SelectItem value={ParkingType.PRIVATE}>Private</SelectItem>
-                <SelectItem value={ParkingType.COMMERCIAL}>Commercial</SelectItem>
-                <SelectItem value={ParkingType.RESIDENTIAL}>Residential</SelectItem>
+                <SelectItem value={ParkingType.COMMERCIAL}>
+                  Commercial
+                </SelectItem>
+                <SelectItem value={ParkingType.RESIDENTIAL}>
+                  Residential
+                </SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[140px] h-11 rounded-xl border-slate-200 bg-white">
+              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[140px] h-11 rounded border-slate-200 bg-white">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
-              <SelectContent className="rounded-xl">
+              <SelectContent className="rounded">
                 <SelectItem value="ALL">All Status</SelectItem>
                 <SelectItem value={ParkingStatus.ACTIVE}>Active</SelectItem>
                 <SelectItem value={ParkingStatus.PENDING}>Pending</SelectItem>
@@ -204,21 +241,36 @@ export default function ParkingPage() {
               <Button
                 variant="outline"
                 onClick={exportToCSV}
-                className="h-11 rounded-xl px-4 border-slate-200 bg-white hover:bg-slate-50 font-bold flex-1 sm:flex-none"
+                className="h-11 rounded px-4 border-slate-200 bg-white hover:bg-slate-50 font-bold flex-1 sm:flex-none"
               >
                 <Download className="h-4 w-4 mr-2" />
                 Export
               </Button>
             )}
 
-            {(typeFilter !== "ALL" || statusFilter !== "ALL" || searchQuery !== "" || dateRange?.from) && (
-              <Button variant="ghost" size="icon" onClick={clearFilters} className="h-11 w-11 rounded-xl hidden sm:flex">
+            {(typeFilter !== "ALL" ||
+              statusFilter !== "ALL" ||
+              searchQuery !== "" ||
+              dateRange?.from) && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={clearFilters}
+                className="h-11 w-11 rounded hidden sm:flex"
+              >
                 <X className="h-4 w-4" />
               </Button>
             )}
 
-            {(typeFilter !== "ALL" || statusFilter !== "ALL" || searchQuery !== "" || dateRange?.from) && (
-              <Button variant="outline" onClick={clearFilters} className="h-11 rounded-xl sm:hidden flex-1 border-slate-200">
+            {(typeFilter !== "ALL" ||
+              statusFilter !== "ALL" ||
+              searchQuery !== "" ||
+              dateRange?.from) && (
+              <Button
+                variant="outline"
+                onClick={clearFilters}
+                className="h-11 rounded sm:hidden flex-1 border-slate-200"
+              >
                 <X className="h-4 w-4 mr-2" />
                 Clear
               </Button>
@@ -229,7 +281,7 @@ export default function ParkingPage() {
           {hasPermission(PERMISSIONS.PARKING_CREATE) && (
             <Button
               onClick={handleAdd}
-              className="h-11 rounded-xl px-6 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 shrink-0 w-full xl:w-auto"
+              className="h-11 rounded px-6 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 shrink-0 w-full xl:w-auto"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Parking
@@ -238,7 +290,7 @@ export default function ParkingPage() {
         </div>
       </PageHeader>
 
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded border border-slate-100 shadow-sm overflow-hidden">
         <ParkingSpacesTable
           spaces={parkings}
           loading={loading}

@@ -72,7 +72,7 @@ export function CircularSessionCounter({ startTime, endTime, displayTime, stoppe
             style={{ width: size, height: size }}
         >
             {/* Outer Glows - Layered */}
-            <div className="absolute inset-0 bg-[#0066FF]/5 rounded-full blur-[80px] animate-pulse group-hover:bg-[#0066FF]/8 transition-colors duration-700" />
+            <div className="absolute inset-0 bg-primary/5 rounded-full blur-[80px] animate-pulse group-hover:bg-primary/8 transition-colors duration-700" />
             <div className="absolute inset-[15%] bg-white rounded-full shadow-[0_0_50px_rgba(0,102,255,0.08)] pointer-events-none" />
 
             <svg
@@ -83,7 +83,7 @@ export function CircularSessionCounter({ startTime, endTime, displayTime, stoppe
             >
                 <defs>
                     <linearGradient id="counterGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#0066FF" />
+                        <stop offset="0%" stopColor="#4F3CC2" />
                         <stop offset="50%" stopColor="#0088FF" />
                         <stop offset="100%" stopColor="#00C2FF" />
                     </linearGradient>

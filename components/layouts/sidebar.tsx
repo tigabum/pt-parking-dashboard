@@ -137,7 +137,11 @@ export function Sidebar({ onItemClick }: SidebarProps) {
     // For parking managers, be very restrictive
     if (isParkingManager) {
       // Parking Managers ONLY see Bookings and Settings
-      const allowedForManager = ["/dashboard", "/dashboard/bookings", "/dashboard/settings"];
+      const allowedForManager = [
+        "/dashboard",
+        "/dashboard/bookings",
+        "/dashboard/settings",
+      ];
       return allowedForManager.includes(item.href);
     }
 
@@ -154,8 +158,11 @@ export function Sidebar({ onItemClick }: SidebarProps) {
     <div className="w-full md:w-64 border-r border-border bg-sidebar flex flex-col h-full">
       {/* Logo */}
       <div className="h-16 md:h-20 flex items-center px-4 md:px-6 border-b border-sidebar-border">
-        <Link href="/dashboard" className="flex items-center gap-2 md:gap-3 group">
-          <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/25 overflow-hidden flex-shrink-0">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 md:gap-3 group"
+        >
+          <div className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 rounded md:rounded bg-primary text-primary-foreground shadow-sm shadow-primary/25 overflow-hidden">
             <img
               src="/login-brand.png"
               alt="Gelagle Park"
@@ -177,27 +184,32 @@ export function Sidebar({ onItemClick }: SidebarProps) {
           const isActive = pathname === item.href;
 
           return (
-            <button
-              key={item.href}
-              onClick={() => {
-                // If it's a parking user clicking "Parking Settings", go directly to their parking detail
-                if (item.label === "Parking Settings" && isParkingLevelUser && user?.orgId) {
-                  router.push(`/dashboard/parkings/${user.orgId}`);
-                } else {
-                  router.push(item.href);
-                }
-                onItemClick?.();
-              }}
-              className={cn(
-                "w-full flex items-center gap-3 md:gap-4 px-4 md:px-6 py-3 md:py-4 rounded-lg text-sm md:text-base font-medium transition-colors my-0.5 md:my-1",
-                isActive
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:pl-5 md:hover:pl-7"
-              )}
-            >
-              <Icon className="w-5 h-5 md:w-[22px] md:h-[22px]" />
-              {item.label}
-            </button>
+            <Link key={item.href} href={item.href}>
+              <button
+                onClick={() => {
+                  // If it's a parking user clicking "Parking Settings", go directly to their parking detail
+                  if (
+                    item.label === "Parking Settings" &&
+                    isParkingLevelUser &&
+                    user?.orgId
+                  ) {
+                    router.push(`/dashboard/parkings/${user.orgId}`);
+                  } else {
+                    router.push(item.href);
+                  }
+                  onItemClick?.();
+                }}
+                className={cn(
+                  "w-full flex items-center gap-3 md:gap-4 px-4 md:px-6 py-3 md:py-4 rounded text-sm md:text-base font-medium transition-colors my-0.5 md:my-1",
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:pl-5 md:hover:pl-7",
+                )}
+              >
+                <Icon className="w-5 h-5 md:w-5.5 md:h-5.5" />
+                {item.label}
+              </button>
+            </Link>
           );
         })}
       </nav>

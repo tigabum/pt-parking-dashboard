@@ -9,7 +9,7 @@ export function ReusableTable<T>({
   isLoading = false,
 }: ReusableTableProps<T>) {
   return (
-    <div className="overflow-hidden bg-white rounded-3xl border border-slate-100 shadow-sm">
+    <div className="overflow-hidden bg-white rounded border border-slate-100 shadow">
       <div className="w-full overflow-x-auto">
         <table className="w-full">
           <thead>

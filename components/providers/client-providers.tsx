@@ -1,16 +1,18 @@
-"use client"
+"use client";
 
-import { AuthProvider } from "@/app/context/auth-context"
-import { SystemLivenessWrapper } from "@/components/auth/system-liveness-wrapper"
-import { Toaster } from "sonner"
+import { AuthProvider } from "@/app/context/auth-context";
+import { SystemLivenessWrapper } from "@/components/auth/system-liveness-wrapper";
+import { Toaster } from "sonner";
+import NextProgress from "../next-progress";
 
 export function ClientProviders({ children }: { children: React.ReactNode }) {
-    return (
-        <AuthProvider>
-            <SystemLivenessWrapper>
-                {children}
-                <Toaster position="top-right" richColors />
-            </SystemLivenessWrapper>
-        </AuthProvider>
-    )
+  return (
+    <AuthProvider>
+      <SystemLivenessWrapper>
+        <Toaster position="top-right" />
+        <NextProgress />
+        {children}
+      </SystemLivenessWrapper>
+    </AuthProvider>
+  );
 }

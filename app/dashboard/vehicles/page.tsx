@@ -53,7 +53,7 @@ export default function VehiclesPage() {
         limit,
         search: searchQuery || undefined,
         sortBy,
-        sortOrder
+        sortOrder,
       });
 
       if (response && response.data) {
@@ -76,30 +76,34 @@ export default function VehiclesPage() {
   };
 
   if (!hasPermission(PERMISSIONS.VEHICLE_VIEW)) {
-    return <div className="p-6 text-center text-red-500 font-semibold">Access Denied: Missing VEHICLE_VIEW permission</div>;
+    return (
+      <div className="p-6 text-center text-red-500 font-semibold">
+        Access Denied: Missing VEHICLE_VIEW permission
+      </div>
+    );
   }
 
   return (
-    <div className="p-6 space-y-8">
+    <div className="p-6 space-y-6">
       <PageHeader
         title="Vehicle Registry"
         description="Monitor and audit all vehicles currently registered within the platform."
       >
-        <div className="relative flex-1 sm:min-w-[260px]">
+        <div className="relative flex-1 sm:min-w-65">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input
             placeholder="Search vehicles..."
-            className="pl-10 h-11 rounded-xl border-slate-200"
+            className="pl-10 h-11 rounded border-slate-200"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
 
         <Select value={sortBy} onValueChange={setSortBy}>
-          <SelectTrigger className="w-[180px] h-11 rounded-xl border-slate-200">
+          <SelectTrigger className="w-45 h-11 rounded border-slate-200">
             <SelectValue placeholder="Sort By" />
           </SelectTrigger>
-          <SelectContent className="rounded-xl">
+          <SelectContent className="rounded">
             <SelectItem value="createdAt">Registered Date</SelectItem>
             <SelectItem value="plateNumber">Plate Number</SelectItem>
             <SelectItem value="brand">Brand</SelectItem>
@@ -110,14 +114,21 @@ export default function VehiclesPage() {
         <Button
           variant="ghost"
           size="icon"
-          className="h-11 w-11 rounded-xl"
+          className="h-11 w-11 rounded"
           onClick={() => setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC")}
         >
-          <Filter className={`h-4 w-4 ${sortOrder === "DESC" ? "rotate-180" : ""} transition-transform`} />
+          <Filter
+            className={`h-4 w-4 ${sortOrder === "DESC" ? "rotate-180" : ""} transition-transform`}
+          />
         </Button>
 
-        {(searchQuery !== "") && (
-          <Button variant="ghost" size="icon" onClick={clearFilters} className="h-11 w-11 rounded-xl">
+        {searchQuery !== "" && (
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={clearFilters}
+            className="h-11 w-11 rounded"
+          >
             <X className="h-4 w-4" />
           </Button>
         )}
@@ -146,7 +157,7 @@ export default function VehiclesPage() {
         </div>
       )}
 
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded border border-slate-100 shadow-sm overflow-hidden">
         <VehicleTable
           vehicles={vehicles as any}
           loading={loading}
@@ -166,7 +177,17 @@ export default function VehiclesPage() {
   );
 }
 
-function StatsCard({ icon, label, value, color }: { icon: any, label: string, value: string, color: string }) {
+function StatsCard({
+  icon,
+  label,
+  value,
+  color,
+}: {
+  icon: any;
+  label: string;
+  value: string;
+  color: string;
+}) {
   const colorMap: any = {
     indigo: "bg-indigo-50 text-indigo-600 border-l-indigo-500",
     green: "bg-green-50 text-green-600 border-l-green-500",
@@ -174,12 +195,18 @@ function StatsCard({ icon, label, value, color }: { icon: any, label: string, va
   };
 
   return (
-    <div className={`bg-white p-6 rounded-3xl border border-slate-100 shadow-sm flex items-center gap-4 border-l-4 ${colorMap[color] || colorMap.primary}`}>
-      <div className={`h-12 w-12 rounded-2xl flex items-center justify-center ${color === 'indigo' ? 'bg-indigo-50' : color === 'green' ? 'bg-green-50' : 'bg-primary/10'}`}>
+    <div
+      className={`bg-white p-6 rounded border border-slate-100 shadow-sm flex items-center gap-4 border-l-4 ${colorMap[color] || colorMap.primary}`}
+    >
+      <div
+        className={`h-12 w-12 rounded-2xl flex items-center justify-center ${color === "indigo" ? "bg-indigo-50" : color === "green" ? "bg-green-50" : "bg-primary/10"}`}
+      >
         {icon}
       </div>
       <div>
-        <div className="text-[10px] font-black uppercase text-slate-400 tracking-widest">{label}</div>
+        <div className="text-[10px] font-black uppercase text-slate-400 tracking-widest">
+          {label}
+        </div>
         <div className="text-2xl font-black text-slate-900">{value}</div>
       </div>
     </div>

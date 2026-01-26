@@ -4,7 +4,13 @@ import { useState } from "react";
 import { Search, Bell, Menu, User, Settings, LogOut } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Sidebar } from "./sidebar";
 import { useAuth } from "@/app/context/auth-context";
 import { useRouter } from "next/navigation";
@@ -65,16 +71,27 @@ export function DashboardHeader() {
                 className="relative h-10 w-10 rounded-full"
               >
                 <Avatar className="h-10 w-10 border border-gray-200">
-                  <AvatarImage src={getImageUrl(user?.profileImage)} alt={user?.fullName} />
+                  <AvatarImage
+                    src={getImageUrl(user?.profileImage)}
+                    alt={user?.fullName}
+                  />
                   <AvatarFallback className="bg-primary/10 text-primary font-bold">
                     {user?.fullName?.charAt(0) || "U"}
                   </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56 p-2 rounded-xl shadow-2xl border-slate-100">
-              <DropdownMenuLabel className="font-bold text-slate-400 uppercase text-[10px] px-2 py-1.5 tracking-widest">My Account</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => router.push("/dashboard/settings")} className="rounded-lg font-bold text-slate-600 focus:bg-slate-50 cursor-pointer">
+            <DropdownMenuContent
+              align="end"
+              className="w-56 p-2 rounded shadow-2xl border-slate-100"
+            >
+              <DropdownMenuLabel className="font-bold text-slate-400 uppercase text-[10px] px-2 py-1.5 tracking-widest">
+                My Account
+              </DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => router.push("/dashboard/settings")}
+                className="rounded-lg font-bold text-slate-600 focus:bg-slate-50 cursor-pointer"
+              >
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
               </DropdownMenuItem>
@@ -92,11 +109,17 @@ export function DashboardHeader() {
             </DropdownMenuContent>
           </DropdownMenu>
           <div className="text-left hidden sm:block space-y-0.5">
-            <p className="text-xs md:text-sm font-bold text-slate-900 leading-tight truncate max-w-[150px]">{user?.fullName}</p>
+            <p className="text-xs md:text-sm font-bold text-slate-900 leading-tight truncate max-w-[150px]">
+              {user?.fullName}
+            </p>
             <div className="flex flex-col">
-              <p className="text-[9px] md:text-[10px] text-slate-400 font-bold leading-none">{user?.email}</p>
+              <p className="text-[9px] md:text-[10px] text-slate-400 font-bold leading-none">
+                {user?.email}
+              </p>
               {user?.phoneNumber && (
-                <p className="text-[9px] md:text-[10px] text-primary/70 font-black mt-0.5 leading-none">{user.phoneNumber}</p>
+                <p className="text-[9px] md:text-[10px] text-primary/70 font-black mt-0.5 leading-none">
+                  {user.phoneNumber}
+                </p>
               )}
             </div>
           </div>

@@ -47,7 +47,16 @@ export default function UsersPage() {
 
   useEffect(() => {
     loadData(page);
-  }, [page, searchTerm, roleFilter, statusFilter, dateRange, sortBy, sortOrder, limit]);
+  }, [
+    page,
+    searchTerm,
+    roleFilter,
+    statusFilter,
+    dateRange,
+    sortBy,
+    sortOrder,
+    limit,
+  ]);
 
   const loadData = async (targetPage = 1) => {
     try {
@@ -58,21 +67,25 @@ export default function UsersPage() {
         search: searchTerm || undefined,
         role: roleFilter === "ALL" ? undefined : roleFilter,
         status: statusFilter === "ALL" ? undefined : statusFilter,
-        startDate: dateRange?.from ? format(dateRange.from, "yyyy-MM-dd") : undefined,
+        startDate: dateRange?.from
+          ? format(dateRange.from, "yyyy-MM-dd")
+          : undefined,
         endDate: dateRange?.to ? format(dateRange.to, "yyyy-MM-dd") : undefined,
         sortBy,
         sortOrder,
         isStaffUser: true,
-        orgId: user?.orgId
+        orgId: user?.orgId,
       });
 
       const userList = response.data || response.users;
 
       if (response && userList) {
-        setUsers(userList.map((u: any) => ({
-          ...u,
-          name: String(u.fullName || u.name || "Unknown"),
-        })));
+        setUsers(
+          userList.map((u: any) => ({
+            ...u,
+            name: String(u.fullName || u.name || "Unknown"),
+          })),
+        );
         setTotal(response.total || userList.length);
         setTotalPages(response.totalPages || 1);
       }
@@ -84,8 +97,10 @@ export default function UsersPage() {
   };
 
   const handleAddUser = () => router.push("/dashboard/users/create");
-  const handleEditUser = (user: User) => router.push(`/dashboard/users/${user.id}/edit`);
-  const handleDetailUser = (user: User) => router.push(`/dashboard/users/${user.id}`);
+  const handleEditUser = (user: User) =>
+    router.push(`/dashboard/users/${user.id}/edit`);
+  const handleDetailUser = (user: User) =>
+    router.push(`/dashboard/users/${user.id}`);
 
   const handleDeleteUser = async (user: User) => {
     if (!confirm("Are you sure you want to toggle this user's status?")) return;
@@ -100,14 +115,23 @@ export default function UsersPage() {
   };
 
   const handleResetPassword = async (user: User) => {
-    if (!confirm(`Are you sure you want to reset the password for ${user.fullName}? A new password will be sent to them via SMS.`)) return;
+    if (
+      !confirm(
+        `Are you sure you want to reset the password for ${user.fullName}? A new password will be sent to them via SMS.`,
+      )
+    )
+      return;
 
     const loadingToast = toast.loading("Resetting password...");
     try {
       await userService.resetUserPassword(user.id);
-      toast.success("Password reset successfully. User notified via SMS.", { id: loadingToast });
+      toast.success("Password reset successfully. User notified via SMS.", {
+        id: loadingToast,
+      });
     } catch (err: any) {
-      toast.error(err?.message || "Failed to reset password", { id: loadingToast });
+      toast.error(err?.message || "Failed to reset password", {
+        id: loadingToast,
+      });
     }
   };
 
@@ -122,7 +146,11 @@ export default function UsersPage() {
   };
 
   if (!hasPermission(PERMISSIONS.USER_VIEW)) {
-    return <div className="p-6 text-center text-red-500 font-semibold">Access Denied: Missing USER_VIEW permission</div>;
+    return (
+      <div className="p-6 text-center text-red-500 font-semibold">
+        Access Denied: Missing USER_VIEW permission
+      </div>
+    );
   }
 
   return (
@@ -130,7 +158,7 @@ export default function UsersPage() {
       <PageHeader
         title="System Staff"
         description="Manage administrative roles and support staff for the platform."
-        className="flex-col !items-start !w-full gap-4"
+        className="flex-col items-start! w-full! gap-4"
       >
         <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between w-full gap-4 mt-2">
           {/* Left: Search */}
@@ -138,7 +166,7 @@ export default function UsersPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
               placeholder="Search staff..."
-              className="pl-10 h-11 rounded-xl border-slate-200 w-full"
+              className="pl-10 h-11 rounded border-slate-200 w-full"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -147,21 +175,25 @@ export default function UsersPage() {
           {/* Middle: Filters */}
           <div className="flex flex-wrap items-center gap-2 md:gap-3 flex-1 lg:justify-start xl:justify-center">
             <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[150px] h-11 rounded-xl border-slate-200 bg-white">
+              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[150px] h-11 rounded border-slate-200 bg-white">
                 <SelectValue placeholder="Role" />
               </SelectTrigger>
-              <SelectContent className="rounded-xl">
+              <SelectContent className="rounded">
                 <SelectItem value="ALL">All Roles</SelectItem>
-                <SelectItem value={UserRole.SYSTEM_SUPER_ADMIN}>Super Admin</SelectItem>
-                <SelectItem value={UserRole.SYSTEM_ADMIN}>System Admin</SelectItem>
+                <SelectItem value={UserRole.SYSTEM_SUPER_ADMIN}>
+                  Super Admin
+                </SelectItem>
+                <SelectItem value={UserRole.SYSTEM_ADMIN}>
+                  System Admin
+                </SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[130px] h-11 rounded-xl border-slate-200 bg-white">
+              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[130px] h-11 rounded border-slate-200 bg-white">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
-              <SelectContent className="rounded-xl">
+              <SelectContent className="rounded">
                 <SelectItem value="ALL">All Status</SelectItem>
                 <SelectItem value="ACTIVE">Active</SelectItem>
                 <SelectItem value="PENDING">Pending</SelectItem>
@@ -173,14 +205,29 @@ export default function UsersPage() {
               <DatePickerWithRange date={dateRange} setDate={setDateRange} />
             </div>
 
-            {(searchTerm !== "" || roleFilter !== "ALL" || statusFilter !== "ALL" || dateRange?.from) && (
-              <Button variant="ghost" size="icon" onClick={clearFilters} className="h-11 w-11 rounded-xl hidden sm:flex">
+            {(searchTerm !== "" ||
+              roleFilter !== "ALL" ||
+              statusFilter !== "ALL" ||
+              dateRange?.from) && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={clearFilters}
+                className="h-11 w-11 rounded hidden sm:flex"
+              >
                 <X className="h-4 w-4" />
               </Button>
             )}
 
-            {(searchTerm !== "" || roleFilter !== "ALL" || statusFilter !== "ALL" || dateRange?.from) && (
-              <Button variant="outline" onClick={clearFilters} className="h-11 rounded-xl sm:hidden flex-1 border-slate-200">
+            {(searchTerm !== "" ||
+              roleFilter !== "ALL" ||
+              statusFilter !== "ALL" ||
+              dateRange?.from) && (
+              <Button
+                variant="outline"
+                onClick={clearFilters}
+                className="h-11 rounded sm:hidden flex-1 border-slate-200"
+              >
                 <X className="h-4 w-4 mr-2" />
                 Clear
               </Button>
@@ -191,23 +238,27 @@ export default function UsersPage() {
           {hasPermission(PERMISSIONS.USER_CREATE) && (
             <Button
               onClick={handleAddUser}
-              className="h-11 rounded-xl px-6 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 shrink-0 w-full xl:w-auto"
+              className="h-11 rounded px-6 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 shrink-0 w-full xl:w-auto"
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Staff
             </Button>
           )}
         </div>
-      </PageHeader >
+      </PageHeader>
 
-      <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white rounded border border-slate-100 shadow-sm overflow-hidden">
         <UserTable
           owners={users}
           loading={loading}
           onDetail={handleDetailUser}
           onEdit={handleEditUser}
           onDelete={handleDeleteUser}
-          onResetPassword={hasPermission(PERMISSIONS.SETTINGS_RESET_PASSWORD) ? handleResetPassword : undefined}
+          onResetPassword={
+            hasPermission(PERMISSIONS.SETTINGS_RESET_PASSWORD)
+              ? handleResetPassword
+              : undefined
+          }
         />
       </div>
 
@@ -219,6 +270,6 @@ export default function UsersPage() {
         limit={limit}
         onLimitChange={setLimit}
       />
-    </div >
+    </div>
   );
 }

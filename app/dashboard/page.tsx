@@ -131,11 +131,12 @@ export default function DashboardPage() {
       <PageHeader
         title="Enterprise Overview"
         description="Real-time operational analytics and financial performance."
+        className="w-full!"
       >
         <div className="flex flex-col sm:flex-row items-center gap-3">
           {(user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.PARKING_SUPER_ADMIN) && managers.length > 0 && (
             <Select value={managerFilter} onValueChange={setManagerFilter}>
-              <SelectTrigger className="w-[200px] h-10 bg-white border-slate-200 text-xs font-bold uppercase tracking-wider rounded-lg">
+              <SelectTrigger className="w-[200px] h-10 bg-white border-slate-200 text-xs font-bold uppercase tracking-wider rounded">
                 <SelectValue placeholder="All Managers" />
               </SelectTrigger>
               <SelectContent>
@@ -149,7 +150,7 @@ export default function DashboardPage() {
 
           {(user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.SYSTEM_ADMIN) && (
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[160px] h-10 bg-white border-slate-200 text-xs font-bold uppercase tracking-wider rounded-lg">
+              <SelectTrigger className="w-[160px] h-10 bg-white border-slate-200 text-xs font-bold uppercase tracking-wider rounded">
                 <SelectValue placeholder="All Status" />
               </SelectTrigger>
               <SelectContent>
@@ -165,7 +166,7 @@ export default function DashboardPage() {
       </PageHeader>
 
       {/* PRIMARY STATS GRID */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm divide-y sm:divide-y-0 sm:divide-x divide-slate-100 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 w-full">
+      <div className="bg-white rounded border border-slate-200 shadow-sm divide-y sm:divide-y-0 sm:divide-x divide-slate-100 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 w-full">
         {hasPermission(PERMISSIONS.DASHBOARD_TOTAL_REVENUE) && (
           <EnterpriseStat
             label="Total Revenue"
@@ -206,16 +207,16 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
         {/* REVENUE CHART */}
-        <Card className="xl:col-span-8 border-0 shadow-sm ring-1 ring-slate-200 bg-white rounded-2xl overflow-hidden">
+        <Card className="xl:col-span-8 border-0 shadow-sm ring-1 ring-slate-200 bg-white rounded overflow-hidden">
           <CardHeader className="border-b border-slate-50 px-6 py-4 flex flex-row items-center justify-between">
             <div>
               <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-800">Revenue Analytics</CardTitle>
             </div>
             <Tabs defaultValue="weekly" value={chartPeriod} onValueChange={(v) => setChartPeriod(v as any)}>
-              <TabsList className="h-8 bg-slate-100 p-0.5 rounded-lg">
-                {hasPermission(PERMISSIONS.DASHBOARD_DAILY_STATS) && <TabsTrigger value="weekly" className="text-[10px] font-bold h-7 px-3 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Weekly</TabsTrigger>}
-                {hasPermission(PERMISSIONS.DASHBOARD_MONTHLY_STATS) && <TabsTrigger value="monthly" className="text-[10px] font-bold h-7 px-3 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Monthly</TabsTrigger>}
-                {hasPermission(PERMISSIONS.DASHBOARD_YEARLY_STATS) && <TabsTrigger value="yearly" className="text-[10px] font-bold h-7 px-3 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm">Yearly</TabsTrigger>}
+              <TabsList className="h-8 bg-slate-100 p-0.5 rounded">
+                {hasPermission(PERMISSIONS.DASHBOARD_DAILY_STATS) && <TabsTrigger value="weekly" className="text-[10px] font-bold h-7 px-3 rounded data-[state=active]:bg-white data-[state=active]:shadow-sm">Weekly</TabsTrigger>}
+                {hasPermission(PERMISSIONS.DASHBOARD_MONTHLY_STATS) && <TabsTrigger value="monthly" className="text-[10px] font-bold h-7 px-3 rounded data-[state=active]:bg-white data-[state=active]:shadow-sm">Monthly</TabsTrigger>}
+                {hasPermission(PERMISSIONS.DASHBOARD_YEARLY_STATS) && <TabsTrigger value="yearly" className="text-[10px] font-bold h-7 px-3 rounded data-[state=active]:bg-white data-[state=active]:shadow-sm">Yearly</TabsTrigger>}
               </TabsList>
             </Tabs>
           </CardHeader>
@@ -279,7 +280,7 @@ export default function DashboardPage() {
         <div className="xl:col-span-4 space-y-6">
           {/* Payment Methods */}
           {hasPermission(PERMISSIONS.REVENUE_VIEW) && (
-            <Card className="border-0 shadow-sm ring-1 ring-slate-200 bg-white rounded-2xl overflow-hidden h-64 sm:h-[350px]">
+            <Card className="border-0 shadow-sm ring-1 ring-slate-200 bg-white rounded overflow-hidden h-64 sm:h-[350px]">
               <CardHeader className="border-b border-slate-50 px-6 py-4">
                 <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-800">Transaction Channels</CardTitle>
               </CardHeader>
@@ -310,7 +311,7 @@ export default function DashboardPage() {
           )}
 
           {/* Operational Summary List */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+          <div className="bg-white rounded border border-slate-200 shadow-sm overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-50 bg-slate-50/50">
               <h3 className="text-xs font-bold uppercase tracking-widest text-slate-500">Operational Snapshot</h3>
             </div>
@@ -318,7 +319,7 @@ export default function DashboardPage() {
               {hasPermission(PERMISSIONS.PARKING_VIEW) && (
                 <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary/10 text-primary rounded-lg">
+                    <div className="p-2 bg-primary/10 text-primary rounded">
                       <CheckCircle2 className="w-4 h-4" />
                     </div>
                     <span className="text-sm font-bold text-slate-700">Available Spots</span>
@@ -329,7 +330,7 @@ export default function DashboardPage() {
               {hasPermission(PERMISSIONS.DASHBOARD_TOTAL_BOOKINGS) && (
                 <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-amber-50 text-amber-600 rounded-lg">
+                    <div className="p-2 bg-amber-50 text-amber-600 rounded">
                       <Clock className="w-4 h-4" />
                     </div>
                     <span className="text-sm font-bold text-slate-700">Active Sessions</span>
@@ -340,7 +341,7 @@ export default function DashboardPage() {
               {hasPermission(PERMISSIONS.REVENUE_VIEW) && (
                 <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+                    <div className="p-2 bg-emerald-50 text-emerald-600 rounded">
                       <PieIcon className="w-4 h-4" />
                     </div>
                     <span className="text-sm font-bold text-slate-700">Commission</span>
@@ -351,7 +352,7 @@ export default function DashboardPage() {
               {hasPermission(PERMISSIONS.PARKING_VIEW) && (
                 <div className="px-6 py-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary/10 text-primary rounded-lg">
+                    <div className="p-2 bg-primary/10 text-primary rounded">
                       <Building2 className="w-4 h-4" />
                     </div>
                     <span className="text-sm font-bold text-slate-700">Total Capacity</span>

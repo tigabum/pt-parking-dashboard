@@ -12,11 +12,11 @@ export default function DashboardLayout({
 }) {
   return (
     <ProtectedRoute>
-      <div className="flex h-screen bg-background">
-        <div className="hidden md:flex flex-col h-full"> {/* Wrapper for desktop sidebar */}
+      <div className="flex bg-background">
+        <div className="hidden md:flex flex-col h-screen"> {/* Wrapper for desktop sidebar */}
           <Sidebar />
         </div>
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden h-screen">
           <DashboardHeader />
           <main className="flex-1 overflow-y-auto">{children}</main>
         </div>

@@ -1,5 +1,6 @@
 import type React from "react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 export function AuthLayout({
   children,
@@ -13,10 +14,13 @@ export function AuthLayout({
       {/* Left Panel - Branding */}
       {showBranding && (
         <div className="hidden lg:flex w-1/2 bg-primary relative overflow-hidden">
-          <img
+          <Image
             src="/login-brand.png"
             alt="CarPark Branding"
             className="absolute inset-0 w-full h-full object-cover"
+            width={5000}
+            height={5000}
+            priority
           />
         </div>
       )}

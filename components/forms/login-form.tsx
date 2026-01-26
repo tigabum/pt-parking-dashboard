@@ -44,7 +44,6 @@ export function LoginForm() {
 
     setError("");
     setLoading(true);
-    const loadingToast = toast.loading("Checking account status...");
 
     try {
       // Determine if identifier is email or phone
@@ -56,10 +55,9 @@ export function LoginForm() {
       const { isPasswordSet, setPasswordToken: token } =
         await authService.preLogin(
           isEmail ? identifier.trim().toLowerCase() : undefined,
-          !isEmail ? identifier.trim() : undefined
+          !isEmail ? identifier.trim() : undefined,
         );
 
-      toast.dismiss(loadingToast);
 
       if (isPasswordSet) {
         setStep("password");
@@ -69,10 +67,8 @@ export function LoginForm() {
         toast.info("Please set your password to continue.");
       }
     } catch (err: any) {
-      toast.dismiss(loadingToast);
       const errorMessage = err?.message || "An unexpected error occurred.";
       setError(errorMessage);
-      // Removed redundant toast.error as it's now handled globally
     } finally {
       setLoading(false);
     }
@@ -83,7 +79,6 @@ export function LoginForm() {
     setError("");
     setLoading(true);
 
-    const loadingToast = toast.loading("Signing in...");
 
     try {
       const isEmail = identifier.includes("@");
@@ -94,17 +89,14 @@ export function LoginForm() {
       await login(
         isEmail ? identifier.trim().toLowerCase() : undefined,
         password,
-        !isEmail ? identifier.trim() : undefined
+        !isEmail ? identifier.trim() : undefined,
       );
 
-      toast.dismiss(loadingToast);
       toast.success("Login successful!");
       router.push("/dashboard");
     } catch (err: any) {
-      toast.dismiss(loadingToast);
       const errorMessage = err?.message || "Login failed. Please try again.";
       setError(errorMessage);
-      // Removed redundant toast.error as it's now handled globally
     } finally {
       setLoading(false);
     }
@@ -123,7 +115,6 @@ export function LoginForm() {
 
     setError("");
     setLoading(true);
-    const loadingToast = toast.loading("Setting your password...");
 
     try {
       if (!resetToken) {
@@ -132,13 +123,12 @@ export function LoginForm() {
       }
       console.log(
         "Setting password with token:",
-        resetToken.substring(0, 20) + "..."
+        resetToken.substring(0, 20) + "...",
       );
 
       // Use the returned user data directly for login
       const { user } = await authService.setPassword(resetToken, password);
 
-      toast.dismiss(loadingToast);
       toast.success("Password set successfully! Logging in...");
 
       // Immediate login with data
@@ -154,10 +144,8 @@ export function LoginForm() {
 
       router.push("/dashboard");
     } catch (err: any) {
-      toast.dismiss(loadingToast);
       const errorMessage = err?.message || "Failed to set password.";
       setError(errorMessage);
-      // Removed redundant toast.error as it's now handled globally
     } finally {
       setLoading(false);
     }
@@ -166,17 +154,17 @@ export function LoginForm() {
     <AuthLayout>
       <div className="flex flex-col items-center text-center mb-8">
         {/* Mobile Logo */}
-        <div className="w-16 h-16 rounded-full overflow-hidden mb-4 lg:hidden border-2 border-primary">
+        {/* <div className="w-16 h-16 rounded-full overflow-hidden mb-4 lg:hidden border-2 border-primary">
           <img
             src="/login-brand.png"
             alt="Logo"
             className="w-full h-full object-cover"
           />
-        </div>
+        </div> */}
 
         {/* Desktop Form Logo */}
         <div className="flex justify-center mb-4">
-          <div className="w-20 h-20 rounded-xl overflow-hidden border-2 border-primary/20 shadow-lg">
+          <div className="w-20 h-20 rounded overflow-hidden border-2 border-primary/20 shadow-lg">
             <img
               src="/login-brand.png"
               alt="Logo"
@@ -225,11 +213,15 @@ export function LoginForm() {
               autoFocus
               required
             />
-            {errors.identifier && <p className="text-xs text-red-500 font-medium pl-2">{errors.identifier}</p>}
+            {errors.identifier && (
+              <p className="text-xs text-red-500 font-medium pl-2">
+                {errors.identifier}
+              </p>
+            )}
           </div>
           <Button
             type="submit"
-            className="w-full h-12 text-base font-bold bg-[#0066FF] hover:bg-[#0052CC] text-white transition-all rounded-xl opacity-100 disabled:bg-[#0066FF]/60"
+            className="w-full h-12 text-base font-bold bg-primary text-white transition-all rounded opacity-100"
             disabled={loading || !identifier}
           >
             {loading ? "Checking..." : "Continue"}
@@ -259,13 +251,17 @@ export function LoginForm() {
               autoFocus
               required
             />
-            {errors.password && <p className="text-xs text-red-500 font-medium pl-2">{errors.password}</p>}
+            {errors.password && (
+              <p className="text-xs text-red-500 font-medium pl-2">
+                {errors.password}
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col gap-3">
             <Button
               type="submit"
-              className="w-full h-12 text-base font-bold bg-[#0066FF] hover:bg-[#0052CC] text-white transition-all rounded-xl opacity-100 disabled:bg-[#0066FF]/60"
+              className="w-full h-12 text-base font-bold bg-primary text-white transition-all rounded opacity-100 disabled:bg-primary/60"
               disabled={loading || !password}
             >
               {loading ? "Signing in..." : "Sign In"}
@@ -319,7 +315,7 @@ export function LoginForm() {
           <div className="flex flex-col gap-3">
             <Button
               type="submit"
-              className="w-full h-12 text-base font-bold bg-[#0066FF] hover:bg-[#0052CC] text-white transition-all rounded-xl opacity-100 disabled:bg-[#0066FF]/60"
+              className="w-full h-12 text-base font-bold bg-primary text-white transition-all rounded opacity-100 disabled:bg-primary/60"
               disabled={loading || !password || !confirmPassword}
             >
               {loading ? "Setting Password..." : "Set Password & Login"}

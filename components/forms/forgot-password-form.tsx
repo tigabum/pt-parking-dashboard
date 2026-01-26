@@ -77,12 +77,16 @@ export function ForgotPasswordForm() {
               className={`h-12 bg-muted/30 border-input/50 ${errors.email ? "border-red-500 bg-red-50" : ""}`}
               required
             />
-            {errors.email && <p className="text-xs text-red-500 font-medium mt-1">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-xs text-red-500 font-medium mt-1">
+                {errors.email}
+              </p>
+            )}
           </div>
 
           <Button
             type="submit"
-            className="w-full h-12 text-base font-semibold bg-[#0066FF] hover:bg-[#0052CC] text-white transition-all rounded-xl shadow-none border-none"
+            className="w-full h-12 text-base font-semibold bg-primary text-white transition-all rounded shadow-none border-none"
             disabled={loading}
           >
             {loading ? "Sending Link..." : "Send Reset Link"}

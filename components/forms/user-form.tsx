@@ -42,7 +42,11 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 import { SYSTEM_ORG_ID } from "@/lib/constants";
-import { PERMISSION_LABELS, getPermissionsByContext, DEFAULT_PERMISSIONS_BY_ROLE } from "@/lib/permissions";
+import {
+  PERMISSION_LABELS,
+  getPermissionsByContext,
+  DEFAULT_PERMISSIONS_BY_ROLE,
+} from "@/lib/permissions";
 
 type Props = {
   onOpenChange: (open: boolean) => void;
@@ -131,7 +135,10 @@ export function UserForm({
     formData.append("isStaffUser", "true");
 
     // Default orgId for system users
-    if (role === UserRole.SYSTEM_SUPER_ADMIN || role === UserRole.SYSTEM_ADMIN) {
+    if (
+      role === UserRole.SYSTEM_SUPER_ADMIN ||
+      role === UserRole.SYSTEM_ADMIN
+    ) {
       formData.append("orgId", SYSTEM_ORG_ID);
     }
 
@@ -141,28 +148,32 @@ export function UserForm({
 
     // Add Permissions
     if (permissions.length > 0) {
-      permissions.forEach(p => formData.append("permissions", p));
+      permissions.forEach((p) => formData.append("permissions", p));
     }
 
     onSave(formData);
   };
 
   const togglePermission = (permission: string) => {
-    setPermissions(prev =>
+    setPermissions((prev) =>
       prev.includes(permission)
-        ? prev.filter(p => p !== permission)
-        : [...prev, permission]
+        ? prev.filter((p) => p !== permission)
+        : [...prev, permission],
     );
   };
 
   const toggleCategory = (categoryPermissions: string[]) => {
-    const allSelected = categoryPermissions.every(p => permissions.includes(p));
+    const allSelected = categoryPermissions.every((p) =>
+      permissions.includes(p),
+    );
     if (allSelected) {
-      setPermissions(prev => prev.filter(p => !categoryPermissions.includes(p)));
+      setPermissions((prev) =>
+        prev.filter((p) => !categoryPermissions.includes(p)),
+      );
     } else {
-      setPermissions(prev => {
+      setPermissions((prev) => {
         const newPerms = [...prev];
-        categoryPermissions.forEach(p => {
+        categoryPermissions.forEach((p) => {
           if (!newPerms.includes(p)) newPerms.push(p);
         });
         return newPerms;
@@ -171,7 +182,7 @@ export function UserForm({
   };
 
   const selectAllAll = (allPerms: string[]) => {
-    const allSelected = allPerms.every(p => permissions.includes(p));
+    const allSelected = allPerms.every((p) => permissions.includes(p));
     if (allSelected) {
       setPermissions([]);
     } else {
@@ -181,23 +192,35 @@ export function UserForm({
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case "Parking Management": return <MapPin className="h-4 w-4" />;
-      case "Booking Management": return <Calendar className="h-4 w-4" />;
-      case "User Management": return <Users className="h-4 w-4" />;
-      case "Customer Management": return <UserSquare className="h-4 w-4" />;
-      case "Vehicle Management": return <Car className="h-4 w-4" />;
-      case "Wallet & Transactions": return <Wallet className="h-4 w-4" />;
-      case "Reviews & Ratings": return <Star className="h-4 w-4" />;
-      case "Configuration Management": return <Settings className="h-4 w-4" />;
-      case "Dashboard & Analytics": return <LayoutDashboard className="h-4 w-4" />;
-      case "Financial Access": return <CreditCard className="h-4 w-4" />;
-      case "System Settings & Security": return <Shield className="h-4 w-4" />;
-      default: return <Target className="h-4 w-4" />;
+      case "Parking Management":
+        return <MapPin className="h-4 w-4" />;
+      case "Booking Management":
+        return <Calendar className="h-4 w-4" />;
+      case "User Management":
+        return <Users className="h-4 w-4" />;
+      case "Customer Management":
+        return <UserSquare className="h-4 w-4" />;
+      case "Vehicle Management":
+        return <Car className="h-4 w-4" />;
+      case "Wallet & Transactions":
+        return <Wallet className="h-4 w-4" />;
+      case "Reviews & Ratings":
+        return <Star className="h-4 w-4" />;
+      case "Configuration Management":
+        return <Settings className="h-4 w-4" />;
+      case "Dashboard & Analytics":
+        return <LayoutDashboard className="h-4 w-4" />;
+      case "Financial Access":
+        return <CreditCard className="h-4 w-4" />;
+      case "System Settings & Security":
+        return <Shield className="h-4 w-4" />;
+      default:
+        return <Target className="h-4 w-4" />;
     }
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-white overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-100 bg-white overflow-hidden flex flex-col">
       {/* Top Header */}
       <div className="flex items-center justify-between px-4 md:px-8 py-5 shrink-0 bg-white border-b shadow-sm z-20">
         <div>
@@ -220,7 +243,7 @@ export function UserForm({
       {/* Content Area */}
       <div className="flex-1 overflow-y-auto px-4 md:px-10 pb-6 bg-slate-50/30">
         <div className="max-w-7xl mx-auto h-full pt-6 md:pt-10">
-          <div className="bg-white rounded-3xl md:rounded-[2.5rem] border border-slate-200 shadow-2xl shadow-slate-200/50 overflow-hidden">
+          <div className="bg-white rounded md:rounded-lg border border-slate-200 shadow-2xl shadow-slate-200/50 overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-3">
               {/* Left Column: Profile & Basic Info */}
               <div className="lg:col-span-1 p-6 md:p-10 border-b lg:border-b-0 lg:border-r border-slate-100 bg-slate-50/30 space-y-8 md:space-y-10">
@@ -276,10 +299,10 @@ export function UserForm({
                         value={role}
                         onValueChange={(val) => setRole(val as UserRole)}
                       >
-                        <SelectTrigger className="h-12 w-full rounded-xl border-slate-200 bg-white font-bold transition-all hover:border-slate-400/50">
+                        <SelectTrigger className="h-12 w-full rounded border-slate-200 bg-white font-bold transition-all hover:border-slate-400/50">
                           <SelectValue placeholder="Enter Role Selection" />
                         </SelectTrigger>
-                        <SelectContent className="rounded-xl shadow-2xl border-slate-100">
+                        <SelectContent className="rounded shadow-2xl border-slate-100">
                           <SelectItem
                             value={UserRole.SYSTEM_SUPER_ADMIN}
                             className="h-10 font-bold uppercase"
@@ -300,9 +323,11 @@ export function UserForm({
                       <Label className="text-xs font-black text-slate-900 uppercase tracking-tight">
                         Organization Registry
                       </Label>
-                      <div className="flex items-center gap-3 p-3 bg-white rounded-xl border border-slate-100 shadow-sm">
+                      <div className="flex items-center gap-3 p-3 bg-white rounded border border-slate-100 shadow-sm">
                         <Building2 className="h-4 w-4 text-primary" />
-                        <span className="text-xs font-bold text-slate-600">PossibleTech</span>
+                        <span className="text-xs font-bold text-slate-600">
+                          PossibleTech
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -314,12 +339,16 @@ export function UserForm({
                 {/* Contact Information */}
                 <div className="space-y-6 md:space-y-8">
                   <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
-                    <div className="p-2.5 bg-primary/10 text-primary rounded-xl">
+                    <div className="p-2.5 bg-primary/10 text-primary rounded">
                       <Mail className="w-5 h-5" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">Personal Information</h3>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">System access & contact details</p>
+                      <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">
+                        Personal Information
+                      </h3>
+                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">
+                        System access & contact details
+                      </p>
                     </div>
                   </div>
 
@@ -329,15 +358,20 @@ export function UserForm({
                         Full Legal Name *
                       </Label>
                       <Input
-                        className={`h-12 w-full rounded-xl border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.fullName ? "border-red-500 bg-red-50" : ""}`}
+                        className={`h-12 w-full rounded border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.fullName ? "border-red-500 bg-red-50" : ""}`}
                         placeholder="Enter Full Legal Name"
                         value={fullName}
                         onChange={(e) => {
                           setFullName(e.target.value);
-                          if (errors.fullName) setErrors({ ...errors, fullName: "" });
+                          if (errors.fullName)
+                            setErrors({ ...errors, fullName: "" });
                         }}
                       />
-                      {errors.fullName && <p className="text-[10px] text-red-500 font-bold uppercase tracking-tight mt-1">{errors.fullName}</p>}
+                      {errors.fullName && (
+                        <p className="text-[10px] text-red-500 font-bold uppercase tracking-tight mt-1">
+                          {errors.fullName}
+                        </p>
+                      )}
                     </div>
 
                     <div className="space-y-3">
@@ -346,7 +380,7 @@ export function UserForm({
                         Official Email *
                       </Label>
                       <Input
-                        className={`h-12 w-full rounded-xl border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.email ? "border-red-500 bg-red-50" : ""}`}
+                        className={`h-12 w-full rounded border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.email ? "border-red-500 bg-red-50" : ""}`}
                         type="email"
                         placeholder="Enter Official Email"
                         value={email}
@@ -355,7 +389,11 @@ export function UserForm({
                           if (errors.email) setErrors({ ...errors, email: "" });
                         }}
                       />
-                      {errors.email && <p className="text-[10px] text-red-500 font-bold uppercase tracking-tight mt-1">{errors.email}</p>}
+                      {errors.email && (
+                        <p className="text-[10px] text-red-500 font-bold uppercase tracking-tight mt-1">
+                          {errors.email}
+                        </p>
+                      )}
                     </div>
 
                     <div className="space-y-3">
@@ -364,15 +402,20 @@ export function UserForm({
                         Primary Contact *
                       </Label>
                       <Input
-                        className={`h-12 w-full rounded-xl border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.phoneNumber ? "border-red-500 bg-red-50" : ""}`}
+                        className={`h-12 w-full rounded border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.phoneNumber ? "border-red-500 bg-red-50" : ""}`}
                         placeholder="Enter Primary Contact"
                         value={phoneNumber}
                         onChange={(e) => {
                           setPhoneNumber(e.target.value);
-                          if (errors.phoneNumber) setErrors({ ...errors, phoneNumber: "" });
+                          if (errors.phoneNumber)
+                            setErrors({ ...errors, phoneNumber: "" });
                         }}
                       />
-                      {errors.phoneNumber && <p className="text-[10px] text-red-500 font-bold uppercase tracking-tight mt-1">{errors.phoneNumber}</p>}
+                      {errors.phoneNumber && (
+                        <p className="text-[10px] text-red-500 font-bold uppercase tracking-tight mt-1">
+                          {errors.phoneNumber}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -394,11 +437,14 @@ export function UserForm({
                       <PermissionSelector
                         permissions={permissions}
                         onPermissionsChange={setPermissions}
-                        categories={getPermissionsByContext(role === UserRole.PARKING_SUPER_ADMIN || role === UserRole.PARKING_MANAGER)}
+                        categories={getPermissionsByContext(
+                          role === UserRole.PARKING_SUPER_ADMIN ||
+                            role === UserRole.PARKING_MANAGER,
+                        )}
                         placeholder="Enter Site Permissions"
                       />
                       <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center gap-4 transition-all hover:bg-white hover:shadow-sm group">
-                        <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center text-primary shadow-sm transition-transform group-hover:scale-110">
+                        <div className="h-10 w-10 rounded bg-white flex items-center justify-center text-primary shadow-sm transition-transform group-hover:scale-110">
                           <Shield className="h-5 w-5" />
                         </div>
                         <div>
@@ -428,14 +474,17 @@ export function UserForm({
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="text-sm text-slate-500 font-medium">
             {permissions.length > 0 && (
-              <span className="text-primary font-bold">{permissions.length} permissions</span>
-            )} selected
+              <span className="text-primary font-bold">
+                {permissions.length} permissions
+              </span>
+            )}{" "}
+            selected
           </div>
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               onClick={() => onOpenChange(false)}
-              className="h-14 px-8 rounded-xl font-bold text-slate-400 hover:text-slate-900"
+              className="h-14 px-8 rounded font-bold text-slate-400 hover:text-slate-900"
             >
               Cancel
             </Button>
@@ -443,7 +492,7 @@ export function UserForm({
             <Button
               onClick={handleSubmit}
               disabled={isLoading}
-              className="h-14 px-16 rounded-xl bg-[#0066FF] hover:bg-[#0052CC] text-white font-bold transition-all min-w-[160px] shadow-none border-none"
+              className="h-14 px-16 rounded bg-primary text-white font-bold transition-all min-w-40 shadow-none border-none"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isNew ? "Create User" : "Update User"}
