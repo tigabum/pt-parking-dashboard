@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Search, Bell, Menu, User, Settings, LogOut } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Sidebar } from "./sidebar";
 import { useAuth } from "@/app/context/auth-context";
 import { useRouter } from "next/navigation";
@@ -34,6 +34,9 @@ export function DashboardHeader() {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="p-0 w-64 border-none">
+            <SheetHeader className="sr-only">
+              <SheetTitle>Navigation Sidebar</SheetTitle>
+            </SheetHeader>
             <Sidebar onItemClick={() => setOpen(false)} />
           </SheetContent>
         </Sheet>

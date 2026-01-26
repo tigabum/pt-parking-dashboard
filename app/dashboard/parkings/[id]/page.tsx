@@ -1018,6 +1018,9 @@ export default function ParkingDetailPage() {
       {/* Doc Preview Dialog */}
       <Dialog open={!!previewDoc} onOpenChange={() => setPreviewDoc(null)}>
         <DialogContent className="max-w-4xl h-[80vh] p-0 overflow-hidden border-none shadow-2xl rounded-3xl">
+          <DialogHeader className="sr-only">
+            <DialogTitle>{previewDoc?.title || "Document Preview"}</DialogTitle>
+          </DialogHeader>
           <div className="absolute top-4 right-4 z-50">
             <Button variant="ghost" size="icon" onClick={() => setPreviewDoc(null)} className="h-10 w-10 rounded-full bg-black/20 text-white hover:bg-black/40 backdrop-blur-md">
               <X size={20} />
