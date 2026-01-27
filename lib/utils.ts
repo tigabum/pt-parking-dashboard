@@ -12,6 +12,14 @@ export function getImageUrl(path: string | null | undefined) {
     return path;
   }
 
+  // 1. Use specific file URL env var if set (Preferred)
+  if (process.env.NEXT_PUBLIC_FILE_URL) {
+    const baseUrl = process.env.NEXT_PUBLIC_FILE_URL.replace(/\/$/, "");
+    const cleanPath = path.replace(/^\//, "");
+    return `${baseUrl}/${cleanPath}`;
+  }
+
+  // 2. Fallback: derive from API_URL (legacy behavior)
   let baseUrl = API_CONFIG.BASE_URL.replace(/\/$/, "");
 
   // If the base URL ends with /api, remove it to serve static files from root
