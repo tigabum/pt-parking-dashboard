@@ -567,47 +567,47 @@ export default function ParkingDetailPage() {
         </div>
       }
     >
-      {/* Hero Section */}
-      <div className="relative w-full h-[300px] md:h-[400px] bg-slate-900 rounded-[2rem] overflow-hidden mb-12">
-        {parking.featureImage ? (
+      {/* Hero Section - Only show if feature image exists */}
+      {parking.featureImage && (
+        <div className="relative w-full h-[300px] md:h-[400px] bg-slate-900 rounded-[2rem] overflow-hidden mb-12">
           <img
             src={getImageUrl(parking.featureImage)}
             className="w-full h-full object-cover opacity-80"
             alt="Cover"
           />
-        ) : null}
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent" />
-        <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div className="space-y-3 max-w-2xl">
-            <Badge
-              variant="outline"
-              className="text-white border-white/20 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-lg uppercase tracking-wider text-[10px] font-bold"
-            >
-              {parking.parkingType || "Public Parking"}
-            </Badge>
-            <h1 className="text-2xl md:text-5xl font-black text-white leading-tight">
-              {parking.name}
-            </h1>
-            <div className="flex flex-wrap items-center gap-4 text-slate-300 text-sm font-medium">
-              <div className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-primary" />
-                {parking.city || "Unknown City"}
-              </div>
-              <div className="flex items-center gap-2">
-                <Star className="h-4 w-4 text-amber-400 fill-current" />
-                <span className="text-white font-bold">
-                  {ratingStats?.averageRating != null
-                    ? Number(ratingStats.averageRating).toFixed(1)
-                    : "New"}
-                </span>
-                <span className="opacity-60">
-                  ({ratingStats?.totalRatings || 0} reviews)
-                </span>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent" />
+          <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div className="space-y-3 max-w-2xl">
+              <Badge
+                variant="outline"
+                className="text-white border-white/20 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-lg uppercase tracking-wider text-[10px] font-bold"
+              >
+                {parking.parkingType || "Public Parking"}
+              </Badge>
+              <h1 className="text-2xl md:text-5xl font-black text-white leading-tight">
+                {parking.name}
+              </h1>
+              <div className="flex flex-wrap items-center gap-4 text-slate-300 text-sm font-medium">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-primary" />
+                  {parking.city || "Unknown City"}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Star className="h-4 w-4 text-amber-400 fill-current" />
+                  <span className="text-white font-bold">
+                    {ratingStats?.averageRating != null
+                      ? Number(ratingStats.averageRating).toFixed(1)
+                      : "New"}
+                  </span>
+                  <span className="opacity-60">
+                    ({ratingStats?.totalRatings || 0} reviews)
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       <Tabs
         defaultValue="details"

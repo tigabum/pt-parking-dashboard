@@ -8,8 +8,7 @@ import {
   Column,
 } from "@/components/tables";
 import { ParkingResponse } from "@/components/types";
-import { getImageUrl } from "@/lib/utils";
-import { QrCode, Star, Image as ImageIcon } from "lucide-react";
+import { QrCode } from "lucide-react";
 import { QrCodeDialog } from "./qr-code-dialog";
 import { PERMISSIONS } from "@/lib/permissions";
 
@@ -41,12 +40,14 @@ export function ParkingSpacesTable({
       header: "Code",
       render: (row) => <span className="font-mono font-bold text-primary">{row.parkingCode || "—"}</span>,
     },
-    header: "Parking Name",
-    render: (row) => <span className="font-bold text-slate-900">{row.name}</span>,
+    {
+      key: "name",
+      header: "Parking Name",
+      render: (row) => <span className="font-bold text-slate-900">{row.name}</span>,
     },
-{
-  key: "location",
-    header: "Location",
+    {
+      key: "location",
+      header: "Location",
       render: (row) => (
         <div className="flex flex-col">
           <span className="font-bold text-slate-900">{row.region || "—"} / {row.city || "—"}</span>
@@ -60,11 +61,11 @@ export function ParkingSpacesTable({
           </span>
         </div>
       )
-},
+    },
 
-{
-  key: "spots",
-    header: "Capacity Analysis",
+    {
+      key: "spots",
+      header: "Capacity Analysis",
       render: (row) => (
         <div className="flex flex-col gap-0.5">
           <div className="flex items-center gap-2">
@@ -81,39 +82,26 @@ export function ParkingSpacesTable({
           </div>
         </div>
       )
-},
-{
-  key: "parkingType",
-    header: "Type",
+    },
+    {
+      key: "parkingType",
+      header: "Type",
       render: (row) => (
         <span className="px-2 py-1 bg-slate-100 rounded-lg text-[10px] font-bold uppercase text-slate-600">
           {row.parkingType || "PUBLIC"}
         </span>
       )
-},
-{
-  key: "pricing",
-    header: "Base Rate",
+    },
+    {
+      key: "pricing",
+      header: "Base Rate",
       render: (row) => formatMoney(row.pricing?.hourly?.price || row.pricing?.flat?.price)
-},
+    },
 
 
-/* {
-  key: "reviews",
-  header: "Reviews",
-  render: (row) => (
-    <div className="flex items-center gap-1.5">
-      <div className="flex items-center gap-1 px-2 py-1 bg-amber-50 rounded-lg border border-amber-100/50">
-        <Star className="h-3 w-3 text-amber-500 fill-amber-500" />
-        <span className="text-xs font-bold text-amber-700">{row.averageRating != null ? Number(row.averageRating).toFixed(1) : "0.0"}</span>
-      </div>
-      <span className="text-[10px] text-slate-400 font-medium">({row.ratingsCount || 0})</span>
-    </div>
-  )
-}, */
-{
-  key: "qr",
-    header: "QR",
+    {
+      key: "qr",
+      header: "QR",
       render: (row) => (
         <button
           onClick={() => setQrSpace(row)}
@@ -125,34 +113,34 @@ export function ParkingSpacesTable({
       ),
     },
 
-statusColumn<ParkingResponse>(),
-  actionsColumn<ParkingResponse>({
-    onDetail,
-    detailPermission: PERMISSIONS.PARKING_VIEW,
-    onEdit,
-    editPermission: PERMISSIONS.PARKING_UPDATE,
-    onDelete,
-    deletePermission: PERMISSIONS.PARKING_DELETE,
-  }),
+    statusColumn<ParkingResponse>(),
+    actionsColumn<ParkingResponse>({
+      onDetail,
+      detailPermission: PERMISSIONS.PARKING_VIEW,
+      onEdit,
+      editPermission: PERMISSIONS.PARKING_UPDATE,
+      onDelete,
+      deletePermission: PERMISSIONS.PARKING_DELETE,
+    }),
   ];
 
-return (
-  <>
-    <ReusableTable
-      data={spaces}
-      columns={columns}
-      getRowKey={(row) => row.id}
-      emptyText={loading ? "Loading parkings..." : "No parkings found"}
-    />
-
-    {qrSpace && (
-      <QrCodeDialog
-        open={!!qrSpace}
-        onOpenChange={(open) => !open && setQrSpace(null)}
-        parkingId={qrSpace.id}
-        parkingName={qrSpace.name}
+  return (
+    <>
+      <ReusableTable
+        data={spaces}
+        columns={columns}
+        getRowKey={(row) => row.id}
+        emptyText={loading ? "Loading parkings..." : "No parkings found"}
       />
-    )}
-  </>
-);
+
+      {qrSpace && (
+        <QrCodeDialog
+          open={!!qrSpace}
+          onOpenChange={(open) => !open && setQrSpace(null)}
+          parkingId={qrSpace.id}
+          parkingName={qrSpace.name}
+        />
+      )}
+    </>
+  );
 }
