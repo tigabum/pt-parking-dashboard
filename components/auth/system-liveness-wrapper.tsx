@@ -17,6 +17,7 @@ export function SystemLivenessWrapper({ children }: { children: React.ReactNode 
                     </div>
                     <div className="space-y-2 text-center">
                         <h3 className="text-lg font-bold text-foreground">Initializing System</h3>
+
                     </div>
                 </div>
             </div>
@@ -29,5 +30,5 @@ export function SystemLivenessWrapper({ children }: { children: React.ReactNode 
 
     return <>{children}</>
 
-    return <>{children}</>
+
 }

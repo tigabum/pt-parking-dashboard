@@ -13,7 +13,7 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "Gelagle Park",
   description: "Professional parking management system",
-  generator: "v0.app",
+  generator: "gelagle.app",
   manifest: "/manifest.json", // Add manifest
   appleWebApp: {
     capable: true,
@@ -35,6 +35,7 @@ export const metadata: Metadata = {
         type: "image/svg+xml",
       },
     ],
+    shortcut: "/favicon.ico",
     apple: "/apple-icon.png",
   },
 };
@@ -61,9 +62,7 @@ export default function RootLayout({
         className={`${outfit.variable} font-sans antialiased text-foreground bg-background`}
       >
         <PWARegistration /> {/* Register SW */}
-        <ClientProviders>
-          {children}
-        </ClientProviders>
+        <ClientProviders>{children}</ClientProviders>
         <Analytics />
       </body>
     </html>
