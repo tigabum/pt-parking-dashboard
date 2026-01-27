@@ -8,7 +8,8 @@ import {
   Column,
 } from "@/components/tables";
 import { ParkingResponse } from "@/components/types";
-import { QrCode, Star } from "lucide-react";
+import { getImageUrl } from "@/lib/utils";
+import { QrCode, Star, Image as ImageIcon } from "lucide-react";
 import { QrCodeDialog } from "./qr-code-dialog";
 import { PERMISSIONS } from "@/lib/permissions";
 
@@ -40,7 +41,28 @@ export function ParkingSpacesTable({
       header: "Code",
       render: (row) => <span className="font-mono font-bold text-primary">{row.parkingCode || "—"}</span>,
     },
-    { key: "name", header: "Parking Name" },
+    {
+      key: "name",
+      header: "Parking Name",
+      render: (row) => (
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-lg overflow-hidden bg-slate-100 border border-slate-200 shrink-0 flex items-center justify-center">
+            {row.featureImage ? (
+              <img
+                src={getImageUrl(row.featureImage)}
+                className="h-full w-full object-cover"
+                alt={row.name}
+              />
+            ) : (
+              <div className="text-slate-300">
+                <span className="text-[10px] font-black uppercase tracking-tighter">IMG</span>
+              </div>
+            )}
+          </div>
+          <span className="font-bold text-slate-900">{row.name}</span>
+        </div>
+      ),
+    },
     {
       key: "location",
       header: "Location",

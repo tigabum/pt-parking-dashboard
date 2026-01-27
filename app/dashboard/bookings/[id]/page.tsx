@@ -333,12 +333,12 @@ export default function BookingDetailPage() {
   const formatDateTime = (date?: string | null) =>
     date
       ? new Date(date).toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        })
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      })
       : "—";
 
   const formatMoney = (amount?: number | string | null) =>
@@ -503,16 +503,16 @@ export default function BookingDetailPage() {
                   "h-4 w-4",
                   (booking.status === BookingStatus.PENDING ||
                     booking.status === BookingStatus.ACTIVE) &&
-                    "animate-pulse",
+                  "animate-pulse",
                 )}
               />
               {sessionDuration}
               {(booking.status === BookingStatus.PENDING ||
                 booking.status === BookingStatus.ACTIVE) && (
-                <span className="ml-2 px-2 py-0.5 bg-primary/5 text-[8px] uppercase tracking-tighter rounded-md animate-bounce">
-                  Live Session
-                </span>
-              )}
+                  <span className="ml-2 px-2 py-0.5 bg-primary/5 text-[8px] uppercase tracking-tighter rounded-md animate-bounce">
+                    Live Session
+                  </span>
+                )}
             </div>
           }
         />
@@ -627,14 +627,14 @@ export default function BookingDetailPage() {
         {(booking.vehicleName ||
           booking.vehicleBrand ||
           booking.vehicleModel) && (
-          <DetailItem
-            label="Vehicle Asset"
-            value={
-              `${booking.vehicleName || booking.vehicleBrand || ""} ${booking.vehicleModel || ""}`.trim() ||
-              "—"
-            }
-          />
-        )}
+            <DetailItem
+              label="Vehicle Asset"
+              value={
+                `${booking.vehicleName || booking.vehicleBrand || ""} ${booking.vehicleModel || ""}`.trim() ||
+                "—"
+              }
+            />
+          )}
 
         <DetailItem
           label="Created At"
@@ -710,11 +710,11 @@ export default function BookingDetailPage() {
           )}
 
           {/* Gallery Grid */}
-          <div className="col-span-full space-y-2 mt-4">
-            <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">
-              Gallery Showcase
-            </Label>
-            {parking.galleryImages && parking.galleryImages.length > 0 ? (
+          {parking.galleryImages && parking.galleryImages.length > 0 && (
+            <div className="col-span-full space-y-2 mt-4">
+              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">
+                Gallery Showcase
+              </Label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {parking.galleryImages.map((img, i) => (
                   <div
@@ -729,59 +729,53 @@ export default function BookingDetailPage() {
                   </div>
                 ))}
               </div>
-            ) : (
-              <div className="p-6 bg-slate-50 rounded border border-dashed border-slate-200 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">
-                No gallery assets available
-              </div>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Documents List */}
-          <div className="col-span-full space-y-2 mt-4">
-            <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">
-              Compliance Documents
-            </Label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                ...(parking.licenseFiles || []).map((f, idx) => ({
-                  url: f,
-                  type: "License",
-                  label: `License #${idx + 1}`,
-                })),
-                ...(parking.agreementDocuments || []).map((f, idx) => ({
-                  url: f,
-                  type: "Agreement",
-                  label: `Agreement #${idx + 1}`,
-                })),
-              ].map((doc, i) => (
-                <a
-                  key={i}
-                  href={getImageUrl(doc.url)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-4 p-4 rounded bg-white border border-slate-100 shadow-sm hover:shadow-md transition-all group"
-                >
-                  <div className="h-10 w-10 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center shrink-0 group-hover:bg-orange-500 group-hover:text-white transition-colors">
-                    <CreditCard className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-sm text-slate-900">
-                      {doc.label}
-                    </p>
-                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-wider group-hover:text-orange-500 transition-colors">
-                      {doc.type}
-                    </p>
-                  </div>
-                </a>
-              ))}
-              {!parking.licenseFiles?.length &&
-                !parking.agreementDocuments?.length && (
-                  <div className="col-span-full p-6 bg-slate-50 rounded border border-dashed border-slate-200 text-center text-xs font-bold text-slate-400 uppercase tracking-widest">
-                    No compliance documents on file
-                  </div>
-                )}
-            </div>
-          </div>
+          {((parking.licenseFiles && parking.licenseFiles.length > 0) ||
+            (parking.agreementDocuments &&
+              parking.agreementDocuments.length > 0)) && (
+              <div className="col-span-full space-y-2 mt-4">
+                <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">
+                  Compliance Documents
+                </Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    ...(parking.licenseFiles || []).map((f, idx) => ({
+                      url: f,
+                      type: "License",
+                      label: `License #${idx + 1}`,
+                    })),
+                    ...(parking.agreementDocuments || []).map((f, idx) => ({
+                      url: f,
+                      type: "Agreement",
+                      label: `Agreement #${idx + 1}`,
+                    })),
+                  ].map((doc, i) => (
+                    <a
+                      key={i}
+                      href={getImageUrl(doc.url)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-4 p-4 rounded bg-white border border-slate-100 shadow-sm hover:shadow-md transition-all group"
+                    >
+                      <div className="h-10 w-10 rounded-lg bg-orange-50 text-orange-500 flex items-center justify-center shrink-0 group-hover:bg-orange-500 group-hover:text-white transition-colors">
+                        <CreditCard className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-sm text-slate-900">
+                          {doc.label}
+                        </p>
+                        <p className="text-[10px] font-black uppercase text-slate-400 tracking-wider group-hover:text-orange-500 transition-colors">
+                          {doc.type}
+                        </p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
         </DetailSection>
       )}
 

@@ -7,6 +7,8 @@ import {
   Column,
 } from "@/components/tables";
 import { User } from "@/lib/auth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getImageUrl } from "@/lib/utils";
 
 type Props = {
   owners: User[];
@@ -28,7 +30,20 @@ export function CustomerTable({
     {
       key: "fullName",
       header: "Name",
-      render: (row) => row.fullName || "",
+      render: (row) => (
+        <div className="flex items-center gap-3">
+          <Avatar className="h-9 w-9 border border-slate-100">
+            <AvatarImage src={getImageUrl(row.profileImage)} />
+            <AvatarFallback className="bg-primary/5 text-primary text-xs font-black">
+              {row.fullName
+                ?.split(" ")
+                .map((n) => n[0])
+                .join("") || "?"}
+            </AvatarFallback>
+          </Avatar>
+          <span className="font-bold text-slate-700">{row.fullName || ""}</span>
+        </div>
+      ),
     },
     { key: "email", header: "Email" },
     { key: "phoneNumber", header: "Phone" },

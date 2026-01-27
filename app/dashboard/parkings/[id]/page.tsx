@@ -535,16 +535,16 @@ export default function ParkingDetailPage() {
           )}
           {(user?.role === UserRole.SYSTEM_SUPER_ADMIN ||
             user?.role === UserRole.PARKING_SUPER_ADMIN) && (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => router.push(`/dashboard/parkings/${id}/edit`)}
-              className="h-9 rounded-full px-4 font-bold text-slate-700 bg-white border-slate-200 hover:bg-slate-50"
-            >
-              <Settings2 className="h-3.5 w-3.5 mr-2" />
-              Edit Parking
-            </Button>
-          )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => router.push(`/dashboard/parkings/${id}/edit`)}
+                className="h-9 rounded-full px-4 font-bold text-slate-700 bg-white border-slate-200 hover:bg-slate-50"
+              >
+                <Settings2 className="h-3.5 w-3.5 mr-2" />
+                Edit Parking
+              </Button>
+            )}
           <Button
             variant="outline"
             size="sm"
@@ -575,14 +575,7 @@ export default function ParkingDetailPage() {
             className="w-full h-full object-cover opacity-80"
             alt="Cover"
           />
-        ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center text-slate-500 bg-slate-100">
-            <ImageIcon className="h-12 w-12 mb-2 opacity-20" />
-            <p className="text-xs font-bold uppercase tracking-widest opacity-40">
-              No Cover Image
-            </p>
-          </div>
-        )}
+        ) : null}
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent" />
         <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-3 max-w-2xl">
@@ -826,7 +819,7 @@ export default function ParkingDetailPage() {
                 </Label>
                 <div className="flex flex-wrap gap-2 text-primary p-2">
                   {parking.amenities?.length > 0 ||
-                  (parking as any).amenitiesList?.length > 0 ? (
+                    (parking as any).amenitiesList?.length > 0 ? (
                     <>
                       {parking.amenities?.map((item, i) => (
                         <div
@@ -890,67 +883,61 @@ export default function ParkingDetailPage() {
             </div>
 
             {/* Documents */}
-            <div className="col-span-full mt-8">
-              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">
-                Legal Compliance & Certifications
-              </Label>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {[
-                  ...(parking.licenseFiles || []).map((f, idx) => ({
-                    url: f,
-                    type: "Business License",
-                    label: `License #${idx + 1}`,
-                  })),
-                  ...(parking.agreementDocuments || []).map((f, idx) => ({
-                    url: f,
-                    type: "Agreement Doc",
-                    label: `Agreement #${idx + 1}`,
-                  })),
-                ].map((doc, i) => (
-                  <div
-                    key={i}
-                    onClick={() =>
-                      setPreviewDoc({
-                        url: getImageUrl(doc.url),
-                        title: doc.label,
-                      })
-                    }
-                    className="group flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:bg-white hover:border-primary/30 hover:shadow-md transition-all cursor-pointer"
-                  >
-                    <div className="h-10 w-10 rounded bg-white border border-slate-100 shadow-sm flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
-                      <FileText className="h-5 w-5" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold text-slate-900 truncate">
-                        {doc.label}
-                      </p>
-                      <p className="text-[9px] uppercase font-bold text-slate-400 mt-0.5 tracking-widest">
-                        {doc.type} • Click to view
-                      </p>
-                    </div>
+            {((parking.licenseFiles && parking.licenseFiles.length > 0) ||
+              (parking.agreementDocuments &&
+                parking.agreementDocuments.length > 0)) && (
+                <div className="col-span-full mt-8">
+                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">
+                    Legal Compliance & Certifications
+                  </Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {[
+                      ...(parking.licenseFiles || []).map((f, idx) => ({
+                        url: f,
+                        type: "Business License",
+                        label: `License #${idx + 1}`,
+                      })),
+                      ...(parking.agreementDocuments || []).map((f, idx) => ({
+                        url: f,
+                        type: "Agreement Doc",
+                        label: `Agreement #${idx + 1}`,
+                      })),
+                    ].map((doc, i) => (
+                      <div
+                        key={i}
+                        onClick={() =>
+                          setPreviewDoc({
+                            url: getImageUrl(doc.url),
+                            title: doc.label,
+                          })
+                        }
+                        className="group flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:bg-white hover:border-primary/30 hover:shadow-md transition-all cursor-pointer"
+                      >
+                        <div className="h-10 w-10 rounded bg-white border border-slate-100 shadow-sm flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                          <FileText className="h-5 w-5" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-bold text-slate-900 truncate">
+                            {doc.label}
+                          </p>
+                          <p className="text-[9px] uppercase font-bold text-slate-400 mt-0.5 tracking-widest">
+                            {doc.type} • Click to view
+                          </p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-                {[
-                  ...(parking.licenseFiles || []),
-                  ...(parking.agreementDocuments || []),
-                ].length === 0 && (
-                  <div className="col-span-full py-8 text-center bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-widest opacity-60">
-                      No documents found in system records.
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
+                </div>
+              )}
 
             {/* Gallery */}
-            <div className="col-span-full mt-8">
-              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">
-                Visual Media & Facility Gallery
-              </Label>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                {parking.galleryImages && parking.galleryImages.length > 0 ? (
-                  parking.galleryImages.map((img, i) => (
+            {parking.galleryImages && parking.galleryImages.length > 0 && (
+              <div className="col-span-full mt-8">
+                <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">
+                  Visual Media & Facility Gallery
+                </Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                  {parking.galleryImages.map((img, i) => (
                     <div
                       key={i}
                       className="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 shadow-sm cursor-zoom-in transition-all hover:shadow-lg hover:border-primary/20"
@@ -962,16 +949,10 @@ export default function ParkingDetailPage() {
                       />
                       <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
                     </div>
-                  ))
-                ) : (
-                  <div className="col-span-full h-32 flex items-center justify-center border-2 border-dashed rounded-2xl bg-slate-50 text-slate-400">
-                    <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">
-                      No visual media uploaded.
-                    </p>
-                  </div>
-                )}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </DetailSection>
         </TabsContent>
 
@@ -1256,7 +1237,7 @@ export default function ParkingDetailPage() {
                   total={ratingStats?.totalRatings || 0}
                   onPageChange={setReviewsPage}
                   limit={10}
-                  onLimitChange={() => {}}
+                  onLimitChange={() => { }}
                 />
               </div>
             )}
@@ -1293,14 +1274,14 @@ export default function ParkingDetailPage() {
 
                 {(user?.role === UserRole.SYSTEM_SUPER_ADMIN ||
                   user?.role === UserRole.PARKING_SUPER_ADMIN) && (
-                  <Button
-                    onClick={() => setIsTopupOpen(true)}
-                    className="bg-primary hover:opacity-90 text-white rounded h-12 px-8 text-[11px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
-                  >
-                    <Plus className="h-4 w-4 mr-2 stroke-[4px]" />
-                    Topup Wallet
-                  </Button>
-                )}
+                    <Button
+                      onClick={() => setIsTopupOpen(true)}
+                      className="bg-primary hover:opacity-90 text-white rounded h-12 px-8 text-[11px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
+                    >
+                      <Plus className="h-4 w-4 mr-2 stroke-[4px]" />
+                      Topup Wallet
+                    </Button>
+                  )}
               </div>
             </div>
             <ReusableTable

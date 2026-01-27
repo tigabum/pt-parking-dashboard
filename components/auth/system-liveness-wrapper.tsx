@@ -17,7 +17,6 @@ export function SystemLivenessWrapper({ children }: { children: React.ReactNode 
                     </div>
                     <div className="space-y-2 text-center">
                         <h3 className="text-lg font-bold text-foreground">Initializing System</h3>
-                        <p className="text-sm text-muted-foreground animate-pulse">Verifying secure connection to backend...</p>
                     </div>
                 </div>
             </div>
