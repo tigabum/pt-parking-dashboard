@@ -15,7 +15,7 @@ export function getImageUrl(path: string | null | undefined) {
   // 1. Use specific file URL env var if set (Preferred)
   if (process.env.NEXT_PUBLIC_FILE_URL) {
     const baseUrl = process.env.NEXT_PUBLIC_FILE_URL.replace(/\/$/, "");
-    const cleanPath = path.replace(/^\//, "");
+    const cleanPath = path.replace(/^\/+/, "");
     return `${baseUrl}/${cleanPath}`;
   }
 
