@@ -12,10 +12,6 @@ import { toast } from "sonner";
 import { authService } from "@/lib/services/auth-service";
 import { LoginStep } from "@/components/types";
 
-const demoAccounts = [
-  { email: "admin@example.com", password: "Admin@12345", role: "Super Admin" },
-];
-
 export function LoginForm() {
   const [step, setStep] = useState<LoginStep>("identifier");
   const [identifier, setIdentifier] = useState("");
@@ -58,7 +54,6 @@ export function LoginForm() {
           !isEmail ? identifier.trim() : undefined,
         );
 
-
       if (isPasswordSet) {
         setStep("password");
       } else {
@@ -78,7 +73,6 @@ export function LoginForm() {
     e.preventDefault();
     setError("");
     setLoading(true);
-
 
     try {
       const isEmail = identifier.includes("@");
@@ -153,15 +147,6 @@ export function LoginForm() {
   return (
     <AuthLayout>
       <div className="flex flex-col items-center text-center mb-8">
-        {/* Mobile Logo */}
-        {/* <div className="w-16 h-16 rounded-full overflow-hidden mb-4 lg:hidden border-2 border-primary">
-          <img
-            src="/login-brand.png"
-            alt="Logo"
-            className="w-full h-full object-cover"
-          />
-        </div> */}
-
         {/* Desktop Form Logo */}
         <div className="flex justify-center mb-4">
           <div className="w-20 h-20 rounded overflow-hidden border-2 border-primary/20 shadow-lg">

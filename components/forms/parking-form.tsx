@@ -482,7 +482,7 @@ export function ParkingForm({
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <Label className="text-sm font-semibold">
                     Commission Configuration
                   </Label>
@@ -508,7 +508,7 @@ export function ParkingForm({
                       ))}
                     </SelectContent>
                   </Select>
-                </div>
+                </div> */}
                 <div className="col-span-1 space-y-2">
                   <Label className="text-sm font-semibold">Description</Label>
                   <Textarea
