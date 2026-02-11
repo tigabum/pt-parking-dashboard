@@ -58,10 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const initAuth = async () => {
-      // 1. Check server status first
-      await checkServer()
-
-      // 2. Load stored user
+      // 1. Load stored user immediately
       const storedUser = localStorage.getItem("user")
       if (storedUser) {
         try {
@@ -70,7 +67,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           localStorage.removeItem("user")
         }
       }
+
+      // 2. Unblock UI immediately
       setLoading(false)
+
+      // 3. Check server status in background
+      checkServer()
     }
 
     initAuth()
