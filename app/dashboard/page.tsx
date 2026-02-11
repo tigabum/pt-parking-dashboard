@@ -93,7 +93,6 @@ export default function DashboardPage() {
   const loadStats = async () => {
     if (!user) return
     try {
-      setLoading(true)
       const data = await dashboardService.getDashboardStats({
         managerUserId: managerFilter === "ALL" ? undefined : managerFilter,
         parkingStatus: statusFilter === "ALL" ? undefined : statusFilter
@@ -106,7 +105,20 @@ export default function DashboardPage() {
     }
   }
 
-  if (loading || !stats) {
+  // Show skeleton UI instead of blocking spinner
+  const isInitialLoad = loading && !stats;
+
+  // --- CHART DATA ---
+  const currentChartData = stats?.trends?.[chartPeriod] || []
+  const paymentStats = (stats?.paymentStats || [])
+    .filter((p: any) => p.name === 'INCASH' || p.name === 'TRANSFER' || p.name === 'TELEBIRR')
+    .map((p: any) => ({
+      name: p.name === 'INCASH' ? 'Cash' : p.name === 'TELEBIRR' ? 'Telebirr' : 'Transfer',
+      value: p.value
+    }))
+
+  // Return early if no stats yet
+  if (!stats) {
     return (
       <div className="p-8 flex items-center justify-center min-h-[400px]">
         <div className="animate-pulse flex flex-col items-center gap-4">
@@ -116,15 +128,6 @@ export default function DashboardPage() {
       </div>
     )
   }
-
-  // --- CHART DATA ---
-  const currentChartData = stats.trends[chartPeriod]
-  const paymentStats = (stats.paymentStats || [])
-    .filter((p: any) => p.name === 'INCASH' || p.name === 'TRANSFER' || p.name === 'TELEBIRR')
-    .map((p: any) => ({
-      name: p.name === 'INCASH' ? 'Cash' : p.name === 'TELEBIRR' ? 'Telebirr' : 'Transfer',
-      value: p.value
-    }))
 
   return (
     <div className="p-6 md:p-8 space-y-8 w-full mx-auto">
