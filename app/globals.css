@@ -192,4 +192,20 @@
   .text-glow {
     text-shadow: 0 0 10px rgba(36, 9, 199, 0.4);
   }
+
+  /* HIDE VERCEL / NEXT.JS DEV TOOLBAR & INDICATORS */
+  #vercel-toolbar,
+  .vercel-toolbar,
+  [data-vercel-toolbar],
+  [data-nextjs-toast],
+  .nextjs-static-indicator,
+  #nextjs-static-indicator,
+  [data-nextjs-indicator],
+  .__next-stepper,
+  #nextjs-toast-container {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
 }

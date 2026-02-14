@@ -27,7 +27,7 @@ export function LoginForm() {
 
   useEffect(() => {
     if (user && !authLoading) {
-      router.push("/dashboard");
+      router.replace("/dashboard");
     }
   }, [user, authLoading, router]);
 
@@ -76,22 +76,17 @@ export function LoginForm() {
 
     try {
       const isEmail = identifier.includes("@");
-      const credentials = isEmail
-        ? { email: identifier.trim().toLowerCase(), password }
-        : { phoneNumber: identifier.trim(), password };
-
       await login(
         isEmail ? identifier.trim().toLowerCase() : undefined,
         password,
         !isEmail ? identifier.trim() : undefined,
       );
 
-      toast.success("Login successful!");
-      router.push("/dashboard");
+      // We stay in loading state while useEffect handles the redirect
+      // This prevents the button from flickering back to "Sign In"
     } catch (err: any) {
       const errorMessage = err?.message || "Login failed. Please try again.";
       setError(errorMessage);
-    } finally {
       setLoading(false);
     }
   };
@@ -112,35 +107,25 @@ export function LoginForm() {
 
     try {
       if (!resetToken) {
-        console.error("Missing reset token in handleSetPasswordSubmit");
         throw new Error("Missing reset token");
       }
-      console.log(
-        "Setting password with token:",
-        resetToken.substring(0, 20) + "...",
-      );
 
-      // Use the returned user data directly for login
-      const { user } = await authService.setPassword(resetToken, password);
+      const { user: userData } = await authService.setPassword(resetToken, password);
 
-      toast.success("Password set successfully! Logging in...");
-
-      // Immediate login with data
       if (typeof loginWithData === "function") {
-        loginWithData(user);
+        loginWithData(userData);
       } else {
-        // Fallback if context not updated yet (hot reload lag)
         const isEmail = identifier.includes("@");
-        const loginEmail = isEmail ? identifier.trim().toLowerCase() : "";
-        const loginPhone = !isEmail ? identifier.trim() : undefined;
-        await login(loginEmail, password, loginPhone);
+        await login(
+          isEmail ? identifier.trim().toLowerCase() : "",
+          password,
+          !isEmail ? identifier.trim() : undefined,
+        );
       }
-
-      router.push("/dashboard");
+      // Stay in loading state for redirect
     } catch (err: any) {
       const errorMessage = err?.message || "Failed to set password.";
       setError(errorMessage);
-    } finally {
       setLoading(false);
     }
   };

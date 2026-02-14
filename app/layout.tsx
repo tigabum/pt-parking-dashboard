@@ -1,7 +1,6 @@
 import type React from "react";
 import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const outfit = Outfit({
