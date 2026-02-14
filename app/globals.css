@@ -202,7 +202,13 @@
   #nextjs-static-indicator,
   [data-nextjs-indicator],
   .__next-stepper,
-  #nextjs-toast-container {
+  #nextjs-toast-container,
+  nextjs-portal,
+  [data-nextjs-portal],
+  #__next-dev-toolbar,
+  #__next-build-watcher,
+  #__next-prerender-indicator,
+  #vercel-live-feedback {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;

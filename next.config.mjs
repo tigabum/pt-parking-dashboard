@@ -60,10 +60,7 @@ const nextConfig = {
   },
 
   // Disable development indicators
-  devIndicators: {
-    appIsrStatus: false,
-    buildActivity: false,
-  },
+  devIndicators: false,
 
   // Compiler optimizations
   swcMinify: true,
