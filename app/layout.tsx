@@ -63,7 +63,6 @@ export default function RootLayout({
       >
         <PWARegistration /> {/* Register SW */}
         <ClientProviders>{children}</ClientProviders>
-        <Analytics />
       </body>
     </html>
   );

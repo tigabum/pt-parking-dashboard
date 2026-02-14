@@ -225,7 +225,7 @@ export function CommissionForm({
                 <Input
                   className={`h-12 rounded border-slate-200 bg-slate-50/50 font-bold ${errors.name ? "border-red-500 bg-red-50" : ""}`}
                   placeholder="Enter Rule Name"
-                  value={form.name}
+                  value={form.name || ""}
                   onChange={(e) => {
                     setForm({ ...form, name: e.target.value });
                     if (errors.name) setErrors({ ...errors, name: "" });
@@ -319,7 +319,7 @@ export function CommissionForm({
                       type="number"
                       className={`h-12 rounded border-slate-200 bg-slate-50/50 font-bold ${errors.value ? "border-red-500 bg-red-50" : ""}`}
                       placeholder="Enter Value"
-                      value={form.value}
+                      value={form.value ?? ""}
                       onChange={(e) => {
                         setForm({ ...form, value: +e.target.value });
                         if (errors.value) setErrors({ ...errors, value: "" });
@@ -381,7 +381,7 @@ export function CommissionForm({
                             type="number"
                             className="h-14 rounded border-slate-200 bg-slate-50/50 font-bold text-lg"
                             placeholder="Enter Min Amount"
-                            value={tier.minAmount}
+                            value={tier.minAmount ?? ""}
                             onChange={(e) =>
                               updateTier(i, "minAmount", +e.target.value)
                             }
@@ -395,7 +395,7 @@ export function CommissionForm({
                             type="number"
                             className="h-14 rounded border-slate-200 bg-slate-50/50 font-bold text-lg"
                             placeholder="Enter Max Amount"
-                            value={tier.maxAmount}
+                            value={tier.maxAmount ?? ""}
                             onChange={(e) =>
                               updateTier(i, "maxAmount", +e.target.value)
                             }
@@ -410,7 +410,7 @@ export function CommissionForm({
                               type="number"
                               className="h-14 rounded border-primary/20 bg-primary/5 font-black text-primary text-xl px-4"
                               placeholder="Enter Fee"
-                              value={tier.commission}
+                              value={tier.commission ?? ""}
                               onChange={(e) =>
                                 updateTier(i, "commission", +e.target.value)
                               }
@@ -468,7 +468,7 @@ export function CommissionForm({
                         type="number"
                         className="h-16 rounded-2xl border-slate-200 bg-slate-50/50 font-black text-2xl px-6"
                         placeholder="Enter Threshold"
-                        value={form.aboveThreshold}
+                        value={form.aboveThreshold ?? ""}
                         onChange={(e) =>
                           setForm({ ...form, aboveThreshold: +e.target.value })
                         }
@@ -487,7 +487,7 @@ export function CommissionForm({
                         type="number"
                         className="h-16 rounded-2xl border-slate-200 bg-slate-50/50 font-black text-2xl px-6 text-primary"
                         placeholder="Enter Fee"
-                        value={form.aboveCommission}
+                        value={form.aboveCommission ?? ""}
                         onChange={(e) =>
                           setForm({ ...form, aboveCommission: +e.target.value })
                         }

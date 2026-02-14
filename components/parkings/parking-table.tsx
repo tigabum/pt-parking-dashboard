@@ -11,6 +11,7 @@ import { ParkingResponse } from "@/components/types";
 import { QrCode } from "lucide-react";
 import { QrCodeDialog } from "./qr-code-dialog";
 import { PERMISSIONS } from "@/lib/permissions";
+import { getImageUrl } from "@/lib/utils";
 
 type Props = {
   spaces: ParkingResponse[];

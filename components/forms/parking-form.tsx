@@ -410,7 +410,7 @@ export function ParkingForm({
                   <Input
                     className={`h-12 rounded bg-slate-50 border-transparent focus:border-primary focus:bg-white transition-all disabled:opacity-70 ${errors.name ? "border-red-500 bg-red-50" : ""}`}
                     placeholder="Enter Parking Name"
-                    value={form.name}
+                    value={form.name || ""}
                     onChange={(e) => {
                       setForm({ ...form, name: e.target.value });
                       if (errors.name) setErrors({ ...errors, name: "" });
@@ -430,7 +430,7 @@ export function ParkingForm({
                   <Input
                     className="h-12 rounded bg-slate-50 border-transparent focus:border-primary focus:bg-white transition-all disabled:opacity-70"
                     placeholder="Enter License Number"
-                    value={form.licenseNumber}
+                    value={form.licenseNumber || ""}
                     onChange={(e) =>
                       setForm({ ...form, licenseNumber: e.target.value })
                     }
@@ -443,7 +443,7 @@ export function ParkingForm({
                     type="number"
                     className={`h-12 rounded bg-slate-50 border-transparent focus:border-primary focus:bg-white transition-all disabled:opacity-70 ${errors.numberOfSpots ? "border-red-500 bg-red-50" : ""}`}
                     placeholder="Enter Total Spots"
-                    value={form.numberOfSpots}
+                    value={form.numberOfSpots || ""}
                     onChange={(e) => {
                       setForm({
                         ...form,
@@ -514,7 +514,7 @@ export function ParkingForm({
                   <Textarea
                     className="rounded bg-slate-50 border-transparent focus:border-primary focus:bg-white transition-all min-h-35 resize-none disabled:opacity-70"
                     placeholder="Enter Description"
-                    value={form.description}
+                    value={form.description || ""}
                     onChange={(e) =>
                       setForm({ ...form, description: e.target.value })
                     }
@@ -635,7 +635,7 @@ export function ParkingForm({
                             </Label>
                             <Input
                               placeholder="e.g. WiFi"
-                              value={amenity.name}
+                              value={amenity.name || ""}
                               onChange={(e) => {
                                 const next = [...form.amenities];
                                 next[index].name = e.target.value;
@@ -651,7 +651,7 @@ export function ParkingForm({
                             </Label>
                             <Input
                               placeholder="e.g. High Speed"
-                              value={amenity.value}
+                              value={amenity.value || ""}
                               onChange={(e) => {
                                 const next = [...form.amenities];
                                 next[index].value = e.target.value;
@@ -692,7 +692,7 @@ export function ParkingForm({
                     Country
                   </Label>
                   <Input
-                    value={form.country}
+                    value={form.country || ""}
                     onChange={(e) =>
                       setForm({ ...form, country: e.target.value })
                     }
@@ -705,7 +705,7 @@ export function ParkingForm({
                     Region *
                   </Label>
                   <Input
-                    value={form.region}
+                    value={form.region || ""}
                     onChange={(e) => {
                       setForm({ ...form, region: e.target.value });
                       if (errors.region) setErrors({ ...errors, region: "" });
@@ -725,7 +725,7 @@ export function ParkingForm({
                     City *
                   </Label>
                   <Input
-                    value={form.city}
+                    value={form.city || ""}
                     onChange={(e) => {
                       setForm({ ...form, city: e.target.value });
                       if (errors.city) setErrors({ ...errors, city: "" });
@@ -744,7 +744,7 @@ export function ParkingForm({
                     Sub-city
                   </Label>
                   <Input
-                    value={form.subCity}
+                    value={form.subCity || ""}
                     onChange={(e) =>
                       setForm({ ...form, subCity: e.target.value })
                     }
@@ -757,7 +757,7 @@ export function ParkingForm({
                     Woreda
                   </Label>
                   <Input
-                    value={form.woreda}
+                    value={form.woreda || ""}
                     onChange={(e) =>
                       setForm({ ...form, woreda: e.target.value })
                     }
@@ -771,7 +771,7 @@ export function ParkingForm({
                     Kebele
                   </Label>
                   <Input
-                    value={form.kebele}
+                    value={form.kebele || ""}
                     onChange={(e) =>
                       setForm({ ...form, kebele: e.target.value })
                     }
@@ -785,7 +785,7 @@ export function ParkingForm({
                     Street Name
                   </Label>
                   <Input
-                    value={form.streetName}
+                    value={form.streetName || ""}
                     onChange={(e) =>
                       setForm({ ...form, streetName: e.target.value })
                     }
@@ -888,7 +888,7 @@ export function ParkingForm({
                         type="number"
                         className="h-10 bg-white"
                         placeholder="Enter Hourly Price"
-                        value={form.pricing.hourly?.price}
+                        value={form.pricing.hourly?.price ?? ""}
                         onChange={(e) =>
                           setForm({
                             ...form,
@@ -914,7 +914,7 @@ export function ParkingForm({
                         type="number"
                         className="h-10 bg-white"
                         placeholder="Enter Discount"
-                        value={form.pricing.hourly?.discount}
+                        value={form.pricing.hourly?.discount ?? ""}
                         onChange={(e) =>
                           setForm({
                             ...form,
@@ -949,7 +949,7 @@ export function ParkingForm({
                         type="number"
                         className="h-10 bg-white"
                         placeholder="Enter Daily Price"
-                        value={form.pricing.daily?.price}
+                        value={form.pricing.daily?.price ?? ""}
                         onChange={(e) =>
                           setForm({
                             ...form,
@@ -975,7 +975,7 @@ export function ParkingForm({
                         type="number"
                         className="h-10 bg-white"
                         placeholder="Enter Discount"
-                        value={form.pricing.daily?.discount}
+                        value={form.pricing.daily?.discount ?? ""}
                         onChange={(e) =>
                           setForm({
                             ...form,
@@ -1010,7 +1010,7 @@ export function ParkingForm({
                         type="number"
                         className="h-10 bg-white"
                         placeholder="Enter Monthly Price"
-                        value={form.pricing.monthly?.price}
+                        value={form.pricing.monthly?.price ?? ""}
                         onChange={(e) =>
                           setForm({
                             ...form,
@@ -1036,7 +1036,7 @@ export function ParkingForm({
                         type="number"
                         className="h-10 bg-white"
                         placeholder="Enter Discount"
-                        value={form.pricing.monthly?.discount}
+                        value={form.pricing.monthly?.discount ?? ""}
                         onChange={(e) =>
                           setForm({
                             ...form,
@@ -1071,7 +1071,7 @@ export function ParkingForm({
                         type="number"
                         className="h-10 bg-white"
                         placeholder="Enter Flat Price"
-                        value={form.pricing.flat?.price}
+                        value={form.pricing.flat?.price ?? ""}
                         onChange={(e) =>
                           setForm({
                             ...form,
@@ -1098,7 +1098,7 @@ export function ParkingForm({
                         type="number"
                         className="h-10 bg-white"
                         placeholder="Enter Discount"
-                        value={form.pricing.flat?.discount}
+                        value={form.pricing.flat?.discount ?? ""}
                         onChange={(e) =>
                           setForm({
                             ...form,
@@ -1293,7 +1293,7 @@ export function ParkingForm({
                       </Label>
                       <Input
                         placeholder="Enter TIN Number"
-                        value={form.tinNumber}
+                        value={form.tinNumber || ""}
                         onChange={(e) =>
                           setForm({ ...form, tinNumber: e.target.value })
                         }
@@ -1307,7 +1307,7 @@ export function ParkingForm({
                       </Label>
                       <Input
                         placeholder="Enter VAT Registration Number"
-                        value={form.vatRegistrationNumber}
+                        value={form.vatRegistrationNumber || ""}
                         onChange={(e) =>
                           setForm({
                             ...form,
@@ -1328,7 +1328,7 @@ export function ParkingForm({
                   </Label>
                   <div className="relative w-full h-64 rounded-2xl overflow-hidden border-2 border-dashed border-slate-200 bg-slate-50 hover:border-primary hover:bg-indigo-50/10 transition-all group flex flex-col items-center justify-center text-center cursor-pointer">
                     {form.agreementDocuments &&
-                    form.agreementDocuments.length > 0 ? (
+                      form.agreementDocuments.length > 0 ? (
                       <div className="flex flex-col items-center justify-center p-6 gap-3">
                         <div className="h-20 w-20 rounded-4xl bg-indigo-50 flex items-center justify-center text-primary">
                           <Check className="h-10 w-10" />

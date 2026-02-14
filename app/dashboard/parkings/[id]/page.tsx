@@ -704,7 +704,6 @@ export default function ParkingDetailPage() {
           </div>
 
           <DetailSection title="Parking Detail">
-            {/* Capacity Stats */}
             <DetailItem
               label="Total Capacity"
               value={`${parking.numberOfSpots} Spots`}
@@ -725,7 +724,6 @@ export default function ParkingDetailPage() {
               className="text-primary"
             />
 
-            {/* System Info */}
             <DetailItem
               label="Assigned Manager"
               value={parking.createdBy?.fullName || "—"}
@@ -764,7 +762,6 @@ export default function ParkingDetailPage() {
             />
             <DetailItem label="Terminal Status" value={parking.status} />
 
-            {/* Pricing */}
             <DetailItem
               label="Hourly Rate"
               value={formatMoney(
@@ -794,7 +791,6 @@ export default function ParkingDetailPage() {
               )}
             />
 
-            {/* Geographic */}
             <DetailItem label="Region" value={parking.region || "—"} />
             <DetailItem label="City" value={parking.city || "—"} />
             <DetailItem label="Sub-City" value={parking.subCity || "—"} />
@@ -803,7 +799,6 @@ export default function ParkingDetailPage() {
             <DetailItem label="Street Name" value={parking.streetName || "—"} />
             <DetailItem label="Country" value={parking.country || "—"} />
 
-            {/* Description & Amenities */}
             <div className="col-span-full mt-8 grid grid-cols-1 md:grid-cols-2 gap-12">
               <div className="space-y-4">
                 <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">
@@ -859,7 +854,6 @@ export default function ParkingDetailPage() {
               </div>
             </div>
 
-            {/* Map */}
             <div className="col-span-full mt-8">
               <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">
                 Exact Geographic Positioning
@@ -882,7 +876,6 @@ export default function ParkingDetailPage() {
               </div>
             </div>
 
-            {/* Documents */}
             {((parking.licenseFiles && parking.licenseFiles.length > 0) ||
               (parking.agreementDocuments &&
                 parking.agreementDocuments.length > 0)) && (
@@ -930,7 +923,6 @@ export default function ParkingDetailPage() {
                 </div>
               )}
 
-            {/* Gallery */}
             {parking.galleryImages && parking.galleryImages.length > 0 && (
               <div className="col-span-full mt-8">
                 <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">
@@ -940,6 +932,12 @@ export default function ParkingDetailPage() {
                   {parking.galleryImages.map((img, i) => (
                     <div
                       key={i}
+                      onClick={() =>
+                        setPreviewDoc({
+                          url: getImageUrl(img),
+                          title: `Gallery Image ${i + 1}`,
+                        })
+                      }
                       className="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 shadow-sm cursor-zoom-in transition-all hover:shadow-lg hover:border-primary/20"
                     >
                       <img
@@ -1359,6 +1357,6 @@ export default function ParkingDetailPage() {
           </div>
         </DialogContent>
       </Dialog>
-    </DetailLayout>
+    </DetailLayout >
   );
 }

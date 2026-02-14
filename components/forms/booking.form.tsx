@@ -519,7 +519,7 @@ export function BookingForm({
                         Customer Phone *
                       </Label>
                       <Input
-                        value={booking.customerPhone}
+                        value={booking.customerPhone || ""}
                         onChange={(e) => {
                           setBooking({
                             ...booking,
@@ -544,7 +544,7 @@ export function BookingForm({
                         Vehicle Plate No *
                       </Label>
                       <Input
-                        value={booking.plateNumber}
+                        value={booking.plateNumber || ""}
                         onChange={(e) => {
                           setBooking({
                             ...booking,
@@ -608,7 +608,7 @@ export function BookingForm({
                       )}
                     </div>
                     <Input
-                      value={booking.customerName}
+                      value={booking.customerName || ""}
                       readOnly={customerFound}
                       onChange={(e) => {
                         setBooking({
@@ -632,7 +632,7 @@ export function BookingForm({
                       Vehicle Brand
                     </Label>
                     <Input
-                      value={booking.vehicleBrand}
+                      value={booking.vehicleBrand || ""}
                       readOnly={vehicleFound}
                       onChange={(e) =>
                         setBooking({ ...booking, vehicleBrand: e.target.value })
@@ -653,7 +653,7 @@ export function BookingForm({
                       )}
                     </div>
                     <Input
-                      value={booking.vehicleName}
+                      value={booking.vehicleName || ""}
                       readOnly={vehicleFound}
                       onChange={(e) =>
                         setBooking({ ...booking, vehicleName: e.target.value })
@@ -671,7 +671,7 @@ export function BookingForm({
                     </Label>
                     <Input
                       type="datetime-local"
-                      value={booking.startTime}
+                      value={booking.startTime || ""}
                       onChange={(e) =>
                         setBooking({ ...booking, startTime: e.target.value })
                       }
@@ -684,7 +684,7 @@ export function BookingForm({
                     </Label>
                     <Input
                       type="datetime-local"
-                      value={booking.endTime}
+                      value={booking.endTime || ""}
                       onChange={(e) =>
                         setBooking({ ...booking, endTime: e.target.value })
                       }

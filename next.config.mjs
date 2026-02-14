@@ -59,6 +59,12 @@ const nextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
+  // Disable development indicators
+  devIndicators: {
+    appIsrStatus: false,
+    buildActivity: false,
+  },
+
   // Compiler optimizations
   swcMinify: true,
 

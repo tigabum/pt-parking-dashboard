@@ -19,6 +19,7 @@ import {
   Car,
   Settings2,
   Wallet,
+  FileText,
 } from "lucide-react";
 
 const navigationItems = [
