@@ -59,7 +59,6 @@ export function LoginForm() {
       } else {
         setResetToken(token);
         setStep("set-password");
-        toast.info("Please set your password to continue.");
       }
     } catch (err: any) {
       const errorMessage = err?.message || "An unexpected error occurred.";

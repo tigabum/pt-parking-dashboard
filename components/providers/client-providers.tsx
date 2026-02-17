@@ -9,7 +9,7 @@ export function ClientProviders({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
       <SystemLivenessWrapper>
-        <Toaster position="top-right" />
+        <Toaster position="top-right" richColors closeButton />
         {children}
       </SystemLivenessWrapper>
     </AuthProvider>
