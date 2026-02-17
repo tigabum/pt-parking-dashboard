@@ -73,7 +73,7 @@ export function ActionButtons<T>({
               className="text-red-600 focus:text-red-700 focus:bg-red-50"
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              <span>Change Status</span>
+              <span>Delete</span>
             </DropdownMenuItem>
           </>
         )}

@@ -48,7 +48,6 @@ export const viewport: Viewport = {
 };
 
 import { ClientProviders } from "@/components/providers/client-providers";
-import { PWARegistration } from "@/components/pwa-registration"; // Import
 
 export default function RootLayout({
   children,
@@ -60,7 +59,6 @@ export default function RootLayout({
       <body
         className={`${outfit.variable} font-sans antialiased text-foreground bg-background`}
       >
-        <PWARegistration /> {/* Register SW */}
         <ClientProviders>{children}</ClientProviders>
       </body>
     </html>

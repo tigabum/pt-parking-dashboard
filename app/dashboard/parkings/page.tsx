@@ -252,41 +252,43 @@ export default function ParkingPage() {
               statusFilter !== "ALL" ||
               searchQuery !== "" ||
               dateRange?.from) && (
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={clearFilters}
-                className="h-11 w-11 rounded hidden sm:flex"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={clearFilters}
+                  className="h-11 w-11 rounded hidden sm:flex"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
 
             {(typeFilter !== "ALL" ||
               statusFilter !== "ALL" ||
               searchQuery !== "" ||
               dateRange?.from) && (
-              <Button
-                variant="outline"
-                onClick={clearFilters}
-                className="h-11 rounded sm:hidden flex-1 border-slate-200"
-              >
-                <X className="h-4 w-4 mr-2" />
-                Clear
-              </Button>
-            )}
+                <Button
+                  variant="outline"
+                  onClick={clearFilters}
+                  className="h-11 rounded sm:hidden flex-1 border-slate-200"
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Clear
+                </Button>
+              )}
           </div>
 
           {/* Right: Add Button */}
-          {hasPermission(PERMISSIONS.PARKING_CREATE) && (
-            <Button
-              onClick={handleAdd}
-              className="h-11 rounded px-6 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 shrink-0 w-full xl:w-auto"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Parking
-            </Button>
-          )}
+          {hasPermission(PERMISSIONS.PARKING_CREATE) &&
+            user?.role !== UserRole.PARKING_SUPER_ADMIN &&
+            user?.role !== UserRole.PARKING_MANAGER && (
+              <Button
+                onClick={handleAdd}
+                className="h-11 rounded px-6 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 shrink-0 w-full xl:w-auto"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Parking
+              </Button>
+            )}
         </div>
       </PageHeader>
 
