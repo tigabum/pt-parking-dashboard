@@ -102,6 +102,7 @@ function PortalContent() {
   const [isExtendOpen, setIsExtendOpen] = useState(false);
   const [newEndTimeLocal, setNewEndTimeLocal] = useState("");
   const [extending, setExtending] = useState(false);
+  const [guestSecret, setGuestSecret] = useState<string | null>(null);
 
   // Booking details
   const [bookingType, setBookingType] = useState<
@@ -142,6 +143,8 @@ function PortalContent() {
         // 2. Check Persistence / Recovery
         const savedPhone = localStorage.getItem("guestPhone");
         const savedBookingId = localStorage.getItem("activeBookingId");
+        const savedSecret = localStorage.getItem("guestSecret");
+        if (savedSecret) setGuestSecret(savedSecret);
 
         // Priority 1: Check by specific Booking ID (Most reliable)
         if (savedBookingId) {
@@ -505,6 +508,10 @@ function PortalContent() {
       // Strict check based on portalService return type
       if (response.success && response.data?.booking) {
         setActiveBooking(response.data.booking);
+        if (response.data.guestSecret) {
+          setGuestSecret(response.data.guestSecret);
+          localStorage.setItem("guestSecret", response.data.guestSecret);
+        }
         localStorage.setItem("guestPhone", phoneNumber);
         localStorage.setItem("guestPlate", plateNumber);
         localStorage.setItem("activeBookingId", response.data.booking.id);
@@ -536,6 +543,8 @@ function PortalContent() {
       const response = await portalService.stopSession(
         activeBooking.id,
         normalizePhone(phoneNumber),
+        undefined,
+        guestSecret || undefined
       );
       setActiveBooking(response);
       toast.success(
@@ -557,6 +566,7 @@ function PortalContent() {
         activeBooking.id,
         normalizePhone(phoneNumber),
         newEndTimeLocal,
+        guestSecret || undefined
       );
       setActiveBooking(updated);
       setIsExtendOpen(false);
@@ -587,6 +597,7 @@ function PortalContent() {
         activeBooking.id,
         normalizePhone(phoneNumber),
         method,
+        guestSecret || undefined
       );
       setActiveBooking(response);
       setSelectedPaymentMethod(method === "INCASH" ? "CASH" : "TELEBIRR");
@@ -599,7 +610,7 @@ function PortalContent() {
       } else {
         toast.success(
           response.message ||
-            "Please pay the attendant and wait for verification.",
+          "Please pay the attendant and wait for verification.",
           { id: loadingToast, duration: 10000 },
         );
       }
@@ -632,7 +643,9 @@ function PortalContent() {
 
   const handleReset = () => {
     localStorage.removeItem("activeBookingId");
+    localStorage.removeItem("guestSecret");
     setActiveBooking(null);
+    setGuestSecret(null);
     setStep(0);
     // Reset form fields for next use
     setPhoneNumber("");
@@ -948,7 +961,7 @@ function PortalContent() {
                         className={cn(
                           "h-14 bg-slate-100 border-none rounded text-base px-4 font-bold text-slate-900 placeholder:text-xs placeholder:text-slate-300 placeholder:font-medium focus-visible:ring-2 focus-visible:ring-primary/20",
                           isExistingCustomer &&
-                            "bg-emerald-50 text-emerald-900 pl-10",
+                          "bg-emerald-50 text-emerald-900 pl-10",
                         )}
                       />
                       {isExistingCustomer && (
@@ -1591,7 +1604,7 @@ function CheckoutView({
                         Math.floor(
                           (new Date(booking.endTime || new Date()).getTime() -
                             new Date(booking.startTime).getTime()) /
-                            60000,
+                          60000,
                         ),
                       )}
                     </span>{" "}

@@ -40,7 +40,7 @@ export const portalService = {
     },
 
     // 4. Create Booking
-    createBooking: async (data: any): Promise<{ success: boolean; message: string; data?: { booking: Booking; currency: string } }> => {
+    createBooking: async (data: any): Promise<{ success: boolean; message: string; data?: { booking: Booking; currency: string; guestSecret?: string } }> => {
         return apiClient.post(
             "/bookings/create",
             data
@@ -61,17 +61,17 @@ export const portalService = {
     // I should add a public booking status endpoint or rely on `updateStatus` (checkout) to return final calc.
 
     // 6. Checkout (Stop Session / Request Payment)
-    stopSession: async (id: string, phone: string, paymentMethod?: string) => {
+    stopSession: async (id: string, phone: string, paymentMethod?: string, guestSecret?: string) => {
         return apiClient.patch(
             `/bookings/public/${id}/checkout`,
-            { customerPhone: phone, paymentMethod }
+            { customerPhone: phone, paymentMethod, guestSecret }
         ).then(handleResponse);
     },
 
-    extendBooking: async (id: string, phone: string, newEndTime: string) => {
+    extendBooking: async (id: string, phone: string, newEndTime: string, guestSecret?: string) => {
         return apiClient.patch(
             `/bookings/public/${id}/extend`,
-            { customerPhone: phone, newEndTime }
+            { customerPhone: phone, newEndTime, guestSecret }
         ).then(handleResponse);
     },
 
