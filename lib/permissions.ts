@@ -327,9 +327,6 @@ export const DEFAULT_PERMISSIONS_BY_ROLE: Record<string, string[]> = {
         PERMISSIONS.BOOKING_CONFIRM,
         PERMISSIONS.BOOKING_CANCEL,
 
-        // User (view only)
-        PERMISSIONS.USER_VIEW,
-
         // Customer
         PERMISSIONS.CUSTOMER_VIEW,
         PERMISSIONS.CUSTOMER_CREATE,
