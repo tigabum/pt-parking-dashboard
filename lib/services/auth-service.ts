@@ -125,10 +125,16 @@ class AuthService {
   /**
    * Logout
    */
-  logout(): void {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user");
+  async logout(): Promise<void> {
+    try {
+      await apiClient.post(API_ENDPOINTS.AUTH.LOGOUT, {}, { skipToast: true } as any);
+    } catch (e) {
+      // Ignore errors if session already expired or server unreachable
+    } finally {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
+    }
   }
 
   /**

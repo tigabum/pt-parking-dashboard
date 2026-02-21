@@ -12,7 +12,7 @@ interface AuthContextType {
   isCheckingServer: boolean
   login: (email?: string, password?: string, phoneNumber?: string) => Promise<void>
   loginWithData: (user: User) => void
-  logout: () => void
+  logout: () => Promise<void>
   canAccess: (requiredRoles: UserRole[]) => boolean
   hasPermission: (permission: string) => boolean
 }
@@ -127,9 +127,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
 
-  const logout = () => {
+  const logout = async () => {
     const { authService } = require('@/lib/services/auth-service')
-    authService.logout()
+    await authService.logout()
     setUser(null)
     localStorage.removeItem("user")
   }

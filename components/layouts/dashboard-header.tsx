@@ -98,8 +98,8 @@ export function DashboardHeader() {
               <DropdownMenuSeparator className="my-1 bg-slate-50" />
               <DropdownMenuItem
                 className="text-red-500 focus:text-red-600 focus:bg-red-50 rounded-lg font-bold cursor-pointer"
-                onClick={() => {
-                  logout();
+                onClick={async () => {
+                  await logout();
                   router.push("/");
                 }}
               >

@@ -19,6 +19,7 @@ export const API_ENDPOINTS = {
         USER_PASSWORD_RESET_CONFIRM: '/auth/user/password-reset/confirm',
         USER_PASSWORD_CHANGE: '/auth/user/password/change',
         USER_REFRESH: '/auth/user/refresh',
+        LOGOUT: '/auth/logout',
     },
     // Users
     USERS: {
