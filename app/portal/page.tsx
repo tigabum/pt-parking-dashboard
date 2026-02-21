@@ -6,7 +6,6 @@ import { portalService } from "@/lib/services/portal-service";
 import {
   Booking,
   Parking,
-  BookingMethod,
   PaymentMethod,
 } from "@/components/types";
 import { Button } from "@/components/ui/button";
@@ -22,7 +21,6 @@ import {
 } from "@/components/ui/select";
 import {
   Loader2,
-  Car,
   Clock,
   Receipt,
   CheckCircle,
@@ -30,30 +28,16 @@ import {
   Check,
   ChevronRight,
   ChevronLeft,
-  MapPin,
-  Sparkles,
   User,
   Wallet,
   ShieldCheck,
-  Search,
-  CalendarClock,
-  Info,
   ArrowRight,
-  ParkingCircle,
-  Phone,
-  CreditCard,
   BadgeCheck,
-  History,
-  Zap,
   Box,
   Layers,
   DollarSign,
-  Tags,
-  Map,
   Landmark,
-  AlertCircle,
-  Plus,
-  LogOut,
+
 } from "lucide-react";
 import {
   Dialog,
@@ -69,8 +53,6 @@ import { CircularSessionCounter } from "@/components/ui/circular-session-counter
 import { RatingDialog } from "@/components/parkings/rating-dialog";
 import { RatingCard } from "@/components/parkings/rating-card";
 
-const SYSTEM_PRIMARY = "#4F3CC2";
-const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
 
 function PortalContent() {
   const searchParams = useSearchParams();
@@ -511,6 +493,9 @@ function PortalContent() {
         if (response.data.guestSecret) {
           setGuestSecret(response.data.guestSecret);
           localStorage.setItem("guestSecret", response.data.guestSecret);
+        } else {
+          setGuestSecret(null);
+          localStorage.removeItem("guestSecret");
         }
         localStorage.setItem("guestPhone", phoneNumber);
         localStorage.setItem("guestPlate", plateNumber);

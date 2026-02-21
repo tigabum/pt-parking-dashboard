@@ -65,6 +65,12 @@ apiClient.interceptors.response.use(
             }
         }
 
+        // Check for rotated token in headers
+        const newToken = response.headers['x-new-token'];
+        if (newToken) {
+            localStorage.setItem('accessToken', newToken);
+        }
+
         return response;
     },
     async (error: AxiosError) => {
