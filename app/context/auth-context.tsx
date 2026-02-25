@@ -4,7 +4,7 @@ import type React from "react"
 import { createContext, useContext, useState, useEffect, useRef, useCallback } from "react"
 import { type User, type UserRole, validateCredentials } from "@/lib/auth"
 import { API_CONFIG, API_ENDPOINTS } from "@/lib/api-config"
-import axios from "axios"
+import apiClient from "@/lib/api-client"
 
 interface AuthContextType {
   user: User | null
@@ -21,8 +21,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000  // 5 minutes – must match backend SESSION_TTL
-const HEARTBEAT_INTERVAL_MS = 60 * 1000       // Touch session every 60 seconds when active
+const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000 // 30 minutes – longer is better for user experience
+const HEARTBEAT_INTERVAL_MS = 60 * 1000      // Touch session every 60 seconds
 const ACTIVITY_EVENTS = ["mousedown", "mousemove", "keypress", "scroll", "touchstart", "click"]
 
 // ─── AuthProvider ─────────────────────────────────────────────────────────────
@@ -76,43 +76,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log(
         `[SessionManager] 💓 Heartbeat – calling session/touch for userId=${userRef.current.id}`,
       )
-      const response = await axios.post(
-        `${API_CONFIG.BASE_URL}${API_ENDPOINTS.AUTH.SESSION_TOUCH}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        },
+      const response = await apiClient.post(
+        API_ENDPOINTS.AUTH.SESSION_TOUCH,
+        {}
       )
 
       const data = response.data
       if (data?.success && data?.data) {
         if (data.data.tokenRotated && data.data.accessToken) {
-          // Backend issued a new token proactively – update localStorage
+          // New token rotated from interceptor or proactive refresh
           localStorage.setItem("accessToken", data.data.accessToken)
           if (data.data.refreshToken) {
             localStorage.setItem("refreshToken", data.data.refreshToken)
           }
           console.log(
-            `[SessionManager] 🔄 Proactive token rotation received – new accessToken stored`,
+            `[SessionManager] 🔄 Token rotation received – new accessToken stored`,
           )
         } else {
-          console.log(`[SessionManager] ✅ Session touch OK – inactivity timer reset on server`)
+          console.log(`[SessionManager] ✅ Session touch OK – radioactivity reset on server`)
         }
       }
     } catch (err: any) {
-      const status = err?.response?.status
-      if (status === 401) {
-        console.warn(
-          `[SessionManager] ⚠️  Session touch returned 401 – session expired. Logging out.`,
-        )
-        await logout()
-        if (typeof window !== "undefined") window.location.href = "/"
-      } else {
-        console.warn(`[SessionManager] ⚠️  Session touch failed (non-401):`, err?.message)
-      }
+      // apiClient handles 401s globally (refreshes if possible, then logs out)
+      console.warn(`[SessionManager] ⚠️  Session touch failed:`, err?.message)
     }
   }, [])
 

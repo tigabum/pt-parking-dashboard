@@ -149,8 +149,8 @@ export default function ParkingUserDetailPage() {
           </Button>
           <Badge
             className={`h-10 px-5 rounded flex items-center justify-center font-black uppercase text-[10px] tracking-widest border-none ${parkingUser.status === "ACTIVE"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
               }`}
           >
             {String(parkingUser.status || "")}

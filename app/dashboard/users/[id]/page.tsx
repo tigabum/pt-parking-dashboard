@@ -131,8 +131,8 @@ export default function UserDetailPage() {
           </Button>
           <Badge
             className={`h-10 px-5 rounded flex items-center justify-center font-black uppercase text-[10px] tracking-widest border-none ${user.status === "ACTIVE"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
               }`}
           >
             {String(user.status || "")}
@@ -189,11 +189,6 @@ export default function UserDetailPage() {
                   label="Organization Registry"
                   value="PossibleTech"
                   icon={Building2}
-                />
-                <FormDetailItem
-                  label="Staff Status"
-                  value={user.isStaffUser ? "ACTIVE STAFF" : "EXTERNAL USER"}
-                  icon={UserIcon}
                 />
               </div>
             </div>

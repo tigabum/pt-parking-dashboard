@@ -26,6 +26,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 import {
   Info,
@@ -94,6 +104,8 @@ export default function ParkingDetailPage() {
     url: string;
     title: string;
   } | null>(null);
+  const [isApproveConfirmOpen, setIsApproveConfirmOpen] = useState(false);
+  const [isStatusConfirmOpen, setIsStatusConfirmOpen] = useState(false);
 
   // Bookings Pagination & Filter State
   const [bookings, setBookings] = useState<BookingResponse[]>([]);
@@ -273,7 +285,6 @@ export default function ParkingDetailPage() {
 
   const handleApprove = async () => {
     if (!parking || approving) return;
-    if (!confirm("Are you sure you want to approve this parking?")) return;
 
     const loadingToast = toast.loading("Approving parking...");
     try {
@@ -287,13 +298,13 @@ export default function ParkingDetailPage() {
       });
     } finally {
       setApproving(false);
+      setIsApproveConfirmOpen(false);
     }
   };
 
   const handleToggleStatus = async () => {
     if (!parking) return;
     const action = parking.status === "ACTIVE" ? "disable" : "enable";
-    if (!confirm(`Are you sure you want to ${action} this parking?`)) return;
 
     const loadingToast = toast.loading(
       `${action === "disable" ? "Disabling" : "Enabling"} parking...`,
@@ -306,6 +317,8 @@ export default function ParkingDetailPage() {
       toast.error(err?.message || `Failed to ${action} parking`, {
         id: loadingToast,
       });
+    } finally {
+      setIsStatusConfirmOpen(false);
     }
   };
 
@@ -503,7 +516,7 @@ export default function ParkingDetailPage() {
           {canAccess([UserRole.SYSTEM_SUPER_ADMIN]) &&
             parking.status !== "PENDING" && (
               <Button
-                onClick={handleToggleStatus}
+                onClick={() => setIsStatusConfirmOpen(true)}
                 variant="outline"
                 size="sm"
                 className={cn(
@@ -521,7 +534,7 @@ export default function ParkingDetailPage() {
             )}
           {canApprove && (
             <Button
-              onClick={handleApprove}
+              onClick={() => setIsApproveConfirmOpen(true)}
               disabled={approving}
               className="bg-green-600 hover:bg-green-500 text-white rounded-full h-9 px-6 text-xs font-bold shadow-sm"
             >
@@ -1357,6 +1370,75 @@ export default function ParkingDetailPage() {
           </div>
         </DialogContent>
       </Dialog>
-    </DetailLayout >
+
+      {/* Approval Confirm Dialog */}
+      <AlertDialog
+        open={isApproveConfirmOpen}
+        onOpenChange={setIsApproveConfirmOpen}
+      >
+        <AlertDialogContent className="rounded-2xl border-none shadow-2xl p-8 max-w-sm">
+          <AlertDialogHeader className="space-y-4">
+            <div className="h-16 w-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mx-auto">
+              <CheckCircle2 size={32} />
+            </div>
+            <AlertDialogTitle className="text-xl font-black text-center text-slate-900 leading-tight">
+              Approve Parking Facility?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-sm font-medium text-slate-500 text-center leading-relaxed">
+              Are you sure you want to approve this parking? This will make the
+              facility live and available for consumer bookings.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-8 flex-col sm:flex-col gap-3">
+            <AlertDialogAction
+              onClick={handleApprove}
+              className="w-full bg-green-600 hover:bg-green-500 text-white font-black h-14 rounded-xl shadow-lg shadow-green-200 transition-all active:scale-95"
+            >
+              Confirm Approval
+            </AlertDialogAction>
+            <AlertDialogCancel className="w-full border-none bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold h-14 rounded-xl transition-all">
+              Cancel
+            </AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Status Toggle Confirm Dialog */}
+      <AlertDialog
+        open={isStatusConfirmOpen}
+        onOpenChange={setIsStatusConfirmOpen}
+      >
+        <AlertDialogContent className="rounded-2xl border-none shadow-2xl p-8 max-w-sm">
+          <AlertDialogHeader className="space-y-4">
+            <div className="h-16 w-16 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 mx-auto">
+              <Power size={32} />
+            </div>
+            <AlertDialogTitle className="text-xl font-black text-center text-slate-900 leading-tight">
+              {parking.status === "ACTIVE" ? "Disable" : "Enable"} Facility?
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-sm font-medium text-slate-500 text-center leading-relaxed">
+              Are you sure you want to {parking.status === "ACTIVE" ? "disable" : "enable"} this
+              parking?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="mt-8 flex-col sm:flex-col gap-3">
+            <AlertDialogAction
+              onClick={handleToggleStatus}
+              className={cn(
+                "w-full font-black h-14 rounded-xl shadow-lg transition-all active:scale-95 text-white",
+                parking.status === "ACTIVE"
+                  ? "bg-red-600 hover:bg-red-500 shadow-red-200"
+                  : "bg-green-600 hover:bg-green-500 shadow-green-200",
+              )}
+            >
+              Confirm {parking.status === "ACTIVE" ? "Disable" : "Enable"}
+            </AlertDialogAction>
+            <AlertDialogCancel className="w-full border-none bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold h-14 rounded-xl transition-all">
+              Cancel
+            </AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </DetailLayout>
   );
 }
