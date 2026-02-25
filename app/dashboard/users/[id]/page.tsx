@@ -14,18 +14,10 @@ import {
 } from "@/components/layouts/detail-layout";
 import { toast } from "sonner";
 import {
-  Mail,
-  Phone,
   User as UserIcon,
-  Building,
-  Shield,
-  CheckCircle2,
-  Clock,
-  Calendar,
   AlertCircle,
 } from "lucide-react";
-import { getImageUrl, cn } from "@/lib/utils";
-import { PERMISSION_LABELS, PERMISSION_CATEGORIES } from "@/lib/permissions";
+import { cn } from "@/lib/utils";
 
 export default function UserDetailPage() {
   const { id } = useParams();
@@ -60,8 +52,7 @@ export default function UserDetailPage() {
     if (!user) return;
     if (
       !confirm(
-        `Are you sure you want to ${
-          user.status === "ACTIVE" ? "disable" : "activate"
+        `Are you sure you want to ${user.status === "ACTIVE" ? "disable" : "activate"
         } this user?`,
       )
     )
@@ -113,6 +104,7 @@ export default function UserDetailPage() {
       subtitle={`ID: ${String(user.id || "")
         .substring(0, 12)
         .toUpperCase()}`}
+      noCard={true}
       actions={
         <div className="flex items-center gap-3">
           <Button
@@ -130,11 +122,10 @@ export default function UserDetailPage() {
             Edit Profile
           </Button>
           <Badge
-            className={`h-10 px-5 rounded flex items-center justify-center font-black uppercase text-[10px] tracking-widest border-none ${
-              user.status === "ACTIVE"
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }`}
+            className={`h-10 px-5 rounded flex items-center justify-center font-black uppercase text-[10px] tracking-widest border-none ${user.status === "ACTIVE"
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+              }`}
           >
             {String(user.status || "")}
           </Badge>
@@ -142,221 +133,22 @@ export default function UserDetailPage() {
       }
     >
       <DetailSection title="Staff User Detail">
-        <div className="col-span-1 md:col-span-2 lg:col-span-1 row-span-2">
-          <div className="relative aspect-square w-48 rounded-lg overflow-hidden border-2 border-slate-100 shadow bg-slate-50 mx-auto lg:mx-0 p-1">
-            <Avatar className="h-full w-full rounded-lg">
-              <AvatarImage src={getImageUrl(user.profileImage)} />
-              <AvatarFallback className="bg-primary/5 text-primary text-5xl font-black">
-                {String(user.fullName || "")
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("") || <UserIcon className="h-20 w-20" />}
-              </AvatarFallback>
-            </Avatar>
-          </div>
-        </div>
-
-        <div className="col-span-1 md:col-span-2 lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
-          <DetailItem label="Full Name" value={String(user.fullName || "")} />
-          <DetailItem
-            label="System Role"
-            value={
-              <Badge
-                variant="outline"
-                className="uppercase tracking-wider font-bold text-primary border-primary/20 bg-primary/5"
-              >
-                <Shield className="h-3 w-3 mr-1" />
-                {String(user.role || "").replace(/_/g, " ")}
-              </Badge>
-            }
-          />
-
-          <DetailItem
-            label="Email Address"
-            value={
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-slate-400" />
-                <span className="font-mono text-sm">
-                  {String(user.email || "")}
-                </span>
-              </div>
-            }
-          />
-          <DetailItem
-            label="Phone Number"
-            value={
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-slate-400" />
-                <span className="font-mono text-sm">
-                  {user.phoneNumber ? String(user.phoneNumber) : "Not provided"}
-                </span>
-              </div>
-            }
-          />
-
-          <DetailItem
-            label="Organization"
-            value={
-              <div className="flex items-center gap-2">
-                <Building className="h-4 w-4 text-slate-400" />
-                <span className="font-bold">PossibleTech</span>
-              </div>
-            }
-          />
-        </div>
-
+        <DetailItem label="User Code" value={user.userCode || "—"} />
+        <DetailItem label="Full Name" value={user.fullName || "—"} />
+        <DetailItem label="Email" value={user.email || "—"} />
+        <DetailItem label="Phone Number" value={user.phoneNumber || "—"} />
+        <DetailItem label="Organization ID" value={user.orgId || "—"} />
+        <DetailItem label="Is Staff User" value={user.isStaffUser ? "YES" : "NO"} />
+        <DetailItem label="Role" value={user.role} />
+        <DetailItem label="Phone Verified" value={user.isPhoneVerified ? "YES" : "NO"} />
+        <DetailItem label="Email Verified" value={user.isEmailVerified ? "YES" : "NO"} />
+        <DetailItem label="Status" value={user.status} />
+        <DetailItem label="Profile Image" value={user.profileImage ? <Badge variant="outline" className="font-mono text-[10px]">{user.profileImage}</Badge> : "—"} />
         <DetailItem
-          label="Account Status"
-          value={
-            <Badge
-              className={cn(
-                "font-bold",
-                user.isPasswordSet ||
-                  user.isEmailVerified ||
-                  user.isPhoneVerified
-                  ? "bg-green-100 text-green-700"
-                  : "bg-amber-100 text-amber-700",
-              )}
-            >
-              {user.isPasswordSet ||
-              user.isEmailVerified ||
-              user.isPhoneVerified
-                ? "Active & Verified"
-                : "Pending Setup"}
-            </Badge>
-          }
+          label="Permissions"
+          value={userPermissions.length > 0 ? userPermissions.join(", ") : "None"}
+          className="col-span-full"
         />
-        <DetailItem
-          label="Email Verified"
-          value={
-            user.isEmailVerified ? (
-              <Badge className="bg-green-100 text-green-700 font-bold">
-                <CheckCircle2 className="h-3 w-3 mr-1" />
-                Verified
-              </Badge>
-            ) : (
-              <Badge className="bg-slate-100 text-slate-600 font-bold">
-                Pending
-              </Badge>
-            )
-          }
-        />
-        <DetailItem
-          label="Phone Verified"
-          value={
-            user.isPhoneVerified ? (
-              <Badge className="bg-green-100 text-green-700 font-bold">
-                <CheckCircle2 className="h-3 w-3 mr-1" />
-                Verified
-              </Badge>
-            ) : (
-              <Badge className="bg-slate-100 text-slate-600 font-bold">
-                Pending
-              </Badge>
-            )
-          }
-        />
-        <DetailItem
-          label="Password Set"
-          value={
-            user.isPasswordSet ? (
-              <Badge className="bg-green-100 text-green-700 font-bold">
-                <CheckCircle2 className="h-3 w-3 mr-1" />
-                Configured
-              </Badge>
-            ) : (
-              <Badge className="bg-slate-100 text-slate-600 font-bold">
-                Not Set
-              </Badge>
-            )
-          }
-        />
-        <DetailItem
-          label="Registration Date"
-          value={
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-slate-400" />
-              {formatDateTime(user.createdAt)}
-            </div>
-          }
-        />
-        <DetailItem
-          label="Last Updated"
-          value={
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-slate-400" />
-              {formatDateTime(user.updatedAt)}
-            </div>
-          }
-        />
-
-        <div className="col-span-full mt-8">
-          <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 block">
-            Access Permissions
-          </Label>
-          {userPermissions.length > 0 ? (
-            <div className="space-y-4">
-              {Object.entries(PERMISSION_CATEGORIES).map(
-                ([category, categoryPermissions]) => {
-                  const userCategoryPerms = categoryPermissions.filter((p) =>
-                    userPermissions.includes(p),
-                  );
-
-                  if (userCategoryPerms.length === 0) return null;
-
-                  return (
-                    <div
-                      key={category}
-                      className="border border-slate-100 rounded-2xl overflow-hidden bg-white"
-                    >
-                      <div className="flex items-center justify-between p-4 bg-primary/5 border-b border-primary/10">
-                        <div className="flex items-center gap-3">
-                          <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                            <Shield className="h-4 w-4 text-primary" />
-                          </div>
-                          <span className="font-black text-slate-900">
-                            {category}
-                          </span>
-                        </div>
-                        <Badge variant="outline" className="font-bold text-xs">
-                          {userCategoryPerms.length}/
-                          {categoryPermissions.length} permissions
-                        </Badge>
-                      </div>
-
-                      <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {userCategoryPerms.map((permission) => (
-                          <div
-                            key={permission}
-                            className="flex items-center gap-3 p-3 rounded bg-green-50 border border-green-200"
-                          >
-                            <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
-                            <span className="text-sm font-bold text-slate-700">
-                              {PERMISSION_LABELS[permission]}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                },
-              )}
-            </div>
-          ) : (
-            <div className="col-span-full py-12 flex flex-col items-center justify-center text-center border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50/50">
-              <div className="h-16 w-16 bg-white rounded-2xl flex items-center justify-center border border-slate-200 shadow-sm mb-4">
-                <Shield className="h-8 w-8 text-slate-300" />
-              </div>
-              <h4 className="text-slate-900 font-bold text-lg mb-2">
-                No Specific Permissions Assigned
-              </h4>
-              <p className="text-slate-500 text-sm max-w-md">
-                This user may have role-based default permissions or requires
-                permission assignment.
-              </p>
-            </div>
-          )}
-        </div>
       </DetailSection>
     </DetailLayout>
   );

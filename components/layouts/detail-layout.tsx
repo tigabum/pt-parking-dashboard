@@ -15,6 +15,7 @@ interface DetailLayoutProps {
   subtitle?: string;
   actions?: React.ReactNode;
   children: React.ReactNode;
+  noCard?: boolean;
 }
 
 export function DetailLayout({
@@ -23,6 +24,7 @@ export function DetailLayout({
   subtitle,
   actions,
   children,
+  noCard,
 }: DetailLayoutProps) {
   const router = useRouter();
 
@@ -60,9 +62,13 @@ export function DetailLayout({
       {/* Content Area */}
       <div className="flex-1 overflow-y-auto bg-slate-50/50">
         <div className="w-full max-w-7xl mx-auto p-4 md:p-10 pb-32">
-          <div className="bg-white rounded border shadow shadow-slate-200/50 overflow-hidden">
-            <div className="p-6 md:p-12 space-y-16">{children}</div>
-          </div>
+          {noCard ? (
+            <div className="space-y-16">{children}</div>
+          ) : (
+            <div className="bg-white rounded border shadow shadow-slate-200/50 overflow-hidden">
+              <div className="p-6 md:p-12 space-y-16">{children}</div>
+            </div>
+          )}
         </div>
       </div>
     </div>

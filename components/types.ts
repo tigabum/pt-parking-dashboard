@@ -136,6 +136,8 @@ export interface CreateUser {
   permissions?: string[];
   createdAt: Date;
   updatedAt: Date;
+  userCode?: string;
+  isStaffUser?: boolean;
 }
 
 export interface UserResponse {
@@ -154,6 +156,8 @@ export interface UserResponse {
   profileImage?: string;
   createdAt: Date;
   updatedAt: Date;
+  userCode?: string;
+  isStaffUser?: boolean;
 }
 
 export interface ParkingSuperAdminData {
