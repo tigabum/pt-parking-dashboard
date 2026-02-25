@@ -20,6 +20,7 @@ export const API_ENDPOINTS = {
         USER_PASSWORD_CHANGE: '/auth/user/password/change',
         USER_REFRESH: '/auth/user/refresh',
         LOGOUT: '/auth/logout',
+        SESSION_TOUCH: '/auth/session/touch',
     },
     // Users
     USERS: {
