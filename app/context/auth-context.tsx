@@ -157,6 +157,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  // ── handleActivity: stable reference needed for add/remove listener symmetry
+  const handleActivity = useCallback(() => {
+    resetInactivityTimer()
+  }, [resetInactivityTimer])
+
   // ── Set up activity listeners when user is logged in ─────────────────────
   useEffect(() => {
     if (!user) {
@@ -175,10 +180,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Immediately touch on login
     touchSession()
 
-    const handleActivity = () => {
-      resetInactivityTimer()
-    }
-
     ACTIVITY_EVENTS.forEach((e) =>
       window.addEventListener(e, handleActivity),
     )
@@ -190,7 +191,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       stopHeartbeat()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user])
+  }, [user, handleActivity, stopHeartbeat, resetInactivityTimer, startHeartbeat, touchSession])
 
   // ── Initial auth hydration ────────────────────────────────────────────────
   useEffect(() => {
@@ -212,10 +213,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initAuth()
   }, [])
 
-  // ── handleActivity must be defined outside the useEffect for proper cleanup
-  function handleActivity() {
-    resetInactivityTimer()
-  }
 
   // ── Login ─────────────────────────────────────────────────────────────────
   const login = async (email?: string, password: string = "", phoneNumber?: string) => {
