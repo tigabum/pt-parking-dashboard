@@ -128,3 +128,31 @@ export function DetailItem({ label, value, className }: DetailItemProps) {
     </div>
   );
 }
+
+interface FormDetailItemProps {
+  label: string;
+  value: React.ReactNode;
+  className?: string;
+  icon?: any;
+}
+
+export function FormDetailItem({
+  label,
+  value,
+  className,
+  icon: Icon,
+}: FormDetailItemProps) {
+  return (
+    <div className={cn("space-y-3", className)}>
+      <p className="text-xs font-black text-slate-900 uppercase tracking-tight flex items-center gap-2">
+        {Icon && <Icon className="h-3.5 w-3.5 text-primary" />}
+        {label}
+      </p>
+      <div className="h-12 w-full rounded border border-slate-200 bg-slate-50/30 px-4 font-bold flex items-center transition-all text-sm text-slate-700">
+        {value || (
+          <span className="text-slate-300 font-medium italic">Not Provided</span>
+        )}
+      </div>
+    </div>
+  );
+}

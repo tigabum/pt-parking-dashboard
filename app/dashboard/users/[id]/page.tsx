@@ -11,13 +11,21 @@ import {
   DetailLayout,
   DetailSection,
   DetailItem,
+  FormDetailItem,
 } from "@/components/layouts/detail-layout";
 import { toast } from "sonner";
 import {
   User as UserIcon,
   AlertCircle,
+  Mail,
+  Phone,
+  Shield,
+  Building2,
+  CheckCircle2,
+  Calendar,
+  Clock,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, getImageUrl } from "@/lib/utils";
 
 export default function UserDetailPage() {
   const { id } = useParams();
@@ -123,8 +131,8 @@ export default function UserDetailPage() {
           </Button>
           <Badge
             className={`h-10 px-5 rounded flex items-center justify-center font-black uppercase text-[10px] tracking-widest border-none ${user.status === "ACTIVE"
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
               }`}
           >
             {String(user.status || "")}
@@ -132,26 +140,157 @@ export default function UserDetailPage() {
         </div>
       }
     >
-      <DetailSection title="Staff User Detail">
-        <DetailItem label="User Code" value={user.userCode || "—"} />
-        <DetailItem label="Full Name" value={user.fullName || "—"} />
-        <DetailItem label="Email" value={user.email || "—"} />
-        <DetailItem label="Phone Number" value={user.phoneNumber || "—"} />
-        <DetailItem label="Organization ID" value={user.orgId || "—"} />
-        <DetailItem label="Is Staff User" value={user.isStaffUser ? "YES" : "NO"} />
-        <DetailItem label="Role" value={user.role} />
-        <DetailItem label="Phone Verified" value={user.isPhoneVerified ? "YES" : "NO"} />
-        <DetailItem label="Email Verified" value={user.isEmailVerified ? "YES" : "NO"} />
-        <DetailItem label="Status" value={user.status} />
-        <DetailItem label="Profile Image" value={user.profileImage ? <Badge variant="outline" className="font-mono text-[10px]">{user.profileImage}</Badge> : "—"} />
-        <DetailItem
-          label="Permissions"
-          value={userPermissions.length > 0 ? userPermissions.join(", ") : "None"}
-          className="col-span-full"
-        />
-      </DetailSection>
+      <div className="bg-white rounded md:rounded-xl border border-slate-200 shadow-2xl shadow-slate-200/50 overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-3">
+          {/* Left Column: Profile & Basic Info */}
+          <div className="lg:col-span-1 p-6 md:p-10 border-b lg:border-b-0 lg:border-r border-slate-100 bg-slate-50/30 space-y-8 md:space-y-10">
+            {/* Profile Photo */}
+            <div className="space-y-6">
+              <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                <UserIcon className="h-4 w-4" />
+                Profile Identity
+              </h3>
+              <div className="flex flex-col items-center">
+                <div className="h-48 w-48 rounded-full border-8 border-white shadow-2xl flex items-center justify-center bg-slate-200 overflow-hidden relative">
+                  {user.profileImage ? (
+                    <img
+                      src={getImageUrl(user.profileImage)}
+                      alt="Profile"
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <UserIcon className="h-20 w-20 text-slate-400" />
+                  )}
+                </div>
+                <div className="mt-6 text-center">
+                  <p className="text-xl font-black text-slate-900 leading-none">
+                    {user.fullName}
+                  </p>
+                  <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-2">
+                    {user.userCode || "No Registry ID"}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Access Status Info */}
+            <div className="space-y-6 pt-6 border-t border-slate-100">
+              <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                <Shield className="h-4 w-4" />
+                System Credential
+              </h3>
+              <div className="space-y-4">
+                <FormDetailItem
+                  label="Defined Role"
+                  value={user.role}
+                  icon={Shield}
+                />
+                <FormDetailItem
+                  label="Organization Registry"
+                  value="PossibleTech"
+                  icon={Building2}
+                />
+                <FormDetailItem
+                  label="Staff Status"
+                  value={user.isStaffUser ? "ACTIVE STAFF" : "EXTERNAL USER"}
+                  icon={UserIcon}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Contact Info & Permissions */}
+          <div className="lg:col-span-2 p-6 md:p-12 space-y-10 md:space-y-12 bg-white">
+            {/* Personal Information */}
+            <div className="space-y-6 md:space-y-8">
+              <div className="flex items-center gap-3 border-b border-slate-50 pb-4">
+                <div className="p-2.5 bg-primary/10 text-primary rounded">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-slate-900 uppercase tracking-widest">
+                    Contact Registration
+                  </h3>
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">
+                    Verified system communication channels
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
+                <FormDetailItem
+                  label="Direct Email"
+                  value={user.email}
+                  icon={Mail}
+                  className="md:col-span-2"
+                />
+                <FormDetailItem
+                  label="Phone Connection"
+                  value={user.phoneNumber || "Not Provisioned"}
+                  icon={Phone}
+                />
+                <FormDetailItem
+                  label="Account Status"
+                  value={user.status}
+                  className="capitalize"
+                />
+                <FormDetailItem
+                  label="Email Verification"
+                  value={user.isEmailVerified ? "VERIFIED" : "PENDING"}
+                  icon={CheckCircle2}
+                />
+                <FormDetailItem
+                  label="Phone Verification"
+                  value={user.isPhoneVerified ? "VERIFIED" : "PENDING"}
+                  icon={CheckCircle2}
+                />
+                <FormDetailItem
+                  label="Registry Created"
+                  value={formatDateTime(user.createdAt)}
+                  icon={Calendar}
+                />
+                <FormDetailItem
+                  label="Last Information Update"
+                  value={formatDateTime(user.updatedAt)}
+                  icon={Clock}
+                />
+              </div>
+            </div>
+
+            {/* Access Permissions */}
+            <div className="space-y-8 pt-8 border-t border-slate-50">
+              <div className="flex items-center gap-4">
+                <div className="h-1 w-12 rounded-full bg-primary/20" />
+                <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest">
+                  Active Capabilities
+                </h3>
+              </div>
+              <div className="p-6 bg-slate-50 border border-slate-100 rounded-2xl">
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-tight mb-4">
+                  Permission Registry List
+                </p>
+                {userPermissions.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {userPermissions.map((perm) => (
+                      <Badge
+                        key={perm}
+                        variant="outline"
+                        className="bg-white text-slate-700 border-slate-200 font-bold uppercase text-[10px] h-8 px-3"
+                      >
+                        {perm.replace(/_/g, " ")}
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm font-bold text-slate-400 italic">
+                    No individual permissions assigned. Role defaults apply.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </DetailLayout>
   );
 }
-
-import { Label } from "@/components/ui/label";
