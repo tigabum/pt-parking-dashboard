@@ -166,9 +166,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!user) {
       stopHeartbeat()
-      ACTIVITY_EVENTS.forEach((e) =>
-        window.removeEventListener(e, handleActivity),
-      )
+      ACTIVITY_EVENTS.forEach((e) => {
+        if (typeof handleActivity === "function") {
+          window.removeEventListener(e, handleActivity)
+        }
+      })
       return
     }
 
@@ -212,6 +214,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     initAuth()
   }, [])
+
+
 
 
   // ── Login ─────────────────────────────────────────────────────────────────
