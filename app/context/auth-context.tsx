@@ -73,9 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!token) return
 
     try {
-      console.log(
-        `[SessionManager] 💓 Heartbeat – calling session/touch for userId=${userRef.current.id}`,
-      )
+      // Heartbeat touch
       const response = await apiClient.post(
         API_ENDPOINTS.AUTH.SESSION_TOUCH,
         {}
@@ -89,16 +87,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (data.data.refreshToken) {
             localStorage.setItem("refreshToken", data.data.refreshToken)
           }
-          console.log(
-            `[SessionManager] 🔄 Token rotation received – new accessToken stored`,
-          )
-        } else {
-          console.log(`[SessionManager] ✅ Session touch OK – radioactivity reset on server`)
         }
       }
     } catch (err: any) {
       // apiClient handles 401s globally (refreshes if possible, then logs out)
-      console.warn(`[SessionManager] ⚠️  Session touch failed:`, err?.message)
     }
   }, [])
 
@@ -110,9 +102,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
     inactivityTimerRef.current = setTimeout(async () => {
-      console.warn(
-        `[SessionManager] ⏰ User inactive for ${INACTIVITY_TIMEOUT_MS / 1000}s – logging out`,
-      )
       await logout()
       if (typeof window !== "undefined") window.location.href = "/"
     }, INACTIVITY_TIMEOUT_MS)
@@ -121,9 +110,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // ── Start heartbeat ───────────────────────────────────────────────────────
   const startHeartbeat = useCallback(() => {
     if (heartbeatTimerRef.current) clearInterval(heartbeatTimerRef.current)
-    console.log(
-      `[SessionManager] 💓 Heartbeat started (interval=${HEARTBEAT_INTERVAL_MS / 1000}s)`,
-    )
     heartbeatTimerRef.current = setInterval(async () => {
       if (!userRef.current) return
       await touchSession()
@@ -135,7 +121,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (heartbeatTimerRef.current) {
       clearInterval(heartbeatTimerRef.current)
       heartbeatTimerRef.current = null
-      console.log(`[SessionManager] 🛑 Heartbeat stopped`)
     }
     if (inactivityTimerRef.current) {
       clearTimeout(inactivityTimerRef.current)
@@ -160,9 +145,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return
     }
 
-    console.log(
-      `[SessionManager] 🟢 Session management started for userId=${user.id} (inactivity=${INACTIVITY_TIMEOUT_MS / 1000}s)`,
-    )
     resetInactivityTimer()
     startHeartbeat()
     // Immediately touch on login
@@ -189,7 +171,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
           const parsed = JSON.parse(storedUser)
           setUser(parsed)
-          console.log(`[SessionManager] 📦 Restored user from localStorage: userId=${parsed?.id}`)
         } catch {
           localStorage.removeItem("user")
         }
@@ -207,43 +188,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // ── Login ─────────────────────────────────────────────────────────────────
   const login = async (email?: string, password: string = "", phoneNumber?: string) => {
     try {
-      console.log(`[SessionManager] 🔐 Login attempt: email=${email ?? phoneNumber}`)
       const validatedUser = await validateCredentials(email, password, phoneNumber)
       if (validatedUser) {
         setUser(validatedUser)
         localStorage.setItem("user", JSON.stringify(validatedUser))
-        console.log(
-          `[SessionManager] ✅ Login success: userId=${validatedUser.id} role=${validatedUser.role}`,
-        )
       }
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.message || error?.message || "Login failed"
-      console.error("[SessionManager] ❌ Login failed:", errorMessage, error)
       throw error
     }
   }
 
   const loginWithData = (userData: User) => {
-    console.log(`[SessionManager] ✅ loginWithData: userId=${userData.id} role=${userData.role}`)
     setUser(userData)
     localStorage.setItem("user", JSON.stringify(userData))
   }
 
   // ── Logout ────────────────────────────────────────────────────────────────
   const logout = async () => {
-    console.log(`[SessionManager] 🚪 Logout initiated for userId=${userRef.current?.id}`)
     stopHeartbeat()
     try {
       const { authService } = require("@/lib/services/auth-service")
       await authService.logout()
     } catch (e) {
-      console.warn("[SessionManager] ⚠️  Logout API call failed (ignored):", e)
+      // Quiet fail
     }
     setUser(null)
     localStorage.removeItem("user")
     localStorage.removeItem("accessToken")
     localStorage.removeItem("refreshToken")
-    console.log(`[SessionManager] ✅ Logout complete – tokens and user cleared`)
   }
 
   // ── Role / Permission helpers ─────────────────────────────────────────────

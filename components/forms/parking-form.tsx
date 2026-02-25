@@ -65,9 +65,7 @@ function loadGoogleMaps(): Promise<void> {
     }
 
     if (!apiKey) {
-      const error = "Google Maps API Key is missing in environment variables.";
-      console.error(error);
-      return reject(new Error(error));
+      return reject(new Error("Google Maps API Key is missing"));
     }
 
     const script = document.createElement("script");
@@ -126,7 +124,7 @@ export function ParkingForm({
           setAvailableAmenities(amenRes.data);
         }
       } catch (error) {
-        console.error("Failed to load form data:", error);
+        // Silent error, form remains in defaults
       }
     };
     loadData();
@@ -231,7 +229,6 @@ export function ParkingForm({
         setLocating(false);
       },
       (error) => {
-        console.warn("Geolocation error:", error);
         let errorMsg = "Unable to get your location";
         if (error.code === 1) errorMsg = "Location permission denied";
         else if (error.code === 2) errorMsg = "Location unavailable";
@@ -326,7 +323,7 @@ export function ParkingForm({
           // handleLocateMe();
         }
       } catch (error) {
-        console.error("Map initialization failed:", error);
+        // Map failed to load, UI remains in fallback state
       }
     };
 

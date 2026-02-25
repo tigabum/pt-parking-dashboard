@@ -89,8 +89,7 @@ export default function WalletsPage() {
         }
       }
     } catch (err) {
-      // Ensure we handle errors gracefully
-      console.error("Failed to load wallets:", err);
+      // Silent failure
       toast.error("Failed to load wallets");
     } finally {
       setLoading(false);
@@ -126,9 +125,9 @@ export default function WalletsPage() {
         parkingId,
         amount,
         topUpDescription ||
-          (user?.role === UserRole.PARKING_SUPER_ADMIN
-            ? "Parking Admin Top-up"
-            : "System Admin Top-up"),
+        (user?.role === UserRole.PARKING_SUPER_ADMIN
+          ? "Parking Admin Top-up"
+          : "System Admin Top-up"),
       );
 
       if (response.success) {

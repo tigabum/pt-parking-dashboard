@@ -64,7 +64,7 @@ export function CommissionForm({
         const res = await parkingService.getAllParking({ limit: 100 });
         setParkings(res.data || []);
       } catch (e) {
-        console.error("Failed to load parkings", e);
+        // Silent error, parkings list remains empty or previous
       } finally {
         setFetchingParkings(false);
       }

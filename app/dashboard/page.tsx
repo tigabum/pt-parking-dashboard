@@ -86,7 +86,7 @@ export default function DashboardPage() {
       const userList = res.data || res.users
       if (userList) setManagers(userList)
     } catch (err) {
-      console.error("Failed to load managers", err)
+      // Silent failure
     }
   }
 
@@ -99,7 +99,7 @@ export default function DashboardPage() {
       })
       setStats(data)
     } catch (error) {
-      console.error(error)
+      // Silent failure
     } finally {
       setLoading(false)
     }

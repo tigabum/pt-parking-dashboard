@@ -102,7 +102,7 @@ export default function BookingsPage() {
       const userList = res.data || res.users;
       if (userList) setManagers(userList);
     } catch (err) {
-      console.error("Failed to load managers", err);
+      // Silent failure
     }
   };
 
@@ -122,7 +122,7 @@ export default function BookingsPage() {
         endDate: dateRange?.to ? format(dateRange.to, "yyyy-MM-dd") : undefined,
         parkingId:
           user?.role === UserRole.SYSTEM_SUPER_ADMIN ||
-          user?.role === UserRole.SYSTEM_ADMIN
+            user?.role === UserRole.SYSTEM_ADMIN
             ? undefined
             : user?.orgId || undefined,
         managerUserId: managerFilter === "ALL" ? undefined : managerFilter,
@@ -142,10 +142,10 @@ export default function BookingsPage() {
           setSpaces(parkingsRes.data);
         }
       } catch (err) {
-        console.error("Parking spaces load failed:", err);
+        // Silent failure
       }
     } catch (err) {
-      console.error("Failed to load bookings", err);
+      // Silent failure
     } finally {
       setLoading(false);
     }
@@ -373,16 +373,16 @@ export default function BookingsPage() {
               statusFilter !== "ALL" ||
               managerFilter !== "ALL" ||
               dateRange?.from) && (
-              <Button
-                onClick={clearFilters}
-                variant="ghost"
-                size="sm"
-                className="h-10 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700"
-              >
-                <X className="h-4 w-4 mr-2" />
-                Clear
-              </Button>
-            )}
+                <Button
+                  onClick={clearFilters}
+                  variant="ghost"
+                  size="sm"
+                  className="h-10 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Clear
+                </Button>
+              )}
 
             {hasPermission(PERMISSIONS.BOOKING_CREATE) &&
               (user?.role === UserRole.PARKING_MANAGER ||

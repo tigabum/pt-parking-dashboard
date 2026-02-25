@@ -69,7 +69,7 @@ export function BookingStats({ parkingId }: { parkingId: string }) {
         setStats(res.data);
       }
     } catch (error) {
-      console.error("Failed to fetch booking stats", error);
+      // Silent failure
     } finally {
       setLoading(false);
     }
@@ -119,9 +119,9 @@ export function BookingStats({ parkingId }: { parkingId: string }) {
             {loading
               ? "..."
               : new Intl.NumberFormat("en-ET", {
-                  style: "currency",
-                  currency: "ETB",
-                }).format(amount)}
+                style: "currency",
+                currency: "ETB",
+              }).format(amount)}
           </p>
           {commission !== undefined && (
             <div className="pt-2 mt-2 border-t border-slate-100 flex flex-col gap-1 text-[10px] uppercase font-bold text-slate-400">
@@ -131,9 +131,9 @@ export function BookingStats({ parkingId }: { parkingId: string }) {
                   {loading
                     ? "..."
                     : new Intl.NumberFormat("en-ET", {
-                        style: "currency",
-                        currency: "ETB",
-                      }).format(commission)}
+                      style: "currency",
+                      currency: "ETB",
+                    }).format(commission)}
                 </span>
               </div>
               {vat !== undefined && (
@@ -143,9 +143,9 @@ export function BookingStats({ parkingId }: { parkingId: string }) {
                     {loading
                       ? "..."
                       : new Intl.NumberFormat("en-ET", {
-                          style: "currency",
-                          currency: "ETB",
-                        }).format(vat)}
+                        style: "currency",
+                        currency: "ETB",
+                      }).format(vat)}
                   </span>
                 </div>
               )}

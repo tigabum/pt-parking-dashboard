@@ -38,7 +38,7 @@ export function WalletTransactions({ parkingId }: WalletTransactionsProps) {
         setTransactions(res.data || []);
       }
     } catch (error) {
-      console.error("Failed to load transactions", error);
+      // Silent failure
     } finally {
       setLoading(false);
     }

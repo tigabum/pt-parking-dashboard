@@ -143,21 +143,14 @@ function PortalContent() {
                 existingBooking.status,
               )
             ) {
-              console.log("Resumed session via ID", existingBooking);
               setActiveBooking(existingBooking);
               if (existingBooking.customerPhone) {
                 setPhoneNumber(existingBooking.customerPhone);
-                localStorage.setItem(
-                  "guestPhone",
-                  existingBooking.customerPhone,
-                );
+                localStorage.setItem("guestPhone", existingBooking.customerPhone);
               }
               // Ensure persistence
               localStorage.setItem("activeBookingId", existingBooking.id);
-              localStorage.setItem(
-                "guestPlate",
-                existingBooking.plateNumber || "",
-              );
+              localStorage.setItem("guestPlate", existingBooking.plateNumber || "");
 
               if (mounted) setLoading(false);
               return; // Stop here, we found it
@@ -166,7 +159,6 @@ function PortalContent() {
               localStorage.removeItem("activeBookingId");
             }
           } catch (e) {
-            console.warn("ID recovery failed, falling back to phone lookup", e);
             localStorage.removeItem("activeBookingId"); // Clear stale ID
           }
         }
@@ -186,17 +178,13 @@ function PortalContent() {
                 existingBooking.status,
               )
             ) {
-              console.log("Resumed session via Phone", existingBooking);
               setActiveBooking(existingBooking);
               setPhoneNumber(savedPhone);
               setPlateNumber(existingBooking.plateNumber || "");
               setFullName(existingBooking.customerName || "");
 
               localStorage.setItem("activeBookingId", existingBooking.id);
-              localStorage.setItem(
-                "guestPlate",
-                existingBooking.plateNumber || "",
-              );
+              localStorage.setItem("guestPlate", existingBooking.plateNumber || "");
             } else {
               // No session or session finalized, clear storage and pre-fill profile
               localStorage.removeItem("activeBookingId");
@@ -211,7 +199,7 @@ function PortalContent() {
               }
             }
           } catch (err) {
-            console.error("Phone recovery failed", err);
+            // Silently fail recovery
           }
         }
       } catch (e: any) {
@@ -262,7 +250,7 @@ function PortalContent() {
           setActiveBooking(updated);
         }
       } catch (e) {
-        console.warn("Polling error", e);
+        // Silently fail polling
       }
     }, 5000);
 
@@ -400,7 +388,6 @@ function PortalContent() {
       // Always go to step 1 to allow users to select booking type and review details
       setStep(1);
     } catch (e) {
-      console.error("Lookup failed", e);
       setStep(1); // Proceed anyway to let user entry manually
     } finally {
       setSearching(false);
@@ -441,14 +428,6 @@ function PortalContent() {
   };
 
   const handleStartParking = async () => {
-    console.log("handleStartParking triggered", {
-      parking,
-      phoneNumber,
-      plateNumber,
-      fullName,
-      paymentCategory,
-    });
-
     if (!parking) {
       toast.error(
         "Parking space data missing. Please try refreshing or rescanning.",
@@ -483,8 +462,6 @@ function PortalContent() {
       };
 
       const response = await portalService.createBooking(payload);
-      console.log("Create Booking Response:", response);
-
       toast.dismiss();
 
       // Strict check based on portalService return type
@@ -505,13 +482,11 @@ function PortalContent() {
       }
 
       // Fallback error
-      console.error("Booking creation failed structure:", response);
       toast.error(
         response.message || "Failed to initiate session. Please try again.",
       );
     } catch (e: any) {
       toast.dismiss();
-      console.error("Booking Create Error:", e);
       const msg = e.response?.data?.message;
       if (Array.isArray(msg)) {
         // Show first few errors to avoid spamming

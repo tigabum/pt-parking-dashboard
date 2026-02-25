@@ -197,7 +197,6 @@ export function BookingForm({
         toast.dismiss(loadingToast);
       }
     } catch (err: any) {
-      console.error("Save failed", err);
       toast.error(err?.message || "Failed to initiate session", {
         id: loadingToast,
       });
@@ -369,7 +368,6 @@ export function BookingForm({
       // Always go to Step 1 to allow users to select booking type and review details
       setStep(1);
     } catch (err) {
-      console.error("Search failed", err);
       // Fallback to step 1 anyway to allow manual entry
       setStep(1);
     } finally {

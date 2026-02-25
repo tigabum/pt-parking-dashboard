@@ -49,7 +49,6 @@ export default function UserDetailPage() {
         toast.error("User not found");
       }
     } catch (err) {
-      console.error(err);
       toast.error("Failed to load user details");
     } finally {
       setLoading(false);

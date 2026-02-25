@@ -127,7 +127,7 @@ export function ParkingUserForm({
         setParkings(response.data);
       }
     } catch (error) {
-      console.error("Failed to load parkings", error);
+      // Silent failure, parkings list remains empty
     }
   };
 

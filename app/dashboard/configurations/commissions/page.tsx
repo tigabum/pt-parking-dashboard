@@ -47,7 +47,7 @@ export default function BookingCommissionsPage() {
         });
       }
     } catch (err) {
-      console.error("Failed to load stats", err);
+      // Silent failure
     }
   };
 
