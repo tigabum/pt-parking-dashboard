@@ -397,7 +397,7 @@ export default function ParkingDetailPage() {
       header: "Comment",
       render: (review) => (
         <p className="text-sm font-medium text-slate-500 line-clamp-1 max-w-sm italic">
-          "{review.comment || "No written sentiment provided."}"
+          {review.comment || "No written sentiment provided."}
         </p>
       ),
     },
@@ -510,7 +510,7 @@ export default function ParkingDetailPage() {
     <DetailLayout
       backLink={{ label: "Parkings", href: "/dashboard/parkings" }}
       title={parking.name}
-      subtitle={`ID: ${parking.id.substring(0, 8)} • ${dayjs(parking.createdAt).format("MMM D, YYYY")}`}
+      subtitle={`ID: ${parking.id.substring(0, 8)} . ${dayjs(parking.createdAt).format("MMM D, YYYY")}`}
       actions={
         <div className="flex items-center gap-1.5 md:gap-2">
           {canAccess([UserRole.SYSTEM_SUPER_ADMIN]) &&
@@ -617,9 +617,9 @@ export default function ParkingDetailPage() {
       </div>
 
       <Tabs
-        defaultValue="details"
-        className="w-full space-y-12"
+        value={activeTab}
         onValueChange={setActiveTab}
+        className="w-full space-y-12"
       >
         <div className="w-full border-b border-slate-100">
           <TabsList className="bg-transparent p-0 h-auto gap-12 w-full justify-start rounded-none">
@@ -1275,42 +1275,41 @@ export default function ParkingDetailPage() {
                 : "No transactions recorded yet."
             }
           />
-        </div>
-      </TabsContent>
-    </Tabs>
+        </TabsContent>
+      </Tabs>
 
       {
-    parking && (
-      <>
-        <Dialog open={isTopupOpen} onOpenChange={setIsTopupOpen}>
-          <DialogContent className="max-w-md p-8 rounded-none border border-slate-100 shadow-none">
-            <DialogHeader className="mb-4">
-              <DialogTitle className="text-xl font-bold text-slate-900">
-                Topup Terminal Wallet
-              </DialogTitle>
-            </DialogHeader>
-            <WalletTopupForm
+        parking && (
+          <>
+            <Dialog open={isTopupOpen} onOpenChange={setIsTopupOpen}>
+              <DialogContent className="max-w-md p-8 rounded-none border border-slate-100 shadow-none">
+                <DialogHeader className="mb-4">
+                  <DialogTitle className="text-xl font-bold text-slate-900">
+                    Topup Terminal Wallet
+                  </DialogTitle>
+                </DialogHeader>
+                <WalletTopupForm
+                  parkingId={parking.id}
+                  parkingName={parking.name}
+                  onSuccess={() => {
+                    setIsTopupOpen(false);
+                    loadData();
+                    loadTransactions();
+                  }}
+                  onCancel={() => setIsTopupOpen(false)}
+                />
+              </DialogContent>
+            </Dialog>
+
+            <QrCodeDialog
+              open={isQrOpen}
+              onOpenChange={setIsQrOpen}
               parkingId={parking.id}
               parkingName={parking.name}
-              onSuccess={() => {
-                setIsTopupOpen(false);
-                loadData();
-                loadTransactions();
-              }}
-              onCancel={() => setIsTopupOpen(false)}
             />
-          </DialogContent>
-        </Dialog>
-
-        <QrCodeDialog
-          open={isQrOpen}
-          onOpenChange={setIsQrOpen}
-          parkingId={parking.id}
-          parkingName={parking.name}
-        />
-      </>
-    )
-  }
+          </>
+        )
+      }
 
       <Dialog open={!!previewDoc} onOpenChange={() => setPreviewDoc(null)}>
         <DialogContent className="max-w-4xl h-[80vh] p-0 overflow-hidden border border-slate-100 shadow-none rounded-none">
@@ -1417,6 +1416,6 @@ export default function ParkingDetailPage() {
           )}
         </AlertDialogContent>
       </AlertDialog>
-    </DetailLayout >
-  ) : null;
+    </DetailLayout>
+  );
 }

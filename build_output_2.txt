@@ -1,0 +1,27 @@
+
+> gelagle-parking-dashboard@0.1.0 build
+> rm -rf .next && next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+- Experiments (use with caution):
+  ✓ optimizeCss
+  · optimizePackageImports
+
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 1 errors:
+./app/dashboard/parkings/[id]/page.tsx:1420:5
+Parsing ecmascript source code failed
+[0m [90m 1418 |[39m       [33m<[39m[33m/[39m[33mAlertDialog[39m[33m>[39m
+ [90m 1419 |[39m     [33m<[39m[33m/[39m[33mDetailLayout[39m [33m>[39m
+[31m[1m>[22m[39m[90m 1420 |[39m   ) [33m:[39m [36mnull[39m[33m;[39m
+ [90m      |[39m     [31m[1m^[22m[39m
+ [90m 1421 |[39m }
+ [90m 1422 |[39m[0m
+
+Expected ';', got ':'
+
+
+    at <unknown> (./app/dashboard/parkings/[id]/page.tsx:1420:5)
