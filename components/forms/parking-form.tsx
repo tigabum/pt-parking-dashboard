@@ -10,6 +10,7 @@ import {
   ParkingFormProps,
   ParkingStatus,
   ParkingType,
+  BusinessModel,
   Commission,
 } from "../types";
 import {
@@ -136,11 +137,14 @@ export function ParkingForm({
       name: "",
       parkingCode: "",
       parkingType: ParkingType.PUBLIC,
+      businessModel: BusinessModel.COMMISSION_BASED,
       description: "",
       status: ParkingStatus.PENDING,
       licenseNumber: "",
       vatRegistrationNumber: "",
       numberOfSpots: 0,
+      subscriptionFee: 0,
+      subscriptionRenewalDate: "",
 
       // Location
       country: "Ethiopia",
@@ -181,6 +185,8 @@ export function ParkingForm({
         agreementDocuments: initialData.agreementDocuments || [],
         commissionConfigId: initialData.commissionConfig?.id,
         amenityIds: initialData.amenitiesList?.map((a: any) => a.id) || [],
+        subscriptionFee: initialData.subscriptionFee || 0,
+        subscriptionRenewalDate: initialData.subscriptionRenewalDate ? new Date(initialData.subscriptionRenewalDate).toISOString().split('T')[0] : "",
       };
     }
     return defaults;
@@ -197,6 +203,8 @@ export function ParkingForm({
         agreementDocuments: initialData.agreementDocuments || [],
         commissionConfigId: initialData.commissionConfig?.id,
         amenityIds: initialData.amenitiesList?.map((a: any) => a.id) || [],
+        subscriptionFee: initialData.subscriptionFee || 0,
+        subscriptionRenewalDate: initialData.subscriptionRenewalDate ? new Date(initialData.subscriptionRenewalDate).toISOString().split('T')[0] : "",
       }));
     }
   }, [initialData]);
@@ -479,6 +487,52 @@ export function ParkingForm({
                     </SelectContent>
                   </Select>
                 </div>
+                <div className="space-y-2">
+                  <Label className="text-sm font-semibold">Business Model</Label>
+                  <Select
+                    value={form.businessModel}
+                    onValueChange={(val) =>
+                      setForm({ ...form, businessModel: val })
+                    }
+                    disabled={!isSystemAdmin && !!initialData}
+                  >
+                    <SelectTrigger className="w-full h-12 rounded bg-slate-50 border-transparent focus:border-primary focus:bg-white transition-all disabled:opacity-70">
+                      <SelectValue placeholder="Select business model" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(BusinessModel).map((t) => (
+                        <SelectItem key={t} value={t}>
+                          {t.replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                {form.businessModel === BusinessModel.SUBSCRIPTION && (
+                  <>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-semibold">Subscription Fee (Yearly/Agreement)</Label>
+                      <Input
+                        type="number"
+                        className="h-12 rounded bg-slate-50 border-transparent focus:border-primary focus:bg-white transition-all disabled:opacity-70"
+                        placeholder="Enter Fee Amount"
+                        value={form.subscriptionFee || ""}
+                        onChange={(e) => setForm({ ...form, subscriptionFee: +e.target.value })}
+                        disabled={!isSystemAdmin && !!initialData}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-semibold">Subscription Renewal/Expiry Date</Label>
+                      <Input
+                        type="date"
+                        className="h-12 rounded bg-slate-50 border-transparent focus:border-primary focus:bg-white transition-all disabled:opacity-70"
+                        value={form.subscriptionRenewalDate || ""}
+                        onChange={(e) => setForm({ ...form, subscriptionRenewalDate: e.target.value })}
+                        disabled={!isSystemAdmin && !!initialData}
+                      />
+                    </div>
+                  </>
+                )}
                 {/* <div className="space-y-2">
                   <Label className="text-sm font-semibold">
                     Commission Configuration

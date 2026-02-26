@@ -24,7 +24,7 @@ import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { Search, X, Plus, Filter, Download } from "lucide-react";
-import { ParkingStatus, ParkingType } from "@/components/types";
+import { ParkingStatus, ParkingType, BusinessModel } from "@/components/types";
 
 export default function ParkingPage() {
   const router = useRouter();
@@ -39,6 +39,21 @@ export default function ParkingPage() {
       router.replace(`/dashboard/parkings/${user.orgId}`);
     }
   }, [user, router]);
+
+  const isParkingUser =
+    user?.role === UserRole.PARKING_SUPER_ADMIN ||
+    user?.role === UserRole.PARKING_MANAGER;
+
+  if (isParkingUser && user?.orgId) {
+    return (
+      <div className="p-8 flex items-center justify-center min-h-[400px]">
+        <div className="animate-pulse flex flex-col items-center gap-4">
+          <div className="h-12 w-12 bg-slate-200 rounded-full" />
+          <div className="h-4 w-32 bg-slate-200 rounded" />
+        </div>
+      </div>
+    );
+  }
   const [parkings, setParkings] = useState<ParkingResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,6 +67,7 @@ export default function ParkingPage() {
   // Filter State
   const [typeFilter, setTypeFilter] = useState<string>("ALL");
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [businessModelFilter, setBusinessModelFilter] = useState<string>("ALL");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [sortBy, setSortBy] = useState<string>("createdAt");
   const [sortOrder, setSortOrder] = useState<"ASC" | "DESC">("DESC");
@@ -63,6 +79,7 @@ export default function ParkingPage() {
     searchQuery,
     typeFilter,
     statusFilter,
+    businessModelFilter,
     dateRange,
     sortBy,
     sortOrder,
@@ -78,6 +95,7 @@ export default function ParkingPage() {
         q: searchQuery || undefined,
         type: typeFilter === "ALL" ? undefined : typeFilter,
         status: statusFilter === "ALL" ? undefined : statusFilter,
+        businessModel: businessModelFilter === "ALL" ? undefined : (businessModelFilter as BusinessModel),
         startDate: dateRange?.from
           ? format(dateRange.from, "yyyy-MM-dd")
           : undefined,
@@ -169,6 +187,7 @@ export default function ParkingPage() {
     setSearchQuery("");
     setTypeFilter("ALL");
     setStatusFilter("ALL");
+    setBusinessModelFilter("ALL");
     setDateRange(undefined);
     setSortBy("createdAt");
     setSortOrder("DESC");
@@ -233,6 +252,17 @@ export default function ParkingPage() {
               </SelectContent>
             </Select>
 
+            <Select value={businessModelFilter} onValueChange={setBusinessModelFilter}>
+              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[140px] h-11 rounded border-slate-200 bg-white">
+                <SelectValue placeholder="Business Model" />
+              </SelectTrigger>
+              <SelectContent className="rounded">
+                <SelectItem value="ALL">All Models</SelectItem>
+                <SelectItem value={BusinessModel.SUBSCRIPTION}>Subscription</SelectItem>
+                <SelectItem value={BusinessModel.COMMISSION_BASED}>Commission-Based</SelectItem>
+              </SelectContent>
+            </Select>
+
             <div className="w-full sm:w-auto flex-1 sm:flex-none">
               <DatePickerWithRange date={dateRange} setDate={setDateRange} />
             </div>
@@ -250,6 +280,7 @@ export default function ParkingPage() {
 
             {(typeFilter !== "ALL" ||
               statusFilter !== "ALL" ||
+              businessModelFilter !== "ALL" ||
               searchQuery !== "" ||
               dateRange?.from) && (
                 <Button
@@ -264,6 +295,7 @@ export default function ParkingPage() {
 
             {(typeFilter !== "ALL" ||
               statusFilter !== "ALL" ||
+              businessModelFilter !== "ALL" ||
               searchQuery !== "" ||
               dateRange?.from) && (
                 <Button

@@ -187,10 +187,11 @@ export function Sidebar({ onItemClick }: SidebarProps) {
           return (
             <Link key={item.href} href={item.href}>
               <button
-                onClick={() => {
-                  // If it's a parking user clicking "Parking Settings", go directly to their parking detail
+                onClick={(e) => {
+                  e.preventDefault();
+                  // If it's a parking user clicking "Parkings", go directly to their parking detail
                   if (
-                    item.label === "Parking Settings" &&
+                    item.label === "Parkings" &&
                     isParkingLevelUser &&
                     user?.orgId
                   ) {

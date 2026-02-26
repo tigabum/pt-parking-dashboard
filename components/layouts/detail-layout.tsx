@@ -37,7 +37,7 @@ export function DetailLayout({
   };
 
   return (
-    <div className="w-full h-full flex flex-col bg-slate-50 overflow-hidden">
+    <div className="w-full h-full flex flex-col bg-white overflow-hidden">
       {/* Standardized Header */}
       <div className="flex items-center justify-between px-6 md:px-8 py-5 shrink-0 bg-white border-b shadow-sm z-20">
         <div className="flex items-center gap-4">
@@ -45,7 +45,7 @@ export function DetailLayout({
             variant="ghost"
             size="icon"
             onClick={handleBack}
-            className="h-10 w-10 rounded-full hover:bg-primary hover:text-white text-slate-500 border border-slate-200 shadow-sm transition-all"
+            className="h-10 w-10 rounded-full hover:bg-slate-900 hover:text-white text-slate-500 border border-slate-200 shadow-sm transition-all"
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
@@ -60,15 +60,9 @@ export function DetailLayout({
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto bg-slate-50/50">
+      <div className="flex-1 overflow-y-auto bg-white">
         <div className="w-full max-w-7xl mx-auto p-4 md:p-10 pb-32">
-          {noCard ? (
-            <div className="space-y-16">{children}</div>
-          ) : (
-            <div className="bg-white rounded border shadow shadow-slate-200/50 overflow-hidden">
-              <div className="p-6 md:p-12 space-y-16">{children}</div>
-            </div>
-          )}
+          <div className="space-y-16">{children}</div>
         </div>
       </div>
     </div>
@@ -96,12 +90,12 @@ export function DetailSection({
       )}
     >
       <div className="flex items-center gap-3">
-        {icon && <div className="text-primary/70">{icon}</div>}
+        {icon && <div className="text-slate-400">{icon}</div>}
         <h2 className="text-sm font-black text-slate-400 uppercase tracking-[0.2em]">
           {title}
         </h2>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-12 px-1 pb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-12 px-0 pb-12">
         {children}
       </div>
     </div>
@@ -145,7 +139,7 @@ export function FormDetailItem({
   return (
     <div className={cn("space-y-3", className)}>
       <p className="text-xs font-black text-slate-900 uppercase tracking-tight flex items-center gap-2">
-        {Icon && <Icon className="h-3.5 w-3.5 text-primary" />}
+        {Icon && <Icon className="h-3.5 w-3.5 text-slate-500" />}
         {label}
       </p>
       <div className="h-12 w-full rounded border border-slate-200 bg-slate-50/30 px-4 font-bold flex items-center transition-all text-sm text-slate-700">

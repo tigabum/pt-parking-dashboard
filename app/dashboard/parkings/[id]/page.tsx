@@ -12,7 +12,7 @@ import {
   Rating,
 } from "@/lib/services/rating-service";
 import { bookingService } from "@/lib/services/booking-service";
-import { ParkingResponse, BookingResponse } from "@/components/types";
+import { ParkingResponse, BookingResponse, BusinessModel } from "@/components/types";
 import { useAuth } from "@/app/context/auth-context";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -259,10 +259,10 @@ export default function ParkingDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 gap-4 font-bold text-slate-400">
-        <Loader2 className="h-10 w-10 animate-spin opacity-20" />
-        <p className="uppercase tracking-widest text-[10px]">
-          Synchronizing Assigned Parking Data...
+      <div className="flex flex-col items-center justify-center min-h-screen bg-white gap-4 font-bold text-slate-400">
+        <Loader2 className="h-10 w-10 animate-spin text-slate-200" />
+        <p className="uppercase tracking-[0.3em] text-[10px] text-slate-300">
+          Synchronizing Data...
         </p>
       </div>
     );
@@ -333,14 +333,14 @@ export default function ParkingDetailPage() {
     icon?: any;
     className?: string;
   }) => (
-    <div className={cn("flex flex-col gap-1.5", className)}>
-      <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest pl-1">
+    <div className={cn("flex flex-col gap-2", className)}>
+      <Label className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
         {label}
       </Label>
-      <div className="flex items-center gap-3 p-3.5 rounded bg-slate-50 border border-slate-100 min-h-[50px]">
-        {Icon && <Icon className="h-4 w-4 text-slate-400 shrink-0" />}
-        <div className="text-sm font-bold text-slate-900 truncate w-full">
-          {value || "—"}
+      <div className="flex items-center gap-4 py-2 border-b border-slate-100 min-h-[44px]">
+        {Icon && <Icon className="h-4 w-4 text-slate-300 shrink-0" />}
+        <div className="text-sm font-bold text-slate-800 truncate w-full">
+          {value || <span className="text-slate-200 italic">No Data</span>}
         </div>
       </div>
     </div>
@@ -373,7 +373,7 @@ export default function ParkingDetailPage() {
       header: "Sentiment",
       render: (review) => (
         <div className="flex items-center gap-1">
-          <Badge className="bg-amber-50 text-amber-600 border border-amber-100 font-black text-xs px-2 h-7 rounded-lg group-hover:bg-amber-100 transition-colors">
+          <Badge className="bg-slate-100 text-slate-600 border border-slate-200 font-bold text-xs px-2 h-7 rounded-lg transition-colors">
             {review.rating}
             <Star size={10} className="ml-1 fill-current stroke-[3px]" />
           </Badge>
@@ -384,7 +384,7 @@ export default function ParkingDetailPage() {
                 size={8}
                 className={cn(
                   "fill-current",
-                  s <= review.rating ? "text-amber-400" : "text-slate-100",
+                  s <= review.rating ? "text-slate-900" : "text-slate-100",
                 )}
               />
             ))}
@@ -520,23 +520,23 @@ export default function ParkingDetailPage() {
                 variant="outline"
                 size="sm"
                 className={cn(
-                  "h-9 rounded-full px-4 font-bold border-slate-200",
+                  "h-9 rounded-none px-4 font-bold border-slate-200 shadow-none transition-all",
                   parking.status === "ACTIVE"
-                    ? "text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-200"
-                    : "text-green-600 hover:bg-green-50 hover:text-green-700 hover:border-green-200",
+                    ? "text-red-600 hover:bg-slate-50"
+                    : "text-green-600 hover:bg-slate-50",
                 )}
               >
                 <Power className="h-3.5 w-3.5 mr-2" />
                 {parking.status === "ACTIVE"
-                  ? "Disable Terminal"
-                  : "Enable Terminal"}
+                  ? "Disable"
+                  : "Enable"}
               </Button>
             )}
           {canApprove && (
             <Button
               onClick={() => setIsApproveConfirmOpen(true)}
               disabled={approving}
-              className="bg-green-600 hover:bg-green-500 text-white rounded-full h-9 px-6 text-xs font-bold shadow-sm"
+              className="bg-slate-900 hover:bg-black text-white rounded-none h-9 px-6 text-xs font-bold transition-all shadow-none"
             >
               {approving ? (
                 <Loader2 className="h-3 w-3 animate-spin mr-2" />
@@ -552,7 +552,7 @@ export default function ParkingDetailPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => router.push(`/dashboard/parkings/${id}/edit`)}
-                className="h-9 rounded-full px-4 font-bold text-slate-700 bg-white border-slate-200 hover:bg-slate-50"
+                className="h-9 rounded-none px-4 font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 shadow-none transition-all"
               >
                 <Settings2 className="h-3.5 w-3.5 mr-2" />
                 Edit Parking
@@ -562,17 +562,17 @@ export default function ParkingDetailPage() {
             variant="outline"
             size="sm"
             onClick={() => setIsQrOpen(true)}
-            className="h-9 rounded-full px-4 font-bold text-slate-700 bg-white border-slate-200"
+            className="h-9 rounded-none px-4 font-bold text-slate-700 bg-white border border-slate-200 shadow-none transition-all"
           >
             <QrIcon className="h-3.5 w-3.5 mr-2" />
             QR Code
           </Button>
           <Badge
             className={cn(
-              "h-9 px-4 rounded-full flex items-center justify-center font-bold uppercase text-[10px] tracking-wider border-none shadow-sm",
+              "h-9 px-4 rounded-none flex items-center justify-center font-bold uppercase text-[10px] tracking-widest border-none shadow-none",
               parking.status === "ACTIVE"
                 ? "bg-green-100 text-green-700"
-                : "bg-amber-100 text-amber-700",
+                : "bg-yellow-100 text-yellow-700",
             )}
           >
             {parking.status}
@@ -580,67 +580,59 @@ export default function ParkingDetailPage() {
         </div>
       }
     >
-      {/* Hero Section - Only show if feature image exists */}
-      {parking.featureImage && (
-        <div className="relative w-full h-[300px] md:h-[400px] bg-slate-900 rounded-[2rem] overflow-hidden mb-12">
-          <img
-            src={getImageUrl(parking.featureImage)}
-            className="w-full h-full object-cover opacity-80"
-            alt="Cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent" />
-          <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <div className="space-y-3 max-w-2xl">
-              <Badge
-                variant="outline"
-                className="text-white border-white/20 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-lg uppercase tracking-wider text-[10px] font-bold"
-              >
-                {parking.parkingType || "Public Parking"}
-              </Badge>
-              <h1 className="text-2xl md:text-5xl font-black text-white leading-tight">
-                {parking.name}
-              </h1>
-              <div className="flex flex-wrap items-center gap-4 text-slate-300 text-sm font-medium">
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-primary" />
-                  {parking.city || "Unknown City"}
-                </div>
-                <div className="flex items-center gap-2">
-                  <Star className="h-4 w-4 text-amber-400 fill-current" />
-                  <span className="text-white font-bold">
-                    {ratingStats?.averageRating != null
-                      ? Number(ratingStats.averageRating).toFixed(1)
-                      : "New"}
-                  </span>
-                  <span className="opacity-60">
-                    ({ratingStats?.totalRatings || 0} reviews)
-                  </span>
-                </div>
+      {/* Minimal Header Section */}
+      <div className="pb-12 border-b border-slate-100 mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="space-y-4 max-w-3xl">
+            <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
+              {parking.parkingType || "Public Parking Facility"}
+              <span className="inline-block w-4 h-[1px] bg-slate-200" />
+              {parking.parkingCode || "N/A"}
+            </div>
+            <h1 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tight leading-none">
+              {parking.name}
+            </h1>
+            <div className="flex flex-wrap items-center gap-6 pt-2">
+              <div className="flex items-center gap-2 text-sm font-bold text-slate-500">
+                <MapPin className="h-4 w-4" />
+                {parking.city} • {parking.region}
+              </div>
+              <div className="flex items-center gap-2 text-sm font-bold text-slate-500">
+                <Star className="h-4 w-4 fill-slate-900 text-slate-900" />
+                <span>
+                  {ratingStats?.averageRating != null ? Number(ratingStats.averageRating).toFixed(1) : "0.0"}
+                </span>
+                <span className="opacity-40">
+                  ({ratingStats?.totalRatings || 0} signals)
+                </span>
               </div>
             </div>
           </div>
+          {parking.featureImage && (
+            <div className="h-32 w-48 rounded-2xl overflow-hidden border border-slate-100 shadow-sm shrink-0">
+              <img src={getImageUrl(parking.featureImage)} className="w-full h-full object-cover" alt="Parking" />
+            </div>
+          )}
         </div>
-      )}
+      </div>
 
       <Tabs
         defaultValue="details"
         className="w-full space-y-12"
         onValueChange={setActiveTab}
       >
-        <div className="bg-slate-100/50 p-1.5 rounded-2xl w-fit">
-          <TabsList className="bg-transparent p-0 h-auto gap-1">
+        <div className="w-full border-b border-slate-100">
+          <TabsList className="bg-transparent p-0 h-auto gap-12 w-full justify-start rounded-none">
             {[
               "Details",
               "Reviews",
               "Wallet",
-              ...(canAccess([UserRole.SYSTEM_SUPER_ADMIN])
-                ? ["Parking Booking"]
-                : []),
+              ...(canAccess([UserRole.SYSTEM_SUPER_ADMIN]) ? ["Parking Booking"] : []),
             ].map((tab) => (
               <TabsTrigger
                 key={tab}
                 value={tab.toLowerCase().replace(" ", "-")}
-                className="rounded px-6 py-2.5 text-xs font-bold uppercase tracking-wider data-[state=active]:bg-white data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all"
+                className="rounded-none px-0 py-4 text-xs font-black uppercase tracking-[0.2em] border-b-2 border-transparent data-[state=active]:border-slate-900 data-[state=active]:bg-transparent data-[state=active]:text-slate-900 transition-all opacity-40 data-[state=active]:opacity-100"
               >
                 {tab}
               </TabsTrigger>
@@ -653,66 +645,42 @@ export default function ParkingDetailPage() {
           value="details"
           className="space-y-16 animate-in slide-in-from-bottom-4 duration-500 pb-20"
         >
-          {/* Visual Live Capacity Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col gap-4 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform text-amber-500">
-                <Box className="h-24 w-24" />
-              </div>
-              <div className="h-12 w-12 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-600 font-black">
-                <Box className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-[10px] font-black text-amber-600 uppercase tracking-[0.2em] mb-1">
-                  Total Capacity
-                </p>
-                <p className="text-4xl font-black text-slate-900">
-                  {parking.numberOfSpots}{" "}
-                  <span className="text-sm font-bold text-slate-300">
-                    Spots
-                  </span>
-                </p>
-              </div>
+          {/* Flattened Capacity Summary */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16 py-8">
+            <div className="flex flex-col gap-4">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
+                Total Infrastructure
+              </p>
+              <p className="text-6xl font-black text-slate-900 tracking-tighter">
+                {parking.numberOfSpots}
+                <span className="text-[10px] font-black text-slate-300 ml-4 uppercase tracking-widest whitespace-nowrap">
+                  Allocated Slots
+                </span>
+              </p>
             </div>
 
-            <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col gap-4 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
-                <CheckCircle2 className="h-24 w-24 text-emerald-500" />
-              </div>
-              <div className="h-12 w-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-emerald-600">
-                <CheckCircle2 className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-[10px] font-black text-emerald-600/60 uppercase tracking-[0.2em] mb-1">
-                  Live Available
-                </p>
-                <p className="text-4xl font-black text-emerald-600">
-                  {parking.availableSpots}{" "}
-                  <span className="text-sm font-bold text-emerald-600/30">
-                    Free
-                  </span>
-                </p>
-              </div>
+            <div className="flex flex-col gap-4">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
+                Vacant Inventory
+              </p>
+              <p className="text-6xl font-black text-slate-900 tracking-tighter">
+                {parking.availableSpots}
+                <span className="text-[10px] font-black text-slate-300 ml-4 uppercase tracking-widest whitespace-nowrap">
+                  Ready For Entry
+                </span>
+              </p>
             </div>
 
-            <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm flex flex-col gap-4 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:scale-110 transition-transform">
-                <Car className="h-24 w-24 text-red-500" />
-              </div>
-              <div className="h-12 w-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-600">
-                <Car className="h-6 w-6" />
-              </div>
-              <div>
-                <p className="text-[10px] font-black text-red-600 uppercase tracking-[0.2em] mb-1">
-                  Currently Occupied
-                </p>
-                <p className="text-4xl font-black text-red-600">
-                  {parking.numberOfSpots - (parking.availableSpots ?? 0)}{" "}
-                  <span className="text-sm font-bold text-red-600/30">
-                    Reserved
-                  </span>
-                </p>
-              </div>
+            <div className="flex flex-col gap-4">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
+                Active Utilization
+              </p>
+              <p className="text-6xl font-black text-slate-900 tracking-tighter">
+                {parking.numberOfSpots - (parking.availableSpots ?? 0)}
+                <span className="text-[10px] font-black text-slate-300 ml-4 uppercase tracking-widest whitespace-nowrap">
+                  Occupied Sessions
+                </span>
+              </p>
             </div>
           </div>
 
@@ -722,48 +690,67 @@ export default function ParkingDetailPage() {
               value={`${parking.numberOfSpots} Spots`}
             />
             <DetailItem
-              label="Available Spots"
-              value={`${parking.availableSpots} Free`}
-              className="text-emerald-600"
+              label="Vacant Capacity"
+              value={`${parking.availableSpots} Unoccupied`}
+              className="font-bold text-green-600"
             />
             <DetailItem
-              label="Occupied Spots"
-              value={`${parking.numberOfSpots - (parking.availableSpots || 0)} Busy`}
-              className="text-amber-600"
+              label="Live Occupancy"
+              value={`${parking.numberOfSpots - (parking.availableSpots || 0)} In Use`}
+              className="font-bold text-red-600"
             />
             <DetailItem
-              label="Current Fill Rate"
+              label="System Fill Velocity"
               value={`${Math.round(((parking.numberOfSpots - (parking.availableSpots || 0)) / (parking.numberOfSpots || 1)) * 100)}%`}
-              className="text-primary"
+              className="font-black text-slate-900"
             />
 
             <DetailItem
-              label="Assigned Manager"
-              value={parking.createdBy?.fullName || "—"}
+              label="Assigned Terminal Manager"
+              value={parking.createdBy?.fullName}
             />
             <DetailItem
-              label="Customer Satisfaction"
+              label="Satisfaction Score"
               value={
                 <div className="flex items-center gap-2">
-                  <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
-                  <span>
+                  <Star className="h-4 w-4 text-slate-400 fill-slate-400" />
+                  <span className="font-bold text-slate-900">
                     {parking.ratingsCount > 0
                       ? `${Number(parking.averageRating).toFixed(1)} / 5.0`
-                      : "New / No ratings"}
+                      : "0.0"}
                   </span>
                   {parking.ratingsCount > 0 && (
-                    <span className="text-slate-400 font-medium">
-                      ({parking.ratingsCount} reviews)
+                    <span className="text-slate-300 font-medium">
+                      ({parking.ratingsCount} signals)
                     </span>
                   )}
                 </div>
               }
             />
-            <DetailItem
-              label="Commission Structure"
-              value={parking.commissionConfig?.name || "—"}
-              className="text-primary"
-            />
+            {parking.businessModel === BusinessModel.SUBSCRIPTION ? (
+              <>
+                <DetailItem
+                  label="Business Model"
+                  value="Subscription Based"
+                  className="font-black"
+                />
+                <DetailItem
+                  label="Annual Contract Fee"
+                  value={formatMoney(parking.subscriptionFee)}
+                  className="font-bold"
+                />
+                <DetailItem
+                  label="Renewal Schedule"
+                  value={parking.subscriptionRenewalDate ? dayjs(parking.subscriptionRenewalDate).format("MMM D, YYYY") : "—"}
+                />
+              </>
+            ) : (
+              <DetailItem
+                label="Commission Structure"
+                value={parking.commissionConfig?.name || "Standard Terminal Rate"}
+                className="font-bold"
+              />
+            )}
             <DetailItem
               label="VAT Number"
               value={parking.vatRegistrationNumber || "—"}
@@ -804,74 +791,71 @@ export default function ParkingDetailPage() {
               )}
             />
 
-            <DetailItem label="Region" value={parking.region || "—"} />
-            <DetailItem label="City" value={parking.city || "—"} />
-            <DetailItem label="Sub-City" value={parking.subCity || "—"} />
-            <DetailItem label="Woreda" value={parking.woreda || "—"} />
-            <DetailItem label="Kebele" value={parking.kebele || "—"} />
-            <DetailItem label="Street Name" value={parking.streetName || "—"} />
-            <DetailItem label="Country" value={parking.country || "—"} />
+            <DetailItem label="Region" value={parking.region} />
+            <DetailItem label="City" value={parking.city} />
+            <DetailItem label="Sub-City" value={parking.subCity} />
+            <DetailItem label="Woreda" value={parking.woreda} />
+            <DetailItem label="Kebele" value={parking.kebele} />
+            <DetailItem label="Street Name" value={parking.streetName} />
+            <DetailItem label="Country" value={parking.country} />
 
-            <div className="col-span-full mt-8 grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="col-span-full mt-2 grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-4">
-                <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">
-                  Facility Overview
+                <Label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.25em] block">
+                  Facility Description
                 </Label>
-                <p className="text-sm font-medium text-slate-600 leading-relaxed bg-slate-50 p-6 rounded-2xl border border-slate-100">
-                  {parking.description || "No facility description provided."}
-                </p>
+                <div className="text-sm font-semibold text-slate-600 leading-relaxed min-h-[120px]">
+                  {parking.description || "Detailed facility breakdown not documented."}
+                </div>
               </div>
               <div className="space-y-4">
-                <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">
-                  Available Services & Amenities
+                <Label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.25em] block">
+                  Operational Amenities
                 </Label>
-                <div className="flex flex-wrap gap-2 text-primary p-2">
-                  {parking.amenities?.length > 0 ||
-                    (parking as any).amenitiesList?.length > 0 ? (
+                <div className="flex flex-wrap gap-x-8 gap-y-4 pt-2">
+                  {parking.amenities?.length > 0 || (parking as any).amenitiesList?.length > 0 ? (
                     <>
                       {parking.amenities?.map((item, i) => (
                         <div
                           key={`json-${i}`}
-                          className="px-4 py-2 rounded-full bg-primary/5 border border-primary/10 text-[11px] font-black uppercase tracking-tight flex items-center gap-2"
+                          className="text-[11px] font-bold uppercase tracking-tight flex items-center gap-3 text-slate-900 border-b border-slate-100 pb-2 mb-2 w-full md:w-auto"
                         >
-                          <Check className="h-3 w-3" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-slate-900" />
                           <span>
                             {item.name}
                             {item.value && (
-                              <span className="text-primary/60 ml-1 font-bold normal-case">
-                                ({item.value})
+                              <span className="text-slate-400 ml-2 font-medium normal-case">
+                                — {item.value}
                               </span>
                             )}
                           </span>
                         </div>
                       ))}
                       {(!parking.amenities || parking.amenities.length === 0) &&
-                        (parking as any).amenitiesList?.map(
-                          (item: any, i: number) => (
-                            <div
-                              key={`list-${i}`}
-                              className="px-4 py-2 rounded-full bg-primary/5 border border-primary/10 text-[11px] font-black uppercase tracking-tight flex items-center gap-2"
-                            >
-                              <Check className="h-3 w-3" />
-                              {item.name}
-                            </div>
-                          ),
-                        )}
+                        (parking as any).amenitiesList?.map((item: any, i: number) => (
+                          <div
+                            key={`list-${i}`}
+                            className="text-[11px] font-bold uppercase tracking-tight flex items-center gap-3 text-slate-900 border-b border-slate-100 pb-2 mb-2 w-full md:w-auto"
+                          >
+                            <div className="h-1.5 w-1.5 rounded-full bg-slate-900" />
+                            {item.name}
+                          </div>
+                        ))}
                     </>
                   ) : (
-                    <span className="text-slate-400 text-xs italic">
-                      No amenities listed.
-                    </span>
+                    <div className="w-full text-slate-300 text-xs italic text-left">
+                      No specific amenities registered for this terminal.
+                    </div>
                   )}
                 </div>
               </div>
             </div>
 
-            <div className="col-span-full mt-8">
-              <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">
-                Exact Geographic Positioning
+            <div className="col-span-full mt-4">
+              <Label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.25em] block mb-4 px-1">
+                Precision Map Positioning
               </Label>
-              <div className="rounded-2xl overflow-hidden border border-slate-100 shadow-sm relative bg-slate-50 h-[450px]">
+              <div className="rounded-none overflow-hidden border-b border-slate-100 bg-white h-[600px] relative group">
                 {parking.lat && parking.lng ? (
                   <iframe
                     width="100%"
@@ -880,54 +864,48 @@ export default function ParkingDetailPage() {
                     style={{ border: 0 }}
                     src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${parking.lat},${parking.lng}&zoom=17`}
                     allowFullScreen
+                    className="grayscale group-hover:grayscale-0 transition-all duration-1000"
                   />
                 ) : (
-                  <div className="flex items-center justify-center h-full text-slate-400 font-bold italic">
-                    Exact coordinates not provided.
+                  <div className="flex flex-col items-center justify-center h-full text-slate-200 font-bold italic gap-4">
+                    <MapPin className="h-12 w-12 opacity-5" />
+                    Geospatial data unavailable.
                   </div>
                 )}
               </div>
             </div>
 
             {((parking.licenseFiles && parking.licenseFiles.length > 0) ||
-              (parking.agreementDocuments &&
-                parking.agreementDocuments.length > 0)) && (
-                <div className="col-span-full mt-8">
-                  <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">
-                    Legal Compliance & Certifications
+              (parking.agreementDocuments && parking.agreementDocuments.length > 0)) && (
+                <div className="col-span-full mt-4">
+                  <Label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.25em] block mb-6 px-1">
+                    Legal Credentials & Agreement Vault
                   </Label>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-12 gap-y-6">
                     {[
                       ...(parking.licenseFiles || []).map((f, idx) => ({
                         url: f,
                         type: "Business License",
-                        label: `License #${idx + 1}`,
+                        label: `License Certificate #${idx + 1}`,
                       })),
                       ...(parking.agreementDocuments || []).map((f, idx) => ({
                         url: f,
-                        type: "Agreement Doc",
-                        label: `Agreement #${idx + 1}`,
+                        type: "Operation Agreement",
+                        label: `Agreed Document #${idx + 1}`,
                       })),
                     ].map((doc, i) => (
                       <div
                         key={i}
-                        onClick={() =>
-                          setPreviewDoc({
-                            url: getImageUrl(doc.url),
-                            title: doc.label,
-                          })
-                        }
-                        className="group flex items-center gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:bg-white hover:border-primary/30 hover:shadow-md transition-all cursor-pointer"
+                        onClick={() => setPreviewDoc({ url: getImageUrl(doc.url), title: doc.label })}
+                        className="group flex items-center gap-6 py-4 border-b border-slate-100 hover:border-slate-900 transition-all cursor-pointer"
                       >
-                        <div className="h-10 w-10 rounded bg-white border border-slate-100 shadow-sm flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
-                          <FileText className="h-5 w-5" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-bold text-slate-900 truncate">
+                        <FileText className="h-5 w-5 text-slate-300 group-hover:text-slate-900 transition-colors" />
+                        <div className="space-y-0.5">
+                          <p className="text-xs font-black text-slate-900 uppercase tracking-tight">
                             {doc.label}
                           </p>
-                          <p className="text-[9px] uppercase font-bold text-slate-400 mt-0.5 tracking-widest">
-                            {doc.type} • Click to view
+                          <p className="text-[10px] uppercase font-bold text-slate-300 tracking-[0.1em]">
+                            {doc.type}
                           </p>
                         </div>
                       </div>
@@ -937,28 +915,22 @@ export default function ParkingDetailPage() {
               )}
 
             {parking.galleryImages && parking.galleryImages.length > 0 && (
-              <div className="col-span-full mt-8">
-                <Label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">
-                  Visual Media & Facility Gallery
+              <div className="col-span-full mt-4">
+                <Label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.25em] block mb-6 px-1">
+                  Facility Visual Matrix
                 </Label>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4">
                   {parking.galleryImages.map((img, i) => (
                     <div
                       key={i}
-                      onClick={() =>
-                        setPreviewDoc({
-                          url: getImageUrl(img),
-                          title: `Gallery Image ${i + 1}`,
-                        })
-                      }
-                      className="group relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 shadow-sm cursor-zoom-in transition-all hover:shadow-lg hover:border-primary/20"
+                      onClick={() => setPreviewDoc({ url: getImageUrl(img), title: `Visual Exposure ${i + 1}` })}
+                      className="group relative aspect-square overflow-hidden bg-slate-100 cursor-zoom-in"
                     >
                       <img
                         src={getImageUrl(img)}
-                        className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
                         alt={`Gallery ${i}`}
                       />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors" />
                     </div>
                   ))}
                 </div>
@@ -978,29 +950,29 @@ export default function ParkingDetailPage() {
             </div>
           )}
 
-          <div className="bg-white rounded overflow-hidden border shadow-sm">
-            <div className="p-6 md:p-8 border-b bg-slate-50/50 flex flex-col gap-6">
+          <div className="pt-8">
+            <div className="pb-8 border-b border-slate-100 flex flex-col gap-6">
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                  <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">
+                  <h3 className="text-base font-black text-slate-900 uppercase tracking-[0.2em]">
                     Parking Activity
                   </h3>
-                  <p className="text-sm text-slate-500 font-medium mt-1">
+                  <p className="text-xs text-slate-400 font-bold mt-1 uppercase tracking-tight">
                     Full history of parking sessions and payments.
                   </p>
                 </div>
                 {bookingsLoading && (
-                  <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                  <Loader2 className="h-5 w-5 animate-spin text-slate-900" />
                 )}
               </div>
 
               {/* Filters */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="relative border-b border-slate-100 pb-2">
+                  <Search className="absolute left-0 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-300" />
                   <Input
                     placeholder="Search plate or phone..."
-                    className="pl-10 h-11 rounded border-slate-200"
+                    className="pl-6 h-8 rounded-none border-none bg-transparent shadow-none focus-visible:ring-0 font-bold text-xs"
                     value={bookingFilters.q}
                     onChange={(e) =>
                       setBookingFilters((prev) => ({
@@ -1017,10 +989,10 @@ export default function ParkingDetailPage() {
                     setBookingFilters((prev) => ({ ...prev, status: val }))
                   }
                 >
-                  <SelectTrigger className="h-11 rounded border-slate-200 bg-white font-bold text-slate-700">
+                  <SelectTrigger className="h-8 rounded-none border-0 border-b border-slate-100 bg-transparent shadow-none focus:ring-0 font-bold text-xs text-slate-700 px-0">
                     <SelectValue placeholder="All Status" />
                   </SelectTrigger>
-                  <SelectContent className="rounded">
+                  <SelectContent className="rounded-none border-slate-100 shadow-xl">
                     <SelectItem value="ALL">All Status</SelectItem>
                     <SelectItem value="ACTIVE">Active</SelectItem>
                     <SelectItem value="PAID">Paid</SelectItem>
@@ -1029,11 +1001,11 @@ export default function ParkingDetailPage() {
                   </SelectContent>
                 </Select>
 
-                <div className="relative">
-                  <UserSquare className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <div className="relative border-b border-slate-100 pb-2">
+                  <UserSquare className="absolute left-0 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-300" />
                   <Input
-                    placeholder="Created By (User ID)..."
-                    className="pl-10 h-11 rounded border-slate-200"
+                    placeholder="Created By..."
+                    className="pl-6 h-8 rounded-none border-none bg-transparent shadow-none focus-visible:ring-0 font-bold text-xs"
                     value={bookingFilters.createdById}
                     onChange={(e) =>
                       setBookingFilters((prev) => ({
@@ -1044,11 +1016,11 @@ export default function ParkingDetailPage() {
                   />
                 </div>
 
-                <div className="relative">
-                  <ShieldCheck className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <div className="relative border-b border-slate-100 pb-2">
+                  <ShieldCheck className="absolute left-0 top-1/2 -translate-y-1/2 h-3 w-3 text-slate-300" />
                   <Input
-                    placeholder="Confirmed By (User ID)..."
-                    className="pl-10 h-11 rounded border-slate-200"
+                    placeholder="Confirmed By..."
+                    className="pl-6 h-8 rounded-none border-none bg-transparent shadow-none focus-visible:ring-0 font-bold text-xs"
                     value={bookingFilters.confirmedById}
                     onChange={(e) =>
                       setBookingFilters((prev) => ({
@@ -1063,16 +1035,16 @@ export default function ParkingDetailPage() {
 
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
-                <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 uppercase font-bold text-[10px] tracking-wider">
+                <thead className="border-b border-slate-100 text-slate-400 uppercase font-bold text-[10px] tracking-widest">
                   <tr>
-                    <th className="px-6 py-4">Customer & Vehicle</th>
-                    <th className="px-6 py-4">Date & Time</th>
-                    <th className="px-6 py-4">Session Pulse</th>
-                    <th className="px-6 py-4">System Trace</th>
-                    <th className="px-6 py-4 text-center">Status</th>
+                    <th className="px-0 py-8">Customer & Vehicle</th>
+                    <th className="px-6 py-8">Date & Time</th>
+                    <th className="px-6 py-8">Session Pulse</th>
+                    <th className="px-6 py-8">System Trace</th>
+                    <th className="px-6 py-8 text-right">Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 bg-white">
+                <tbody className="divide-y divide-slate-100">
                   {bookings.map((booking, i) => (
                     <tr
                       key={i}
@@ -1147,11 +1119,11 @@ export default function ParkingDetailPage() {
                           className={cn(
                             "font-bold uppercase text-[10px] tracking-wider border-none shadow-none px-3 h-7 rounded-full",
                             (booking.status as any) === "PAID"
-                              ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
+                              ? "bg-green-100 text-green-700 hover:bg-green-200"
                               : booking.status === "WAITING_CONFIRMATION"
-                                ? "bg-amber-100 text-amber-700 hover:bg-amber-200"
+                                ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
                                 : booking.status === "ACTIVE"
-                                  ? "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                                  ? "bg-green-100 text-green-700 hover:bg-green-200"
                                   : booking.status === "PENDING"
                                     ? "bg-yellow-100 text-yellow-700 hover:bg-yellow-200"
                                     : booking.status === "CANCELLED"
@@ -1178,7 +1150,7 @@ export default function ParkingDetailPage() {
               </table>
             </div>
 
-            <div className="p-6 md:p-8 bg-slate-50 border-t border-slate-100">
+            <div className="p-6 md:p-8 border-t border-slate-100">
               <DashboardPagination
                 page={bookingsPage}
                 totalPages={bookingsTotalPages}
@@ -1257,128 +1229,131 @@ export default function ParkingDetailPage() {
 
         <TabsContent
           value="wallet"
-          className="space-y-8 animate-in slide-in-from-bottom-4 duration-500"
+          className="animate-in slide-in-from-bottom-4 duration-500 pb-20"
         >
-          <div className="bg-white rounded overflow-hidden border shadow-sm">
-            <div className="p-8 border-b bg-slate-50/50 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-              <div className="space-y-1">
-                <h3 className="text-base font-bold text-slate-900 uppercase tracking-widest">
-                  Transaction History
-                </h3>
-                <p className="text-[11px] text-slate-500 font-bold uppercase tracking-tight opacity-70">
-                  Audit trail of all financial movements
-                </p>
-              </div>
-
-              <div className="flex flex-wrap items-center justify-end gap-3 md:gap-6 shrink-0">
-                <div className="flex flex-col items-end px-6 py-1.5 border-r border-slate-200">
-                  <p className="text-[10px] font-black text-slate-900 uppercase tracking-[0.1em] mb-0.5">
-                    Current Balance
+          <div className="pt-12">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 border-b border-slate-100 pb-16">
+              <div className="space-y-6">
+                <div className="space-y-1">
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
+                    Terminal Wallet Status
                   </p>
-                  <p className="text-3xl font-black text-primary tabular-nums tracking-tighter">
+                  <p className="text-6xl font-black text-slate-900 tabular-nums tracking-tighter">
                     {Number(parking.wallet?.balance || 0).toLocaleString()}{" "}
-                    <span className="text-xs opacity-50 font-black uppercase">
-                      ETB
+                    <span className="text-[10px] opacity-40 font-black uppercase tracking-widest ml-4">
+                      ETB Funds
                     </span>
                   </p>
                 </div>
-
-                {(user?.role === UserRole.SYSTEM_SUPER_ADMIN ||
-                  user?.role === UserRole.PARKING_SUPER_ADMIN) && (
-                    <Button
-                      onClick={() => setIsTopupOpen(true)}
-                      className="bg-primary hover:opacity-90 text-white rounded h-12 px-8 text-[11px] font-black uppercase tracking-widest shadow-xl shadow-primary/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
-                    >
-                      <Plus className="h-4 w-4 mr-2 stroke-[4px]" />
-                      Topup Wallet
-                    </Button>
-                  )}
+                <div className="flex items-center gap-4 py-3 px-6 bg-slate-50 border-l-4 border-slate-900">
+                  <p className="text-xs font-bold text-slate-600">
+                    Active terminal credit for transactional clearance.
+                  </p>
+                </div>
               </div>
+
+              {(user?.role === UserRole.SYSTEM_SUPER_ADMIN ||
+                user?.role === UserRole.PARKING_SUPER_ADMIN) && (
+                  <Button
+                    onClick={() => setIsTopupOpen(true)}
+                    className="bg-slate-900 hover:bg-black text-white rounded-none h-14 px-12 text-[11px] font-black uppercase tracking-[0.2em] transition-all"
+                  >
+                    <Plus className="h-4 w-4 mr-3 stroke-[4px]" />
+                    Initiate Topup
+                  </Button>
+                )}
             </div>
-            <ReusableTable
-              data={transactions}
-              columns={txColumns}
-              getRowKey={(row) => row.id}
-              isLoading={txLoading}
-              emptyText={
-                !parking?.wallet
-                  ? "No wallet initialization detected for this terminal."
-                  : "No transactions recorded yet."
-              }
-            />
           </div>
-        </TabsContent>
-      </Tabs>
-
-      {/* Topup Dialog */}
-      <Dialog open={isTopupOpen} onOpenChange={setIsTopupOpen}>
-        <DialogContent className="max-w-md p-6 rounded border-none shadow-2xl overflow-hidden">
-          <DialogHeader className="mb-4">
-            <DialogTitle className="text-xl font-bold text-slate-900">
-              Topup Terminal Wallet
-            </DialogTitle>
-          </DialogHeader>
-          <WalletTopupForm
-            parkingId={parking.id}
-            parkingName={parking.name}
-            onSuccess={() => {
-              setIsTopupOpen(false);
-              loadData();
-              loadTransactions();
-            }}
-            onCancel={() => setIsTopupOpen(false)}
+          <ReusableTable
+            data={transactions}
+            columns={txColumns}
+            getRowKey={(row) => row.id}
+            isLoading={txLoading}
+            emptyText={
+              !parking?.wallet
+                ? "No wallet initialization detected for this terminal."
+                : "No transactions recorded yet."
+            }
           />
-        </DialogContent>
-      </Dialog>
+        </div>
+      </TabsContent>
+    </Tabs>
 
-      {/* QR Code Dialog */}
-      <QrCodeDialog
-        open={isQrOpen}
-        onOpenChange={setIsQrOpen}
-        parkingId={parking.id}
-        parkingName={parking.name}
-      />
+      {
+    parking && (
+      <>
+        <Dialog open={isTopupOpen} onOpenChange={setIsTopupOpen}>
+          <DialogContent className="max-w-md p-8 rounded-none border border-slate-100 shadow-none">
+            <DialogHeader className="mb-4">
+              <DialogTitle className="text-xl font-bold text-slate-900">
+                Topup Terminal Wallet
+              </DialogTitle>
+            </DialogHeader>
+            <WalletTopupForm
+              parkingId={parking.id}
+              parkingName={parking.name}
+              onSuccess={() => {
+                setIsTopupOpen(false);
+                loadData();
+                loadTransactions();
+              }}
+              onCancel={() => setIsTopupOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
 
-      {/* Doc Preview Dialog */}
+        <QrCodeDialog
+          open={isQrOpen}
+          onOpenChange={setIsQrOpen}
+          parkingId={parking.id}
+          parkingName={parking.name}
+        />
+      </>
+    )
+  }
+
       <Dialog open={!!previewDoc} onOpenChange={() => setPreviewDoc(null)}>
-        <DialogContent className="max-w-4xl h-[80vh] p-0 overflow-hidden border-none shadow-2xl rounded">
-          <DialogHeader className="sr-only">
-            <DialogTitle>{previewDoc?.title || "Document Preview"}</DialogTitle>
-          </DialogHeader>
-          <div className="absolute top-4 right-4 z-50">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setPreviewDoc(null)}
-              className="h-10 w-10 rounded-full bg-black/20 text-white hover:bg-black/40 backdrop-blur-md"
-            >
-              <X size={20} />
-            </Button>
-          </div>
-          <div className="w-full h-full bg-slate-100 flex items-center justify-center">
-            {previewDoc?.url ? (
-              previewDoc.url.toLowerCase().endsWith(".pdf") ? (
-                <iframe src={previewDoc.url} className="w-full h-full" />
-              ) : (
-                <img
-                  src={previewDoc.url}
-                  className="max-w-full max-h-full object-contain shadow-2xl"
-                  alt={previewDoc.title}
-                />
-              )
-            ) : null}
-          </div>
+        <DialogContent className="max-w-4xl h-[80vh] p-0 overflow-hidden border border-slate-100 shadow-none rounded-none">
+          {previewDoc && (
+            <>
+              <DialogHeader className="sr-only">
+                <DialogTitle>{previewDoc.title || "Document Preview"}</DialogTitle>
+              </DialogHeader>
+              <div className="absolute top-4 right-4 z-50">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setPreviewDoc(null)}
+                  className="h-10 w-10 rounded-full bg-black/20 text-white hover:bg-black/40 backdrop-blur-md"
+                >
+                  <X size={20} />
+                </Button>
+              </div>
+              <div className="w-full h-full bg-slate-100 flex items-center justify-center">
+                {previewDoc.url ? (
+                  previewDoc.url.toLowerCase().endsWith(".pdf") ? (
+                    <iframe src={previewDoc.url} className="w-full h-full" />
+                  ) : (
+                    <img
+                      src={previewDoc.url}
+                      className="max-w-full max-h-full object-contain shadow-2xl"
+                      alt={previewDoc.title}
+                    />
+                  )
+                ) : null}
+              </div>
+            </>
+          )}
         </DialogContent>
       </Dialog>
 
-      {/* Approval Confirm Dialog */}
       <AlertDialog
         open={isApproveConfirmOpen}
         onOpenChange={setIsApproveConfirmOpen}
       >
-        <AlertDialogContent className="rounded-2xl border-none shadow-2xl p-8 max-w-sm">
+        <AlertDialogContent className="rounded-none border border-slate-100 shadow-none p-12 max-w-sm">
           <AlertDialogHeader className="space-y-4">
-            <div className="h-16 w-16 rounded-full bg-green-50 flex items-center justify-center text-green-600 mx-auto">
+            <div className="h-16 w-16 rounded-none border border-slate-100 flex items-center justify-center text-slate-900 mx-auto">
               <CheckCircle2 size={32} />
             </div>
             <AlertDialogTitle className="text-xl font-black text-center text-slate-900 leading-tight">
@@ -1389,56 +1364,59 @@ export default function ParkingDetailPage() {
               facility live and available for consumer bookings.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="mt-8 flex-col sm:flex-col gap-3">
+          <AlertDialogFooter className="mt-8 flex-col sm:flex-col gap-4">
             <AlertDialogAction
               onClick={handleApprove}
-              className="w-full bg-green-600 hover:bg-green-500 text-white font-black h-14 rounded-xl shadow-lg shadow-green-200 transition-all active:scale-95"
+              className="w-full bg-slate-900 hover:bg-black text-white font-black h-14 rounded-none transition-all"
             >
               Confirm Approval
             </AlertDialogAction>
-            <AlertDialogCancel className="w-full border-none bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold h-14 rounded-xl transition-all">
+            <AlertDialogCancel className="w-full border border-slate-100 bg-white hover:bg-slate-50 text-slate-600 font-bold h-14 rounded-none transition-all">
               Cancel
             </AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Status Toggle Confirm Dialog */}
       <AlertDialog
         open={isStatusConfirmOpen}
         onOpenChange={setIsStatusConfirmOpen}
       >
-        <AlertDialogContent className="rounded-2xl border-none shadow-2xl p-8 max-w-sm">
-          <AlertDialogHeader className="space-y-4">
-            <div className="h-16 w-16 rounded-full bg-amber-50 flex items-center justify-center text-amber-600 mx-auto">
-              <Power size={32} />
-            </div>
-            <AlertDialogTitle className="text-xl font-black text-center text-slate-900 leading-tight">
-              {parking.status === "ACTIVE" ? "Disable" : "Enable"} Facility?
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-sm font-medium text-slate-500 text-center leading-relaxed">
-              Are you sure you want to {parking.status === "ACTIVE" ? "disable" : "enable"} this
-              parking?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter className="mt-8 flex-col sm:flex-col gap-3">
-            <AlertDialogAction
-              onClick={handleToggleStatus}
-              className={cn(
-                "w-full font-black h-14 rounded-xl shadow-lg transition-all active:scale-95 text-white",
-                parking.status === "ACTIVE"
-                  ? "bg-red-600 hover:bg-red-500 shadow-red-200"
-                  : "bg-green-600 hover:bg-green-500 shadow-green-200",
-              )}
-            >
-              Confirm {parking.status === "ACTIVE" ? "Disable" : "Enable"}
-            </AlertDialogAction>
-            <AlertDialogCancel className="w-full border-none bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold h-14 rounded-xl transition-all">
-              Cancel
-            </AlertDialogCancel>
-          </AlertDialogFooter>
+        <AlertDialogContent className="rounded-none border border-slate-100 shadow-none p-12 max-w-sm">
+          {parking && (
+            <>
+              <AlertDialogHeader className="space-y-4">
+                <div className="h-16 w-16 rounded-none border border-slate-100 flex items-center justify-center text-slate-900 mx-auto">
+                  <Power size={32} />
+                </div>
+                <AlertDialogTitle className="text-xl font-black text-center text-slate-900 leading-tight">
+                  {parking.status === "ACTIVE" ? "Disable" : "Enable"} Facility?
+                </AlertDialogTitle>
+                <AlertDialogDescription className="text-sm font-medium text-slate-500 text-center leading-relaxed">
+                  Are you sure you want to {parking.status === "ACTIVE" ? "disable" : "enable"} this
+                  parking?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="mt-8 flex-col sm:flex-col gap-4">
+                <AlertDialogAction
+                  onClick={handleToggleStatus}
+                  className={cn(
+                    "w-full font-black h-14 rounded-none transition-all text-white",
+                    parking.status === "ACTIVE"
+                      ? "bg-slate-900 hover:bg-black"
+                      : "bg-slate-900 hover:bg-black",
+                  )}
+                >
+                  Confirm {parking.status === "ACTIVE" ? "Disable" : "Enable"}
+                </AlertDialogAction>
+                <AlertDialogCancel className="w-full border border-slate-100 bg-white hover:bg-slate-50 text-slate-600 font-bold h-14 rounded-none transition-all">
+                  Cancel
+                </AlertDialogCancel>
+              </AlertDialogFooter>
+            </>
+          )}
         </AlertDialogContent>
       </AlertDialog>
-    </DetailLayout>
-  );
+    </DetailLayout >
+  ) : null;
 }

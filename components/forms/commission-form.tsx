@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Commission, CommissionType, TierConfig } from "@/components/types";
+import { Commission, CommissionType, TierConfig, BusinessModel } from "@/components/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -60,8 +60,12 @@ export function CommissionForm({
   useEffect(() => {
     const fetchParkings = async () => {
       try {
-        // Fetch all parkings without pagination limit if possible or sufficiently large
-        const res = await parkingService.getAllParking({ limit: 100 });
+        setFetchingParkings(true);
+        // Fetch only wallet-based parkings for commission configuration
+        const res = await parkingService.getAllParking({
+          limit: 1000,
+          businessModel: BusinessModel.COMMISSION_BASED
+        });
         setParkings(res.data || []);
       } catch (e) {
         // Silent error, parkings list remains empty or previous
@@ -446,10 +450,7 @@ export function CommissionForm({
               </div>
             )}
 
-            {/* Single Value Calculation (Percentage/Flat) - MOVED TO TOP GRID */}
-            {/* Removed the large Platform Revenue Cut card as per request */}
-
-            {/* Above Some Value Section - OUTSIDE loop */}
+            {/* Above Some Value Section */}
             {form.type === CommissionType.TIER && (
               <div className="space-y-8 pt-8 border-t border-slate-100">
                 <div className="flex items-center">

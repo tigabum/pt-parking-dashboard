@@ -37,6 +37,11 @@ export interface User {
   createdAt: string | Date;
   updatedAt?: string | Date;
   vehicles?: Vehicle[];
+  parking?: {
+    id: string;
+    name: string;
+    agentType: string;
+  };
 }
 
 export interface AuthContextType {

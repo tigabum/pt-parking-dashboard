@@ -7,11 +7,11 @@ import {
   actionsColumn,
   Column,
 } from "@/components/tables";
-import { ParkingResponse } from "@/components/types";
+import { ParkingResponse, BusinessModel } from "@/components/types";
 import { QrCode } from "lucide-react";
 import { QrCodeDialog } from "./qr-code-dialog";
 import { PERMISSIONS } from "@/lib/permissions";
-import { getImageUrl } from "@/lib/utils";
+import { getImageUrl, cn } from "@/lib/utils";
 
 type Props = {
   spaces: ParkingResponse[];
@@ -94,10 +94,25 @@ export function ParkingSpacesTable({
       )
     },
     {
+      key: "businessModel",
+      header: "Business Model",
+      render: (row) => (
+        <span className={cn(
+          "px-2 py-1 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap",
+          row.businessModel === BusinessModel.SUBSCRIPTION
+            ? "bg-purple-100 text-purple-600"
+            : "bg-blue-100 text-blue-600"
+        )}>
+          {row.businessModel?.replace(/-/g, " ") || "COMMISSION BASED"}
+        </span>
+      )
+    },
+    {
       key: "pricing",
       header: "Base Rate",
       render: (row) => formatMoney(row.pricing?.hourly?.price || row.pricing?.flat?.price)
     },
+
 
 
     {

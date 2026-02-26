@@ -8,7 +8,7 @@ import {
 } from "@/components/tables";
 import { User } from "@/lib/auth";
 import { PERMISSIONS } from "@/lib/permissions";
-import { getImageUrl } from "@/lib/utils";
+import { getImageUrl, cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Mail, Phone, User as UserIcon } from "lucide-react";
 
@@ -75,6 +75,25 @@ export function UserTable({
           {row.role?.replace(/-/g, " ")}
         </Badge>
       ),
+    },
+    {
+      key: "agent",
+      header: "Assigned Agent",
+      render: (row) => (
+        <div className="flex flex-col">
+          <span className="font-bold text-slate-900 text-xs">
+            {row.parking?.name || "Global / System"}
+          </span>
+          {row.parking?.agentType && (
+            <span className={cn(
+              "text-[9px] font-black uppercase tracking-tighter",
+              row.parking.agentType.includes("subscription") ? "text-purple-600" : "text-blue-600"
+            )}>
+              {row.parking.agentType.replace(/-/g, " ")}
+            </span>
+          )}
+        </div>
+      )
     },
     statusColumn<User>(),
     actionsColumn<User>({

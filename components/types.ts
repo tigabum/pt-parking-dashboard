@@ -53,6 +53,11 @@ export enum CommissionType {
   TIER = "TIER",
 }
 
+export enum BusinessModel {
+  SUBSCRIPTION = "SUBSCRIPTION",
+  COMMISSION_BASED = "COMMISSION-BASED",
+}
+
 export enum OTPStatus {
   REQUESTED = "REQUESTED",
   EXPIRED = "EXPIRED",
@@ -186,8 +191,8 @@ export interface CreateParking {
   streetName?: string;
 
   // Basic Info
-  parkingCode?: string;
   parkingType?: ParkingType;
+  businessModel?: BusinessModel;
   licenseNumber?: string;
   status?: ParkingStatus;
 
@@ -203,6 +208,8 @@ export interface CreateParking {
   isVatIncluded: boolean;
   isIndoor?: boolean;
   pricing: Pricing;
+  subscriptionFee?: number;
+  subscriptionRenewalDate?: string;
 }
 
 export interface Pricing {
@@ -257,6 +264,7 @@ export interface ParkingResponse {
   // All new fields added to response
   parkingCode?: string;
   parkingType?: ParkingType;
+  businessModel?: BusinessModel;
   licenseNumber?: string;
   country?: string;
   region?: string;
@@ -272,6 +280,8 @@ export interface ParkingResponse {
   licenseFiles?: string[];
   pricing?: Pricing;
   wallet?: Wallet;
+  subscriptionFee?: number;
+  subscriptionRenewalDate?: string;
 }
 
 export interface CreateBooking {
@@ -425,6 +435,7 @@ export interface ParkingFilterParams {
   isVatIncluded?: boolean;
   status?: string;
   type?: string;
+  businessModel?: BusinessModel;
   startDate?: string;
   endDate?: string;
 }
