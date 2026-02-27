@@ -13,6 +13,21 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Allow Next.js <Image> to optimize images from the backend file server
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: '157.180.114.86',
+        port: '5000',
+        pathname: '/uploads/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '157.180.114.86',
+        port: '5000',
+        pathname: '/uploads/**',
+      },
+    ],
   },
 
   // Disable development indicators

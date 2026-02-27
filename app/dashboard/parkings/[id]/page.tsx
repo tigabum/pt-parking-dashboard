@@ -97,6 +97,29 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
+/* ─── File type helpers ─── */
+function isImageFile(path: string) {
+  const lower = path.toLowerCase();
+  return (
+    lower.endsWith(".jpg") ||
+    lower.endsWith(".jpeg") ||
+    lower.endsWith(".png") ||
+    lower.endsWith(".webp") ||
+    lower.endsWith(".gif") ||
+    lower.endsWith(".bmp") ||
+    lower.endsWith(".svg")
+  );
+}
+
+function isPdfFile(path: string) {
+  return path.toLowerCase().endsWith(".pdf");
+}
+
+/** Returns true when the array has at least one non-empty string */
+function hasFiles(arr?: string[] | null): arr is string[] {
+  return Array.isArray(arr) && arr.some((f) => f && f.trim() !== "");
+}
+
 /* ─── Helpers ─── */
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
@@ -649,7 +672,12 @@ export default function ParkingDetailPage() {
                   <img
                     src={getImageUrl(parking.featureImage)}
                     className="w-full h-full object-cover"
-                    alt="Parking"
+                    alt="Feature"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).style.display = "none";
+                      (e.currentTarget.parentElement as HTMLElement).innerHTML =
+                        '<div class="flex items-center justify-center h-full text-slate-300 text-sm font-medium">Image unavailable</div>';
+                    }}
                   />
                 </div>
               )}
@@ -878,54 +906,84 @@ export default function ParkingDetailPage() {
               </FormSection>
 
               {/* SECTION 7 – Documents */}
-              {((parking.licenseFiles && parking.licenseFiles.length > 0) ||
-                (parking.agreementDocuments && parking.agreementDocuments.length > 0)) && (
+              {(hasFiles(parking.licenseFiles) ||
+                hasFiles(parking.agreementDocuments)) && (
                   <>
                     <div className="h-px bg-slate-100" />
                     <FormSection title="Legal Documents">
                       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         {[
-                          ...(parking.licenseFiles || []).map((f, idx) => ({
+                          ...(parking.licenseFiles || []).filter(Boolean).map((f, idx) => ({
                             url: f,
                             type: "Business License",
                             label: `License Certificate #${idx + 1}`,
                           })),
-                          ...(parking.agreementDocuments || []).map((f, idx) => ({
+                          ...(parking.agreementDocuments || []).filter(Boolean).map((f, idx) => ({
                             url: f,
                             type: "Operation Agreement",
                             label: `Agreement #${idx + 1}`,
                           })),
-                        ].map((doc, i) => (
-                          <button
-                            key={i}
-                            onClick={() =>
-                              setPreviewDoc({ url: getImageUrl(doc.url), title: doc.label })
-                            }
-                            className="flex items-center gap-3 p-4 rounded-xl border border-slate-200 bg-slate-50 hover:border-primary hover:bg-primary/5 transition-all text-left group"
-                          >
-                            <FileText className="h-5 w-5 text-slate-400 group-hover:text-primary shrink-0 transition-colors" />
-                            <div>
-                              <p className="text-xs font-bold text-slate-800 uppercase tracking-tight">
-                                {doc.label}
-                              </p>
-                              <p className="text-[10px] text-slate-400 mt-0.5">
-                                {doc.type}
-                              </p>
-                            </div>
-                          </button>
-                        ))}
+                        ].map((doc, i) => {
+                          const fullUrl = getImageUrl(doc.url);
+                          const isImg = isImageFile(doc.url);
+                          const isPdf = isPdfFile(doc.url);
+                          return (
+                            <button
+                              key={i}
+                              onClick={() =>
+                                setPreviewDoc({ url: fullUrl, title: doc.label })
+                              }
+                              className="flex items-start gap-3 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:border-primary hover:bg-primary/5 transition-all text-left group"
+                            >
+                              {/* Thumbnail for images, icon for PDFs/others */}
+                              {isImg ? (
+                                <div className="h-14 w-14 rounded-lg overflow-hidden border border-slate-200 shrink-0 bg-slate-100">
+                                  <img
+                                    src={fullUrl}
+                                    className="w-full h-full object-cover"
+                                    alt={doc.label}
+                                    onError={(e) => {
+                                      (e.currentTarget as HTMLImageElement).style.display = "none";
+                                      (e.currentTarget.parentElement as HTMLElement).innerHTML =
+                                        '<div class="flex items-center justify-center h-full"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-slate-300"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>';
+                                    }}
+                                  />
+                                </div>
+                              ) : (
+                                <div className={`h-14 w-14 rounded-lg flex items-center justify-center shrink-0 border ${isPdf
+                                    ? "bg-red-50 border-red-200"
+                                    : "bg-slate-100 border-slate-200"
+                                  }`}>
+                                  <FileText className={`h-6 w-6 ${isPdf ? "text-red-400" : "text-slate-400"
+                                    }`} />
+                                </div>
+                              )}
+                              <div className="flex-1 min-w-0 pt-1">
+                                <p className="text-xs font-bold text-slate-800 uppercase tracking-tight truncate">
+                                  {doc.label}
+                                </p>
+                                <p className="text-[10px] text-slate-400 mt-0.5">
+                                  {doc.type}
+                                </p>
+                                <p className="text-[10px] text-primary mt-1 font-medium group-hover:underline">
+                                  {isPdf ? "View PDF" : isImg ? "View Image" : "Open File"}
+                                </p>
+                              </div>
+                            </button>
+                          );
+                        })}
                       </div>
                     </FormSection>
                   </>
                 )}
 
               {/* SECTION 8 – Gallery */}
-              {parking.galleryImages && parking.galleryImages.length > 0 && (
+              {hasFiles(parking.galleryImages) && (
                 <>
                   <div className="h-px bg-slate-100" />
                   <FormSection title="Photo Gallery">
                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                      {parking.galleryImages.map((img, i) => (
+                      {(parking.galleryImages || []).filter(Boolean).map((img, i) => (
                         <button
                           key={i}
                           onClick={() =>
@@ -933,11 +991,28 @@ export default function ParkingDetailPage() {
                           }
                           className="group relative aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-100 cursor-zoom-in"
                         >
-                          <img
-                            src={getImageUrl(img)}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                            alt={`Gallery ${i}`}
-                          />
+                          {isImageFile(img) ? (
+                            <img
+                              src={getImageUrl(img)}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              alt={`Gallery ${i}`}
+                              onError={(e) => {
+                                const target = e.currentTarget as HTMLImageElement;
+                                target.style.display = "none";
+                                const parent = target.parentElement;
+                                if (parent) {
+                                  parent.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-slate-300 gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span style="font-size:9px">No preview</span></div>`;
+                                }
+                              }}
+                            />
+                          ) : (
+                            <div className="flex flex-col items-center justify-center h-full text-slate-400 gap-1">
+                              <FileText className="h-6 w-6" />
+                              <span className="text-[9px] font-medium uppercase">
+                                {img.split(".").pop() || "File"}
+                              </span>
+                            </div>
+                          )}
                         </button>
                       ))}
                     </div>
@@ -1315,14 +1390,36 @@ export default function ParkingDetailPage() {
               </div>
               <div className="w-full h-full bg-slate-100 flex items-center justify-center">
                 {previewDoc.url ? (
-                  previewDoc.url.toLowerCase().endsWith(".pdf") ? (
-                    <iframe src={previewDoc.url} className="w-full h-full" />
-                  ) : (
+                  isPdfFile(previewDoc.url) ? (
+                    <iframe
+                      src={previewDoc.url}
+                      className="w-full h-full"
+                      title={previewDoc.title}
+                    />
+                  ) : isImageFile(previewDoc.url) ? (
                     <img
                       src={previewDoc.url}
                       className="max-w-full max-h-full object-contain shadow-2xl"
                       alt={previewDoc.title}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src = "";
+                        (e.currentTarget as HTMLImageElement).alt = "Failed to load image";
+                      }}
                     />
+                  ) : (
+                    // For unknown file types, try rendering as iframe
+                    <div className="flex flex-col items-center justify-center gap-4 text-slate-400">
+                      <FileText className="h-16 w-16" />
+                      <p className="font-medium text-sm">Preview not available</p>
+                      <a
+                        href={previewDoc.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors"
+                      >
+                        Open File
+                      </a>
+                    </div>
                   )
                 ) : null}
               </div>
