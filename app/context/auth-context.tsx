@@ -21,8 +21,10 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const INACTIVITY_TIMEOUT_MS = 30 * 60 * 1000 // 30 minutes – longer is better for user experience
-const HEARTBEAT_INTERVAL_MS = 60 * 1000      // Touch session every 60 seconds
+// Must match SESSION_TTL in backend .env (300 seconds = 5 minutes)
+const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000  // 5 minutes – matches Redis SESSION_TTL
+const HEARTBEAT_INTERVAL_MS = 90 * 1000       // Touch session every 90 s (well within 5-min window)
+const TOUCH_THROTTLE_MS = 2 * 60 * 1000       // Throttle activity-triggered Redis touch to once per 2 min
 const ACTIVITY_EVENTS = ["mousedown", "mousemove", "keypress", "scroll", "touchstart", "click"]
 
 // ─── AuthProvider ─────────────────────────────────────────────────────────────
@@ -37,6 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null)
   const heartbeatTimerRef = useRef<NodeJS.Timeout | null>(null)
   const lastActivityRef = useRef<number>(Date.now())
+  const lastTouchRef = useRef<number>(0)  // Tracks last Redis touch to throttle activity-triggered touches
 
   useEffect(() => {
     userRef.current = user
@@ -95,15 +98,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   // ── Reset inactivity timer ────────────────────────────────────────────────
+  // NOTE: We must NOT call logout() inside a stale setTimeout closure;
+  // instead we clean up directly and redirect – logout() will be called
+  // by the redirect (page unmount) or we do an explicit cleanup here.
   const resetInactivityTimer = useCallback(() => {
     if (!userRef.current) return
 
     lastActivityRef.current = Date.now()
 
     if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
-    inactivityTimerRef.current = setTimeout(async () => {
-      await logout()
-      if (typeof window !== "undefined") window.location.href = "/"
+    inactivityTimerRef.current = setTimeout(() => {
+      // Clear timers before any async work
+      if (heartbeatTimerRef.current) {
+        clearInterval(heartbeatTimerRef.current)
+        heartbeatTimerRef.current = null
+      }
+      // Clear local storage directly (avoids stale closure issues with setUser)
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("user")
+        // Redirect to login – AuthProvider will re-hydrate with no user
+        window.location.href = "/"
+      }
     }, INACTIVITY_TIMEOUT_MS)
   }, [])
 
@@ -129,9 +146,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   // ── handleActivity: stable reference needed for add/remove listener symmetry
+  // Also throttles a Redis session touch to once every 2 minutes on activity.
   const handleActivity = useCallback(() => {
     resetInactivityTimer()
-  }, [resetInactivityTimer])
+    // Throttled touch: keeps Redis TTL alive on user activity without spamming
+    const now = Date.now()
+    if (now - lastTouchRef.current > TOUCH_THROTTLE_MS) {
+      lastTouchRef.current = now
+      touchSession()
+    }
+  }, [resetInactivityTimer, touchSession])
 
   // ── Set up activity listeners when user is logged in ─────────────────────
   useEffect(() => {
