@@ -9,6 +9,7 @@ import {
 import { User } from "@/lib/auth";
 import { ParkingResponse } from "@/components/types";
 import { PERMISSIONS } from "@/lib/permissions";
+import { SYSTEM_ORG_ID } from "@/lib/constants";
 
 type Props = {
   users: User[];
@@ -31,6 +32,7 @@ export function ParkingUserTable({
 }: Props) {
   // Helper to find which parking a user belongs to
   const getOwnedParkingName = (user: User) => {
+    if (user.orgId === SYSTEM_ORG_ID) return "Possible Tech";
     const parking = parkings.find((p) => p.id === user.orgId);
     return parking ? parking.name : "Unassigned";
   };

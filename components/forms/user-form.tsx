@@ -326,7 +326,7 @@ export function UserForm({
                       <div className="flex items-center gap-3 p-3 bg-white rounded border border-slate-100 shadow-sm">
                         <Building2 className="h-4 w-4 text-primary" />
                         <span className="text-xs font-bold text-slate-600">
-                          PossibleTech
+                          Possible Tech
                         </span>
                       </div>
                     </div>
@@ -439,7 +439,7 @@ export function UserForm({
                         onPermissionsChange={setPermissions}
                         categories={getPermissionsByContext(
                           role === UserRole.PARKING_SUPER_ADMIN ||
-                            role === UserRole.PARKING_MANAGER,
+                          role === UserRole.PARKING_MANAGER,
                         )}
                         placeholder="Enter Site Permissions"
                       />

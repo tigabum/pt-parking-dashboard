@@ -11,6 +11,7 @@ import { PERMISSIONS } from "@/lib/permissions";
 import { getImageUrl, cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Mail, Phone, User as UserIcon } from "lucide-react";
+import { SYSTEM_ORG_ID } from "@/lib/constants";
 
 type Props = {
   owners: User[];
@@ -82,7 +83,7 @@ export function UserTable({
       render: (row) => (
         <div className="flex flex-col">
           <span className="font-bold text-slate-900 text-xs">
-            {row.parking?.name || "Global / System"}
+            {row.orgId === SYSTEM_ORG_ID ? "Possible Tech" : (row.parking?.name || "Global / System")}
           </span>
           {row.parking?.agentType && (
             <span className={cn(
