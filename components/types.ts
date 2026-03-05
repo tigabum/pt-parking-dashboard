@@ -194,6 +194,10 @@ export interface CreateParking {
   parkingType?: ParkingType;
   businessModel?: BusinessModel;
   licenseNumber?: string;
+  tinNumber?: string;
+  vatRegistrationNumber?: string;
+  email?: string;
+  phoneNumber?: string;
   status?: ParkingStatus;
 
   // Assets
@@ -273,9 +277,13 @@ export interface ParkingResponse {
   woreda?: string;
   kebele?: string;
   streetName?: string;
+  houseNumber?: string;
+  locality?: string;
   tinNumber?: string;
   commission?: number;
   isVatIncluded?: boolean;
+  email?: string;
+  phoneNumber?: string;
   isIndoor: boolean;
   licenseFiles?: string[];
   pricing?: Pricing;

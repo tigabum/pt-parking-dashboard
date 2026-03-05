@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { SYSTEM_ORG_ID } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -133,8 +134,9 @@ export function ParkingUserForm({
 
   const filteredParkings = parkings.filter(
     (p) =>
-      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      p.parkingCode?.toLowerCase().includes(searchTerm.toLowerCase()),
+      p.id !== SYSTEM_ORG_ID &&
+      (p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.parkingCode?.toLowerCase().includes(searchTerm.toLowerCase())),
   );
 
   const validate = () => {
