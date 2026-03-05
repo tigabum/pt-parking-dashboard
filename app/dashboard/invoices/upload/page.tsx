@@ -74,7 +74,7 @@ export default function InvoiceUploadPage() {
                     preTaxAmount: parseFloat(get("pretaxamount") || get("amount") || "0"),
                     taxAmount: parseFloat(get("taxamount") || get("tax") || "0"),
                     productDescription: get("productdescription") || get("description") || "Service",
-                    status: "pending",
+                    status: "pending" as "pending",
                 };
             }).filter((r) => r.buyerTin);
             setParsedRows(rows);
@@ -164,8 +164,8 @@ export default function InvoiceUploadPage() {
                 onDrop={handleFileDrop}
                 onClick={() => fileInputRef.current?.click()}
                 className={`border-2 border-dashed rounded-2xl p-12 flex flex-col items-center justify-center gap-4 cursor-pointer transition-all ${dragOver
-                        ? "border-primary bg-primary/5 scale-[1.01]"
-                        : "border-slate-200 bg-slate-50/50 hover:border-primary/50 hover:bg-primary/[0.02]"
+                    ? "border-primary bg-primary/5 scale-[1.01]"
+                    : "border-slate-200 bg-slate-50/50 hover:border-primary/50 hover:bg-primary/[0.02]"
                     }`}
             >
                 <input

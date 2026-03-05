@@ -9,22 +9,56 @@
   · optimizePackageImports
 
   Creating an optimized production build ...
+✓ Compiled successfully in 6.9s
+  Running TypeScript ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/27) ...
+  Generating static pages using 11 workers (6/27) 
+  Generating static pages using 11 workers (13/27) 
+  Generating static pages using 11 workers (20/27) 
+✓ Generating static pages using 11 workers (27/27) in 312.2ms
+  Finalizing page optimization ...
 
-> Build error occurred
-Error: Turbopack build failed with 1 errors:
-./app/dashboard/parkings/[id]/page.tsx:1278:15
-Parsing ecmascript source code failed
-[0m [90m 1276 |[39m             }
- [90m 1277 |[39m           [33m/[39m[33m>[39m
-[31m[1m>[22m[39m[90m 1278 |[39m         [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
- [90m      |[39m               [31m[1m^[22m[39m
-[31m[1m>[22m[39m[90m 1279 |[39m       [33m<[39m[33m/[39m[33mTabsContent[39m[33m>[39m
- [90m      |[39m [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m
- [90m 1280 |[39m     [33m<[39m[33m/[39m[33mTabs[39m[33m>[39m
- [90m 1281 |[39m
- [90m 1282 |[39m       {[0m
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ○ /dashboard
+├ ○ /dashboard/bookings
+├ ƒ /dashboard/bookings/[id]
+├ ○ /dashboard/bookings/create
+├ ○ /dashboard/configurations
+├ ƒ /dashboard/configurations/[id]
+├ ƒ /dashboard/configurations/[id]/edit
+├ ○ /dashboard/configurations/commissions
+├ ○ /dashboard/configurations/new
+├ ○ /dashboard/customers
+├ ƒ /dashboard/customers/[id]
+├ ○ /dashboard/forgot-password
+├ ○ /dashboard/invoice-credentials
+├ ○ /dashboard/invoices
+├ ƒ /dashboard/invoices/[id]
+├ ○ /dashboard/invoices/receipt
+├ ○ /dashboard/invoices/upload
+├ ○ /dashboard/invoices/withholding
+├ ○ /dashboard/parking-users
+├ ƒ /dashboard/parking-users/[id]
+├ ƒ /dashboard/parking-users/[id]/edit
+├ ○ /dashboard/parking-users/create
+├ ○ /dashboard/parkings
+├ ƒ /dashboard/parkings/[id]
+├ ƒ /dashboard/parkings/[id]/edit
+├ ○ /dashboard/parkings/create
+├ ○ /dashboard/settings
+├ ○ /dashboard/users
+├ ƒ /dashboard/users/[id]
+├ ƒ /dashboard/users/[id]/edit
+├ ○ /dashboard/users/create
+├ ○ /dashboard/vehicles
+├ ƒ /dashboard/vehicles/[id]
+├ ○ /dashboard/wallets
+└ ○ /portal
 
-Expected '</', got 'jsx text'
 
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
 
-    at <unknown> (./app/dashboard/parkings/[id]/page.tsx:1278:15)
