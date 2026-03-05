@@ -20,6 +20,7 @@ import {
   Settings2,
   Wallet,
   FileText,
+  Receipt,
 } from "lucide-react";
 
 const navigationItems = [
@@ -101,6 +102,20 @@ const navigationItems = [
     showInParkingDashboard: false,
   },
   {
+    label: "Invoices",
+    href: "/dashboard/invoices",
+    icon: FileText,
+    permission: PERMISSIONS.INVOICE_VIEW,
+    showInParkingDashboard: true,
+  },
+  {
+    label: "Invoice Credentials",
+    href: "/dashboard/invoice-credentials",
+    icon: Receipt,
+    permission: PERMISSIONS.INVOICE_CREDENTIAL_VIEW,
+    showInParkingDashboard: true,
+  },
+  {
     label: "Settings",
     href: "/dashboard/settings",
     icon: Settings,
@@ -141,6 +156,7 @@ export function Sidebar({ onItemClick }: SidebarProps) {
       const allowedForManager = [
         "/dashboard",
         "/dashboard/bookings",
+        "/dashboard/invoices",
         "/dashboard/settings",
       ];
       return allowedForManager.includes(item.href);

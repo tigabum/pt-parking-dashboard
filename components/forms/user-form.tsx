@@ -241,8 +241,8 @@ export function UserForm({
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto px-4 md:px-10 pb-6 bg-slate-50/30">
-        <div className="max-w-7xl mx-auto h-full pt-6 md:pt-10">
+      <div className="flex-1 overflow-y-auto px-4 md:px-10 pb-6 bg-slate-50/30 flex flex-col">
+        <div className="max-w-7xl mx-auto my-auto pt-6 md:pt-10 w-full">
           <div className="bg-white rounded md:rounded-lg border border-slate-200 shadow-2xl shadow-slate-200/50 overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-3">
               {/* Left Column: Profile & Basic Info */}
