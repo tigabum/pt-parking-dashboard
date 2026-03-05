@@ -58,8 +58,8 @@ export default function InvoicesPage() {
         buyerTin: "0094856874",
         buyerEmail: "company@anbessait.com",
         transactionType: "B2B",
-        amount: 1000,
-        taxAmount: 150
+        amount: 11000,
+        taxAmount: 1650
     });
 
     const parkingId = user?.orgId;
@@ -86,6 +86,13 @@ export default function InvoicesPage() {
         if (!parkingId) return;
         setRegistering(true);
         try {
+            // Calculate item distribution for the multiple item test case
+            const firstItemPreTax = 1000;
+            const secondItemPreTax = Math.max(0, testPayload.amount - firstItemPreTax);
+
+            const firstItemTax = Math.round(firstItemPreTax * 0.15);
+            const secondItemTax = Math.max(0, testPayload.taxAmount - firstItemTax);
+
             const payload = {
                 parkingId,
                 TransactionType: testPayload.transactionType,
@@ -103,19 +110,18 @@ export default function InvoicesPage() {
                 },
                 ItemList: [
                     {
-                        Discount: 0,
-                        ExciseTaxValue: 0,
-                        NatureOfSupplies: "goods",
-                        ItemCode: "1111",
-                        ProductDescription: "Parking test service",
-                        PreTaxValue: testPayload.amount,
-                        Quantity: 1,
-                        LineNumber: 1,
-                        TaxAmount: testPayload.taxAmount,
-                        TaxCode: "VAT15",
-                        TotalLineAmount: testPayload.amount + testPayload.taxAmount,
-                        Unit: "PCS",
-                        UnitPrice: testPayload.amount
+                        PreTaxValue: firstItemPreTax,
+                        TaxAmount: firstItemTax,
+                        TotalLineAmount: firstItemPreTax + firstItemTax,
+                        UnitPrice: firstItemPreTax,
+                        ProductDescription: "Standard Parking Service"
+                    },
+                    {
+                        PreTaxValue: secondItemPreTax,
+                        TaxAmount: secondItemTax,
+                        TotalLineAmount: secondItemPreTax + secondItemTax,
+                        UnitPrice: secondItemPreTax,
+                        ProductDescription: "Advanced Parking Package"
                     }
                 ]
             };
@@ -126,7 +132,11 @@ export default function InvoicesPage() {
             loadInvoices();
         } catch (error: any) {
             console.error("Registration failed", error);
-            toast.error(error.response?.data?.message || "Failed to register invoice with MOR");
+            const errorMsg = error.response?.data?.message || "Failed to register invoice with MOR";
+            toast.error(errorMsg, {
+                duration: 10000,
+                description: typeof errorMsg === 'string' && errorMsg.includes('{') ? "Validation Rule Mismatch" : undefined
+            });
         } finally {
             setRegistering(false);
         }
