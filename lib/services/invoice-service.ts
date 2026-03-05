@@ -49,4 +49,9 @@ export const invoiceService = {
         const response = await apiClient.post(`/invoice/cancel/${id}`, { reason });
         return response.data;
     },
+
+    generateReceipt: async (id: string, data: any = {}) => {
+        const response = await apiClient.post(`/invoice/generate-receipt/${id}`, data);
+        return response.data;
+    },
 };
