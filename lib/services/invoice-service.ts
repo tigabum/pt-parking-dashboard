@@ -30,8 +30,13 @@ export const invoiceService = {
         return response.data;
     },
 
-    getHistory: async (parkingId: string) => {
-        const response = await apiClient.get(`/invoice/history/${parkingId}`);
+    getHistory: async (parkingId: string, params: any = {}) => {
+        const response = await apiClient.get(`/invoice/history/${parkingId}`, { params });
+        return response.data;
+    },
+
+    getById: async (id: string) => {
+        const response = await apiClient.get(`/invoice/${id}`);
         return response.data;
     },
 
@@ -51,7 +56,12 @@ export const invoiceService = {
     },
 
     generateReceipt: async (id: string, data: any = {}) => {
-        const response = await apiClient.post(`/invoice/generate-receipt/${id}`, data);
+        const response = await apiClient.post(`/invoice/receipt/${id}`, data);
+        return response.data;
+    },
+
+    generateWithholdingReceipt: async (id: string, data: any = {}) => {
+        const response = await apiClient.post(`/invoice/withholding/${id}`, data);
         return response.data;
     },
 };

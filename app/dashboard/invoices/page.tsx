@@ -12,7 +12,10 @@ import {
     Send,
     Loader2,
     X,
-    Filter
+    Filter,
+    Briefcase,
+    XCircle,
+    Printer
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +42,7 @@ import { Label } from "@/components/ui/label";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
 import { DateRange } from "react-day-picker";
 import { InvoiceTable } from "@/components/invoices/invoice-table";
+import { DashboardPagination } from "@/components/tables/dashboard-pagination";
 
 export default function InvoicesPage() {
     const { user } = useAuth();
@@ -49,9 +53,39 @@ export default function InvoicesPage() {
     const [typeFilter, setTypeFilter] = useState<string>("ALL");
     const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
+    // Pagination State
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
+    const [total, setTotal] = useState(0);
+    const [totalPages, setTotalPages] = useState(1);
+
     const [registering, setRegistering] = useState(false);
     const [isSingleDialogOpen, setIsSingleDialogOpen] = useState(false);
     const [isBulkDialogOpen, setIsBulkDialogOpen] = useState(false);
+    const [isWithholdDialogOpen, setIsWithholdDialogOpen] = useState(false);
+    const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+    const [isReceiptDialogOpen, setIsReceiptDialogOpen] = useState(false);
+    const [selectedInvoice, setSelectedInvoice] = useState<any>(null);
+
+    const [withholdForm, setWithholdForm] = useState({
+        ReceiptNumber: "",
+        Reason: "Withhold for services",
+        ReceiptCounter: "",
+        ManualReceiptNumber: "1",
+        SourceSystemType: "POS",
+        SourceSystemNumber: "800C04A75A",
+        Type: "TWHT",
+        Rate: 2
+    });
+
+    const [receiptForm, setReceiptForm] = useState({
+        ReceiptNumber: "",
+        Reason: "Payment for parking service",
+        ModeOfPayment: "CASH",
+        CollectorName: "System"
+    });
+
+    const [cancelReason, setCancelReason] = useState("1");
 
     const [testPayload, setTestPayload] = useState({
         buyerName: "QR Anbessa Technology Development",
@@ -64,12 +98,25 @@ export default function InvoicesPage() {
 
     const parkingId = user?.orgId;
 
-    const loadInvoices = async () => {
+    const loadInvoices = async (targetPage = page) => {
         if (!parkingId) return;
         setLoading(true);
         try {
-            const data = await invoiceService.getHistory(parkingId);
-            setInvoices(data || []);
+            const response = await invoiceService.getHistory(parkingId, {
+                page: targetPage,
+                limit,
+                search: searchTerm || undefined,
+                status: statusFilter === "ALL" ? undefined : statusFilter,
+                type: typeFilter === "ALL" ? undefined : typeFilter,
+                startDate: dateRange?.from ? format(dateRange.from, "yyyy-MM-dd") : undefined,
+                endDate: dateRange?.to ? format(dateRange.to, "yyyy-MM-dd") : undefined,
+            });
+
+            if (response && response.data) {
+                setInvoices(response.data);
+                setTotal(response.total || response.data.length);
+                setTotalPages(response.totalPages || 1);
+            }
         } catch (error) {
             console.error("Failed to load invoices", error);
             toast.error("Failed to fetch invoice history");
@@ -79,8 +126,13 @@ export default function InvoicesPage() {
     };
 
     useEffect(() => {
-        loadInvoices();
-    }, [parkingId]);
+        loadInvoices(1);
+        setPage(1);
+    }, [parkingId, searchTerm, statusFilter, typeFilter, dateRange, limit]);
+
+    useEffect(() => {
+        loadInvoices(page);
+    }, [page]);
 
     const handleSingleRegister = async () => {
         if (!parkingId) return;
@@ -153,28 +205,63 @@ export default function InvoicesPage() {
         }
     };
 
-    const handleGenerate = async (invoice: any) => {
+    const handleGenerate = (invoice: any) => {
+        setSelectedInvoice(invoice);
+        setReceiptForm({
+            ...receiptForm,
+            ReceiptNumber: `REC${Date.now()}`
+        });
+        setIsReceiptDialogOpen(true);
+    };
+
+    const submitReceipt = async () => {
+        if (!selectedInvoice) return;
         const loadingToast = toast.loading("Generating sales receipt...");
         try {
-            await invoiceService.generateReceipt(invoice.id);
+            await invoiceService.generateReceipt(selectedInvoice.id, receiptForm);
             toast.success("Receipt generated successfully", { id: loadingToast });
+            setIsReceiptDialogOpen(false);
             loadInvoices();
         } catch (error: any) {
             toast.error(error.response?.data?.message || "Receipt generation failed", { id: loadingToast });
         }
     };
 
-    const handleCancel = async (invoice: any) => {
-        const reason = confirm("Are you sure you want to cancel this invoice? This action is permanent on MOR records.")
-            ? "1" // Default reason code
-            : null;
+    const handleWithhold = (invoice: any) => {
+        setSelectedInvoice(invoice);
+        setWithholdForm({
+            ...withholdForm,
+            ReceiptNumber: `WHT${Date.now()}`,
+            ReceiptCounter: (invoice.invoiceCounter + 2000).toString()
+        });
+        setIsWithholdDialogOpen(true);
+    };
 
-        if (!reason) return;
+    const submitWithhold = async () => {
+        if (!selectedInvoice) return;
+        const loadingToast = toast.loading("Generating withholding receipt...");
+        try {
+            await invoiceService.generateWithholdingReceipt(selectedInvoice.id, withholdForm);
+            toast.success("Withholding receipt generated successfully", { id: loadingToast });
+            setIsWithholdDialogOpen(false);
+            loadInvoices();
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Withholding receipt generation failed", { id: loadingToast });
+        }
+    };
 
+    const handleCancel = (invoice: any) => {
+        setSelectedInvoice(invoice);
+        setIsCancelDialogOpen(true);
+    };
+
+    const submitCancel = async () => {
+        if (!selectedInvoice) return;
         const loadingToast = toast.loading("Cancelling invoice...");
         try {
-            await invoiceService.cancelInvoice(invoice.id, reason);
+            await invoiceService.cancelInvoice(selectedInvoice.id, cancelReason);
             toast.success("Invoice cancelled successfully", { id: loadingToast });
+            setIsCancelDialogOpen(false);
             loadInvoices();
         } catch (error: any) {
             toast.error(error.response?.data?.message || "Cancellation failed", { id: loadingToast });
@@ -193,33 +280,7 @@ export default function InvoicesPage() {
         setDateRange(undefined);
     };
 
-    const filteredInvoices = invoices.filter(inv => {
-        const matchesSearch =
-            inv.irn?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            inv.id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            inv.buyerName?.toLowerCase().includes(searchTerm.toLowerCase());
-
-        const matchesStatus = statusFilter === "ALL" || inv.status === statusFilter;
-        const matchesType = typeFilter === "ALL" || inv.transactionType === typeFilter;
-
-        // Date range filter
-        let matchesDate = true;
-        if (dateRange?.from) {
-            const createdAt = new Date(inv.createdAt);
-            const fromDate = new Date(dateRange.from);
-            fromDate.setHours(0, 0, 0, 0);
-
-            if (dateRange.to) {
-                const toDate = new Date(dateRange.to);
-                toDate.setHours(23, 59, 59, 999);
-                matchesDate = createdAt >= fromDate && createdAt <= toDate;
-            } else {
-                matchesDate = createdAt >= fromDate;
-            }
-        }
-
-        return matchesSearch && matchesStatus && matchesType && matchesDate;
-    });
+    const displayInvoices = invoices;
 
     return (
         <div className="p-6 space-y-6 animate-in fade-in duration-500">
@@ -396,7 +457,7 @@ export default function InvoicesPage() {
                             </DialogContent>
                         </Dialog>
 
-                        <Button onClick={loadInvoices} variant="ghost" size="icon" className="h-11 w-11 rounded border border-transparent hover:border-slate-100 hover:bg-white transition-all ml-1">
+                        <Button onClick={() => loadInvoices()} variant="ghost" size="icon" className="h-11 w-11 rounded border border-transparent hover:border-slate-100 hover:bg-white transition-all ml-1">
                             <RefreshCw className={loading ? "h-4 w-4 animate-spin" : "h-4 w-4"} />
                         </Button>
                     </div>
@@ -405,14 +466,151 @@ export default function InvoicesPage() {
 
             <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
                 <InvoiceTable
-                    invoices={filteredInvoices}
+                    invoices={displayInvoices}
                     loading={loading}
                     onVerify={handleVerify}
                     onGenerate={handleGenerate}
+                    onWithhold={handleWithhold}
                     onCancel={handleCancel}
                     onViewPayload={handleViewPayload}
                 />
             </div>
+
+            <DashboardPagination
+                page={page}
+                totalPages={totalPages}
+                total={total}
+                onPageChange={setPage}
+                limit={limit}
+                onLimitChange={setLimit}
+            />
+
+            {/* Sales Receipt Dialog */}
+            <Dialog open={isReceiptDialogOpen} onOpenChange={setIsReceiptDialogOpen}>
+                <DialogContent className="sm:max-w-[450px] border-none shadow-2xl rounded-3xl overflow-hidden p-0">
+                    <DialogHeader className="p-8 bg-emerald-50 border-b border-emerald-100 text-left">
+                        <DialogTitle className="text-2xl font-black uppercase flex items-center gap-3 text-emerald-700">
+                            <Printer className="h-6 w-6" />
+                            Sales Receipt
+                        </DialogTitle>
+                        <DialogDescription className="text-emerald-600 font-medium mt-2 text-left">
+                            Finalize payment for invoice IRN: <span className="font-mono block truncate mt-1 text-emerald-800">{selectedInvoice?.irn}</span>
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="p-8 space-y-4">
+                        <div className="space-y-1">
+                            <Label className="text-[10px] font-black uppercase text-slate-400">Receipt Number</Label>
+                            <Input value={receiptForm.ReceiptNumber} onChange={e => setReceiptForm({ ...receiptForm, ReceiptNumber: e.target.value })} className="h-11 rounded-xl border-slate-200" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                                <Label className="text-[10px] font-black uppercase text-slate-400">Mode of Payment</Label>
+                                <Select value={receiptForm.ModeOfPayment} onValueChange={v => setReceiptForm({ ...receiptForm, ModeOfPayment: v })}>
+                                    <SelectTrigger className="h-11 rounded-xl border-slate-200"><SelectValue /></SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="CASH">CASH</SelectItem>
+                                        <SelectItem value="BANK">BANK TRANSFER</SelectItem>
+                                        <SelectItem value="TELEBIRR">TELEBIRR</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-1">
+                                <Label className="text-[10px] font-black uppercase text-slate-400">Collector Name</Label>
+                                <Input value={receiptForm.CollectorName} onChange={e => setReceiptForm({ ...receiptForm, CollectorName: e.target.value })} className="h-11 rounded-xl border-slate-200" />
+                            </div>
+                        </div>
+                        <div className="space-y-1">
+                            <Label className="text-[10px] font-black uppercase text-slate-400">Reason / Description</Label>
+                            <Input value={receiptForm.Reason} onChange={e => setReceiptForm({ ...receiptForm, Reason: e.target.value })} className="h-11 rounded-xl border-slate-200" />
+                        </div>
+                    </div>
+                    <DialogFooter className="p-6 bg-slate-50 border-t border-slate-100 flex-row gap-3">
+                        <Button variant="ghost" onClick={() => setIsReceiptDialogOpen(false)} className="font-bold flex-1">Cancel</Button>
+                        <Button onClick={submitReceipt} className="bg-emerald-600 hover:bg-emerald-700 font-black uppercase tracking-widest px-8 flex-1">Generate Receipt</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Withholding Dialog */}
+            <Dialog open={isWithholdDialogOpen} onOpenChange={setIsWithholdDialogOpen}>
+                <DialogContent className="sm:max-w-[500px] border-none shadow-2xl rounded-3xl overflow-hidden p-0">
+                    <DialogHeader className="p-8 bg-orange-50 border-b border-orange-100 text-left">
+                        <DialogTitle className="text-2xl font-black uppercase flex items-center gap-3 text-orange-700">
+                            <Briefcase className="h-6 w-6" />
+                            Withholding Receipt
+                        </DialogTitle>
+                        <DialogDescription className="text-orange-600 font-medium mt-2 text-left">
+                            Generate a withholding tax receipt for invoice IRN: <span className="font-mono block truncate mt-1 text-orange-800">{selectedInvoice?.irn}</span>
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="p-8 space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                                <Label className="text-[10px] font-black uppercase text-slate-400">Receipt Number</Label>
+                                <Input value={withholdForm.ReceiptNumber} onChange={e => setWithholdForm({ ...withholdForm, ReceiptNumber: e.target.value })} className="h-10 rounded-lg border-slate-200" />
+                            </div>
+                            <div className="space-y-1">
+                                <Label className="text-[10px] font-black uppercase text-slate-400">Counter</Label>
+                                <Input value={withholdForm.ReceiptCounter} onChange={e => setWithholdForm({ ...withholdForm, ReceiptCounter: e.target.value })} className="h-10 rounded-lg border-slate-200" />
+                            </div>
+                            <div className="space-y-1">
+                                <Label className="text-[10px] font-black uppercase text-slate-400">Source Type</Label>
+                                <Select value={withholdForm.SourceSystemType} onValueChange={v => setWithholdForm({ ...withholdForm, SourceSystemType: v })}>
+                                    <SelectTrigger className="h-10 rounded-lg border-slate-200"><SelectValue /></SelectTrigger>
+                                    <SelectContent><SelectItem value="POS">POS - Point of Sale</SelectItem><SelectItem value="MAN">MAN - Manual</SelectItem></SelectContent>
+                                </Select>
+                            </div>
+                            <div className="space-y-1">
+                                <Label className="text-[10px] font-black uppercase text-slate-400">Rate (%)</Label>
+                                <Input type="number" value={withholdForm.Rate} onChange={e => setWithholdForm({ ...withholdForm, Rate: Number(e.target.value) })} className="h-10 rounded-lg border-slate-200" />
+                            </div>
+                        </div>
+                        <div className="space-y-1">
+                            <Label className="text-[10px] font-black uppercase text-slate-400">Reason</Label>
+                            <Input value={withholdForm.Reason} onChange={e => setWithholdForm({ ...withholdForm, Reason: e.target.value })} className="h-10 rounded-lg border-slate-200" />
+                        </div>
+                    </div>
+                    <DialogFooter className="p-6 bg-slate-50 border-t border-slate-100 flex-row gap-3">
+                        <Button variant="ghost" onClick={() => setIsWithholdDialogOpen(false)} className="font-bold flex-1">Cancel</Button>
+                        <Button onClick={submitWithhold} className="bg-orange-600 hover:bg-orange-700 font-black uppercase tracking-widest px-8 flex-1">Generate</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Cancel Dialog */}
+            <Dialog open={isCancelDialogOpen} onOpenChange={setIsCancelDialogOpen}>
+                <DialogContent className="sm:max-w-[400px] border-none shadow-2xl rounded-3xl overflow-hidden p-0">
+                    <DialogHeader className="p-8 bg-rose-50 border-b border-rose-100 text-left">
+                        <DialogTitle className="text-2xl font-black uppercase flex items-center gap-3 text-rose-700">
+                            <XCircle className="h-6 w-6" />
+                            Cancel Invoice
+                        </DialogTitle>
+                        <DialogDescription className="text-rose-600 font-medium mt-2 text-left">
+                            This action is permanent and will be logged with MOR.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="p-8 space-y-4">
+                        <div className="space-y-2">
+                            <Label className="text-xs font-black uppercase text-slate-400">Reason for Cancellation</Label>
+                            <Select value={cancelReason} onValueChange={setCancelReason}>
+                                <SelectTrigger className="h-11 rounded-xl border-slate-200">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="1">Incorrect Receipt</SelectItem>
+                                    <SelectItem value="2">Request by Customer</SelectItem>
+                                    <SelectItem value="3">System Error</SelectItem>
+                                    <SelectItem value="4">Other</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+                    <DialogFooter className="p-6 bg-slate-50 border-t border-slate-100 flex-row gap-3">
+                        <Button variant="ghost" onClick={() => setIsCancelDialogOpen(false)} className="font-bold text-slate-400 flex-1">Go Back</Button>
+                        <Button onClick={submitCancel} className="bg-rose-600 hover:bg-rose-700 font-black uppercase tracking-widest px-8 flex-1">Confirm Cancel</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

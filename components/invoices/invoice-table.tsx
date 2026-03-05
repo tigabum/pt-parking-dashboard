@@ -1,20 +1,14 @@
 "use client";
-import {
-    ReusableTable,
-    indexColumn,
-    statusColumn,
-    Column,
-} from "@/components/tables";
-import { Badge } from "@/components/ui/badge";
+import { Column } from "@/components/tables";
 import { format } from "date-fns";
 import {
-    FileText,
     MoreVertical,
     ShieldCheck,
     Printer,
     XCircle,
     Eye,
-    History
+    CheckCircle2,
+    Briefcase,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +18,7 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 
 type Props = {
     invoices: any[];
@@ -32,6 +27,47 @@ type Props = {
     onGenerate: (invoice: any) => void;
     onCancel: (invoice: any) => void;
     onViewPayload: (invoice: any) => void;
+    onWithhold: (invoice: any) => void;
+};
+
+const getStatusBadge = (status: string) => {
+    switch (status) {
+        case "REGISTERED":
+        case "Active":
+            return (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600">
+                    Active
+                </span>
+            );
+        case "VERIFIED":
+            return (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-indigo-600">
+                    Verified
+                </span>
+            );
+        case "CANCELLED":
+            return (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600">
+                    Cancelled
+                </span>
+            );
+        case "FAILED":
+            return (
+                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-600">
+                    Failed
+                </span>
+            );
+        default:
+            return (
+                <span className="text-[11px] font-bold text-slate-500">{status}</span>
+            );
+    }
+};
+
+// Map our internal status to display label
+const mapStatus = (status: string) => {
+    if (status === "REGISTERED") return "Active";
+    return status;
 };
 
 export function InvoiceTable({
@@ -41,144 +77,204 @@ export function InvoiceTable({
     onGenerate,
     onCancel,
     onViewPayload,
+    onWithhold,
 }: Props) {
-    const getStatusBadge = (status: string) => {
-        switch (status) {
-            case "REGISTERED":
-                return <Badge className="bg-emerald-500 hover:bg-emerald-600 font-bold uppercase text-[9px]">Registered</Badge>;
-            case "VERIFIED":
-                return <Badge className="bg-indigo-500 hover:bg-indigo-600 font-bold uppercase text-[9px]">Verified</Badge>;
-            case "CANCELLED":
-                return <Badge className="bg-rose-500 hover:bg-rose-600 font-bold uppercase text-[9px]">Cancelled</Badge>;
-            case "FAILED":
-                return <Badge className="bg-amber-500 hover:bg-amber-600 font-bold uppercase text-[9px]">Failed</Badge>;
-            default:
-                return <Badge className="bg-slate-400 font-bold uppercase text-[9px]">{status}</Badge>;
-        }
-    };
+    const router = useRouter();
 
     const columns: Column<any>[] = [
         {
-            key: "document",
-            header: "Document Details",
+            key: "id",
+            header: "Id",
             render: (row) => (
-                <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center border border-slate-100 text-slate-400">
-                        <FileText size={18} />
-                    </div>
-                    <div className="flex flex-col">
-                        <span className="font-bold text-slate-900 leading-tight">
-                            {row.irn ? (
-                                <span className="truncate max-w-[200px]" title={row.irn}>
-                                    {row.irn.substring(0, 15)}...
-                                </span>
-                            ) : "NOT_ASSIGNED"}
-                        </span>
-                        <span className="text-[10px] text-slate-400 font-mono tracking-tighter uppercase font-bold">
-                            ID: {row.id.substring(0, 8)} | CTR: {row.invoiceCounter || "—"}
-                        </span>
-                    </div>
-                </div>
+                <span className="text-[12px] font-bold text-slate-700">
+                    {row.invoiceCounter ?? row.id?.substring(0, 6) ?? "—"}
+                </span>
             ),
         },
         {
-            key: "amount",
-            header: "Value (ETB)",
-            className: "text-right",
+            key: "transactionType",
+            header: "Transaction Type",
             render: (row) => (
-                <div className="flex flex-col items-end">
-                    <span className="font-bold text-slate-900">
-                        {Number(row.totalAmount || 0).toLocaleString()}
-                    </span>
-                    <span className="text-[9px] font-black uppercase text-secondary">
-                        Tax: {Number(row.taxAmount || 0).toLocaleString()}
-                    </span>
-                </div>
-            )
-        },
-        {
-            key: "type",
-            header: "Type",
-            render: (row) => (
-                <Badge variant="outline" className="uppercase text-[9px] font-black tracking-widest bg-slate-50 border-slate-200 text-slate-600 px-2 py-0.5 rounded-lg">
-                    {row.transactionType}
-                </Badge>
+                <span className="text-[12px] font-semibold text-slate-600">
+                    {row.transactionType ?? "B2B"}
+                </span>
             ),
         },
         {
-            key: "timestamp",
-            header: "Timestamp",
+            key: "sellerTin",
+            header: "Seller TIN",
             render: (row) => (
-                <div className="flex flex-col text-[11px] font-medium text-slate-500 uppercase">
-                    <span>{format(new Date(row.createdAt), "dd MMM yyyy")}</span>
-                    <span className="text-slate-300">{format(new Date(row.createdAt), "HH:mm:ss")}</span>
-                </div>
-            )
+                <span className="text-[12px] font-mono text-slate-700">
+                    {row.sellerTin ?? row.sellerDetails?.Tin ?? row.tin ?? "—"}
+                </span>
+            ),
+        },
+        {
+            key: "buyerTin",
+            header: "Buyer TIN",
+            render: (row) => (
+                <span className="text-[12px] font-mono text-blue-600 font-bold">
+                    {row.buyerTin ?? row.buyerDetails?.Tin ?? "—"}
+                </span>
+            ),
+        },
+        {
+            key: "sellerPhone",
+            header: "Seller Phone",
+            render: (row) => (
+                <span className="text-[12px] text-slate-600">
+                    {row.sellerPhone ?? row.sellerDetails?.Phone ?? row.phoneNumber ?? "—"}
+                </span>
+            ),
+        },
+        {
+            key: "sellerRegion",
+            header: "Seller Region",
+            render: (row) => (
+                <span className="text-[12px] text-slate-700 font-bold">
+                    {row.sellerRegion ?? row.sellerDetails?.Region ?? row.region ?? "—"}
+                </span>
+            ),
+        },
+        {
+            key: "sellerVat",
+            header: "Seller VAT",
+            render: (row) => (
+                <span className="text-[12px] font-mono text-amber-700">
+                    {row.sellerVat ?? row.sellerDetails?.VatNumber ?? row.vatNumber ?? "—"}
+                </span>
+            ),
+        },
+        {
+            key: "mark",
+            header: "Mark",
+            className: "text-center",
+            render: (row) => (
+                <span className="text-[12px] text-slate-400">
+                    {row.irn ? (
+                        <CheckCircle2 className="h-4 w-4 text-emerald-500 mx-auto" />
+                    ) : (
+                        <span className="text-slate-300">-</span>
+                    )}
+                </span>
+            ),
         },
         {
             key: "status",
             header: "Status",
-            className: "text-center",
-            render: (row) => getStatusBadge(row.status),
+            render: (row) => getStatusBadge(mapStatus(row.status)),
         },
         {
             key: "actions",
-            header: "Actions",
-            className: "text-center",
+            header: "",
+            className: "text-center w-10",
             render: (row) => (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0 rounded">
-                            <MoreVertical className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-[200px] rounded-xl shadow-xl border-slate-100 p-2">
-                        <DropdownMenuItem
-                            onClick={() => onVerify(row)}
-                            disabled={row.status !== "REGISTERED"}
-                            className="rounded-lg font-bold gap-3 py-2.5 cursor-pointer"
-                        >
-                            <ShieldCheck className="h-4 w-4 text-indigo-500" />
-                            <span>Verify MOR</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            onClick={() => onGenerate(row)}
-                            disabled={row.status !== "VERIFIED" && row.status !== "REGISTERED"}
-                            className="rounded-lg font-bold gap-3 py-2.5 cursor-pointer"
-                        >
-                            <Printer className="h-4 w-4 text-primary" />
-                            <span>Generate Invoice</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator className="my-1" />
-                        <DropdownMenuItem
-                            onClick={() => onViewPayload(row)}
-                            className="rounded-lg font-bold gap-3 py-2.5 cursor-pointer"
-                        >
-                            <Eye className="h-4 w-4 text-slate-400" />
-                            <span>View Data</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator className="my-1" />
-                        <DropdownMenuItem
-                            onClick={() => onCancel(row)}
-                            disabled={row.status === "CANCELLED" || row.status === "FAILED"}
-                            className="rounded-lg font-bold gap-3 py-2.5 cursor-pointer text-rose-600 focus:text-rose-700 focus:bg-rose-50"
-                        >
-                            <XCircle className="h-4 w-4" />
-                            <span>Cancel Invoice</span>
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <div onClick={(e) => e.stopPropagation()}>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 p-0 rounded">
+                                <MoreVertical className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-[200px] rounded-xl shadow-xl border-slate-100 p-2">
+                            <DropdownMenuItem
+                                onClick={() => onVerify(row)}
+                                disabled={row.status !== "REGISTERED"}
+                                className="rounded-lg font-bold gap-3 py-2.5 cursor-pointer"
+                            >
+                                <ShieldCheck className="h-4 w-4 text-indigo-500" />
+                                <span>Verify MOR</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => onGenerate(row)}
+                                disabled={row.status !== "VERIFIED" && row.status !== "REGISTERED"}
+                                className="rounded-lg font-bold gap-3 py-2.5 cursor-pointer"
+                            >
+                                <Printer className="h-4 w-4 text-primary" />
+                                <span>Generate Receipt</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                onClick={() => onWithhold(row)}
+                                disabled={row.status === "CANCELLED" || row.status === "FAILED"}
+                                className="rounded-lg font-bold gap-3 py-2.5 cursor-pointer"
+                            >
+                                <Briefcase className="h-4 w-4 text-orange-500" />
+                                <span>Withhold Tax</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator className="my-1" />
+                            <DropdownMenuItem
+                                onClick={() => onViewPayload(row)}
+                                className="rounded-lg font-bold gap-3 py-2.5 cursor-pointer"
+                            >
+                                <Eye className="h-4 w-4 text-slate-400" />
+                                <span>View Data</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator className="my-1" />
+                            <DropdownMenuItem
+                                onClick={() => onCancel(row)}
+                                disabled={row.status === "CANCELLED" || row.status === "FAILED"}
+                                className="rounded-lg font-bold gap-3 py-2.5 cursor-pointer text-rose-600 focus:text-rose-700 focus:bg-rose-50"
+                            >
+                                <XCircle className="h-4 w-4" />
+                                <span>Cancel Invoice</span>
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
             ),
         },
     ];
 
     return (
-        <ReusableTable
-            data={invoices}
-            columns={columns}
-            getRowKey={(row) => row.id}
-            isLoading={loading}
-            emptyText={loading ? "Querying MOR ledger..." : "No invoice records found"}
-        />
+        <div className="overflow-hidden bg-white rounded border border-slate-100 shadow">
+            <div className="w-full overflow-x-auto">
+                <table className="w-full">
+                    <thead>
+                        <tr className="bg-slate-100/50">
+                            {columns.map((col) => (
+                                <th
+                                    key={col.key}
+                                    className="px-3 md:px-6 py-4 md:py-5 text-left text-[10px] md:text-xs font-extrabold text-foreground uppercase tracking-widest border-b-2 border-primary/10 whitespace-nowrap"
+                                >
+                                    {col.header}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                        {loading ? (
+                            <tr>
+                                <td colSpan={columns.length} className="px-6 py-20 text-center">
+                                    <div className="flex flex-col items-center gap-3">
+                                        <div className="h-10 w-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+                                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Querying MOR ledger...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        ) : invoices.length === 0 ? (
+                            <tr>
+                                <td colSpan={columns.length} className="px-6 py-12 text-center text-sm font-medium text-slate-400 italic">
+                                    No invoice records found
+                                </td>
+                            </tr>
+                        ) : (
+                            invoices.map((row, index) => (
+                                <tr
+                                    key={row.id}
+                                    onClick={() => router.push(`/dashboard/invoices/${row.id}`)}
+                                    className="hover:bg-primary/5 transition-colors group even:bg-slate-50/50 cursor-pointer"
+                                >
+                                    {columns.map((col) => (
+                                        <td key={col.key} className="px-3 md:px-6 py-3 md:py-4 text-[11px] md:text-sm font-medium text-slate-700 whitespace-nowrap">
+                                            {col.render ? col.render(row, index) : (row as any)[col.key]}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     );
 }
