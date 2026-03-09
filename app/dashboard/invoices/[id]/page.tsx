@@ -16,8 +16,19 @@ import {
     Cpu,
     Package,
     Loader2,
+    ShieldCheck,
+    Printer,
+    Download,
+    XCircle,
+    CheckCircle2,
+    AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { useRef } from "react";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 // ─── Collapsible Section ──────────────────────────────────────────────────────
 function CollapsibleSection({
@@ -92,20 +103,111 @@ export default function InvoiceDetailPage() {
     const id = params?.id as string;
     const [invoice, setInvoice] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [processing, setProcessing] = useState(false);
+    const printRef = useRef<HTMLDivElement>(null);
+
+    const loadInvoice = async () => {
+        if (!id) return;
+        setLoading(true);
+        try {
+            const data = await invoiceService.getById(id);
+            setInvoice(data);
+        } catch (e) {
+            console.error(e);
+            toast.error("Failed to load invoice details");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        if (!id) return;
-        (async () => {
-            try {
-                const data = await invoiceService.getById(id);
-                setInvoice(data);
-            } catch (e) {
-                console.error(e);
-            } finally {
-                setLoading(false);
-            }
-        })();
+        loadInvoice();
     }, [id]);
+
+    const handleVerify = async () => {
+        setProcessing(true);
+        const loadingToast = toast.loading("Verifying with Ministry of Revenue...");
+        try {
+            await invoiceService.verifyInvoice(id);
+            toast.success("Invoice VERIFIED successfully", { id: loadingToast });
+            loadInvoice();
+        } catch (error: any) {
+            toast.error("Verification failed: " + (error.response?.data?.message || error.message), { id: loadingToast });
+        } finally {
+            setProcessing(false);
+        }
+    };
+
+    const handleCancel = async () => {
+        if (!confirm("Are you sure you want to cancel this invoice? This action is reported to MOR.")) return;
+        setProcessing(true);
+        const loadingToast = toast.loading("Cancelling invoice...");
+        try {
+            await invoiceService.cancelInvoice(id, "1"); // Reason Code 1: Incorrect Receipt
+            toast.success("Invoice CANCELLED successfully", { id: loadingToast });
+            loadInvoice();
+        } catch (error: any) {
+            toast.error("Cancellation failed: " + (error.response?.data?.message || error.message), { id: loadingToast });
+        } finally {
+            setProcessing(false);
+        }
+    };
+
+    const handleReceipt = async () => {
+        setProcessing(true);
+        const loadingToast = toast.loading("Generating sales receipt...");
+        try {
+            await invoiceService.generateReceipt(id, {
+                ReceiptNumber: `REC${Date.now()}`,
+                Reason: "Payment for parking service",
+                ModeOfPayment: "CASH"
+            });
+            toast.success("Receipt generated successfully", { id: loadingToast });
+            loadInvoice();
+        } catch (error: any) {
+            toast.error("Receipt generation failed: " + (error.response?.data?.message || error.message), { id: loadingToast });
+        } finally {
+            setProcessing(false);
+        }
+    };
+
+    const downloadPDF = async () => {
+        if (!printRef.current) return;
+        const loadingToast = toast.loading("Preparing PDF for download...");
+        try {
+            const element = printRef.current;
+            const canvas = await html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: "#ffffff"
+            });
+            const imgData = canvas.toDataURL("image/png");
+
+            const pdf = new jsPDF({
+                orientation: "portrait",
+                unit: "px",
+                format: "a4"
+            });
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+
+            const imgX = (pdfWidth - imgWidth * ratio) / 2;
+            const imgY = 20;
+
+            pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+            pdf.save(`Invoice_${invoice.invoiceCounter || id.substring(0, 8)}.pdf`);
+
+            toast.success("Invoice downloaded successfully!", { id: loadingToast });
+        } catch (error) {
+            console.error("PDF generation failed", error);
+            toast.error("Failed to generate PDF download", { id: loadingToast });
+        }
+    };
 
     if (loading) {
         return (
@@ -138,237 +240,218 @@ export default function InvoiceDetailPage() {
             backLink={{ label: "Invoice Report", href: "/dashboard/invoices" }}
         >
             <div className="space-y-6">
-                {/* Top Summary Card */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Left: Core Fields */}
-                    <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-6 space-y-3">
-                        <h2 className="text-base font-black text-slate-800 mb-4">Invoice Details</h2>
-                        <DetailRow
-                            label="Invoice Registration Number"
-                            value={
-                                <span className="font-mono text-[11px] break-all text-slate-700">
-                                    {invoice.irn ?? "—"}
-                                </span>
-                            }
-                        />
-                        <DetailRow label="Seller TIN" value={invoice.sellerTin ?? seller.Tin ?? "—"} />
-                        <DetailRow label="Buyer TIN" value={invoice.buyerTin ?? buyer.Tin ?? "—"} />
-                        <DetailRow
-                            label="Status"
-                            value={<StatusBadge status={invoice.status} />}
-                        />
-                        <DetailRow
-                            label="Marked"
-                            value={invoice.irn ? "Yes" : "No"}
-                        />
-                        <DetailRow
-                            label="Transaction Type"
-                            value={invoice.transactionType}
-                        />
-                        <DetailRow
-                            label="Invoice Counter"
-                            value={invoice.invoiceCounter}
-                        />
-                        <DetailRow
-                            label="Created At"
-                            value={
-                                invoice.createdAt
-                                    ? format(new Date(invoice.createdAt), "dd MMM yyyy, HH:mm")
-                                    : "—"
-                            }
-                        />
-                        {invoice.receiptNumber && (
-                            <DetailRow label="Receipt Number" value={invoice.receiptNumber} />
-                        )}
+                {/* Action Bar */}
+                <div className="flex flex-wrap items-center justify-between gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div className="flex items-center gap-2">
+                        <Button
+                            onClick={handleVerify}
+                            disabled={processing || invoice.status !== "REGISTERED"}
+                            variant="secondary"
+                            className="bg-white hover:bg-indigo-50 text-indigo-700 border-indigo-100 font-bold rounded-xl"
+                        >
+                            <ShieldCheck className="h-4 w-4 mr-2" />
+                            Verify MOR
+                        </Button>
+                        <Button
+                            onClick={handleReceipt}
+                            disabled={processing || (invoice.status !== "VERIFIED" && invoice.status !== "REGISTERED")}
+                            variant="secondary"
+                            className="bg-white hover:bg-blue-50 text-blue-700 border-blue-100 font-bold rounded-xl"
+                        >
+                            <Printer className="h-4 w-4 mr-2" />
+                            Generate Receipt
+                        </Button>
+                        <Button
+                            onClick={handleCancel}
+                            disabled={processing || invoice.status === "CANCELLED" || invoice.status === "FAILED"}
+                            variant="secondary"
+                            className="bg-white hover:bg-rose-50 text-rose-700 border-rose-100 font-bold rounded-xl"
+                        >
+                            <XCircle className="h-4 w-4 mr-2" />
+                            Cancel Invoice
+                        </Button>
                     </div>
-
-                    {/* Right: Collapsible Sections */}
-                    <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
-                        <CollapsibleSection title="Buyer Detail" icon={User}>
-                            <div className="space-y-0">
-                                <DetailRow label="Legal Name" value={buyer.LegalName} />
-                                <DetailRow label="TIN" value={buyer.Tin} />
-                                <DetailRow label="VAT Number" value={buyer.VatNumber} />
-                                <DetailRow label="Phone" value={buyer.Phone} />
-                                <DetailRow label="Email" value={buyer.Email} />
-                                <DetailRow label="Region" value={buyer.Region} />
-                                <DetailRow label="City" value={buyer.City} />
-                                <DetailRow label="Wereda" value={buyer.Wereda} />
-                                <DetailRow label="House Number" value={buyer.HouseNumber} />
-                                <DetailRow label="Sub City" value={buyer.SubCity} />
-                                <DetailRow label="Locality" value={buyer.Locality} />
-                                <DetailRow label="ID Type" value={buyer.IdType} />
-                            </div>
-                        </CollapsibleSection>
-
-                        <CollapsibleSection title="Seller Detail" icon={Building2} defaultOpen>
-                            <div className="space-y-0">
-                                <DetailRow label="Legal Name" value={seller.LegalName} />
-                                <DetailRow label="TIN" value={seller.Tin} />
-                                <DetailRow label="VAT Number" value={seller.VatNumber} />
-                                <DetailRow label="Phone" value={seller.Phone} />
-                                <DetailRow label="Email" value={seller.Email} />
-                                <DetailRow label="Region" value={seller.Region} />
-                                <DetailRow label="City" value={seller.City} />
-                                <DetailRow label="Wereda" value={seller.Wereda} />
-                                <DetailRow label="House Number" value={seller.HouseNumber} />
-                                <DetailRow label="Sub City" value={seller.SubCity} />
-                                <DetailRow label="Locality" value={seller.Locality} />
-                            </div>
-                        </CollapsibleSection>
-
-                        <CollapsibleSection title="Documents Detail" icon={FileText}>
-                            <div className="space-y-0">
-                                <DetailRow label="Document Number" value={doc.DocumentNumber} />
-                                <DetailRow label="Date" value={doc.Date} />
-                                <DetailRow label="Type" value={doc.Type} />
-                            </div>
-                        </CollapsibleSection>
-
-                        <CollapsibleSection title="Payment Detail" icon={CreditCard}>
-                            <div className="space-y-0">
-                                <DetailRow label="Mode" value={payment.Mode} />
-                                <DetailRow label="Payment Term" value={payment.PaymentTerm} />
-                            </div>
-                        </CollapsibleSection>
-
-                        <CollapsibleSection title="Reference Detail" icon={Link2}>
-                            <div className="space-y-0">
-                                <DetailRow label="Previous IRN" value={ref.PreviousIrn || "—"} />
-                                <DetailRow
-                                    label="Related Document"
-                                    value={
-                                        ref.RelatedDocument
-                                            ? JSON.stringify(ref.RelatedDocument)
-                                            : "—"
-                                    }
-                                />
-                            </div>
-                        </CollapsibleSection>
-
-                        <CollapsibleSection title="Source System Details" icon={Cpu}>
-                            <div className="space-y-0">
-                                <DetailRow label="System Number" value={src.SystemNumber} />
-                                <DetailRow label="System Type" value={src.SystemType} />
-                                <DetailRow label="Invoice Counter" value={src.InvoiceCounter} />
-                                <DetailRow label="Cashier Name" value={src.CashierName} />
-                                <DetailRow label="Sales Person" value={src.SalesPersonName} />
-                            </div>
-                        </CollapsibleSection>
-                    </div>
+                    <Button
+                        onClick={downloadPDF}
+                        disabled={processing}
+                        className="bg-primary hover:opacity-90 font-black rounded-xl shadow-lg shadow-primary/20"
+                    >
+                        <Download className="h-4 w-4 mr-2" />
+                        Download PDF
+                    </Button>
                 </div>
 
-                {/* Value Summary */}
-                {Object.keys(val).length > 0 && (
-                    <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-6">
-                        <h2 className="text-base font-black text-slate-800 mb-4 flex items-center gap-2">
-                            <CreditCard className="h-4 w-4 text-slate-400" />
-                            Value Details
-                        </h2>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            {[
-                                { label: "Total Value", value: val.TotalValue, currency: val.InvoiceCurrency },
-                                { label: "Tax Value", value: val.TaxValue, currency: val.InvoiceCurrency },
-                                { label: "Excise Value", value: val.ExciseValue, currency: val.InvoiceCurrency },
-                                { label: "Income Withhold", value: val.IncomeWithholdValue, currency: val.InvoiceCurrency },
-                                { label: "Txn Withhold", value: val.TransactionWithholdValue, currency: val.InvoiceCurrency },
-                                { label: "Discount", value: val.Discount, currency: val.InvoiceCurrency },
-                                { label: "Currency", value: val.InvoiceCurrency },
-                            ].map((item) => (
-                                <div key={item.label} className="bg-slate-50 rounded-xl p-4">
-                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{item.label}</p>
-                                    <p className="text-lg font-black text-slate-900">
-                                        {item.currency && item.value !== undefined
-                                            ? `${item.currency} ${Number(item.value ?? 0).toLocaleString()}`
-                                            : item.value ?? "—"}
-                                    </p>
+                <div ref={printRef} className="space-y-6 bg-white p-4 md:p-8 rounded-2xl shadow-sm border border-slate-50">
+                    {/* Header Info */}
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-100 pb-8">
+                        <div>
+                            <div className="flex items-center gap-3 mb-2">
+                                <h1 className="text-3xl font-black text-slate-900 tracking-tight">INVOICE</h1>
+                                <StatusBadge status={invoice.status} />
+                            </div>
+                            <p className="text-sm font-medium text-slate-500">
+                                Registration Number: <span className="font-mono text-slate-900">{invoice.irn || "NOT_ASSIGNED"}</span>
+                            </p>
+                        </div>
+                        <div className="text-right">
+                            {invoice.qrCode && (
+                                <div className="bg-white p-3 border border-slate-100 rounded-2xl shadow-sm inline-block">
+                                    <img src={invoice.qrCode} alt="MOR QR Code" className="w-32 h-32" />
+                                    <p className="text-[8px] font-black text-slate-400 mt-2 uppercase text-center tracking-widest">Signed by MOR</p>
                                 </div>
-                            ))}
+                            )}
                         </div>
                     </div>
-                )}
 
-                {/* Items Table */}
-                <div className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden">
-                    <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-                        <h2 className="text-base font-black text-slate-800 flex items-center gap-2">
-                            <Package className="h-4 w-4 text-slate-400" />
-                            Items
-                        </h2>
-                        <span className="text-xs text-slate-400 font-medium">{items.length} item(s)</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {/* Core Fields */}
+                        <div className="space-y-3">
+                            <h2 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <FileText className="h-4 w-4" />
+                                General Information
+                            </h2>
+                            <DetailRow
+                                label="Invoice ID"
+                                value={<span className="font-mono">{invoice.invoiceCounter}</span>}
+                            />
+                            <DetailRow label="Seller TIN" value={invoice.sellerTin || seller.Tin} />
+                            <DetailRow label="Buyer TIN" value={invoice.buyerTin || buyer.Tin} />
+                            <DetailRow label="Transaction" value={invoice.transactionType} />
+                            <DetailRow
+                                label="Created At"
+                                value={
+                                    invoice.createdAt
+                                        ? format(new Date(invoice.createdAt), "dd MMM yyyy, HH:mm")
+                                        : "—"
+                                }
+                            />
+                            {invoice.receipt?.receiptNumber && (
+                                <DetailRow
+                                    label="Receipt Ref"
+                                    value={
+                                        <div className="flex flex-col items-end">
+                                            <span className="text-blue-600">{invoice.receipt.receiptNumber}</span>
+                                            <span className="text-[10px] text-slate-400">{invoice.receipt.receiptDate}</span>
+                                        </div>
+                                    }
+                                />
+                            )}
+                        </div>
+
+                        {/* Summary Stats */}
+                        <div className="space-y-3">
+                            <h2 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                                <CreditCard className="h-4 w-4" />
+                                Financial Summary
+                            </h2>
+                            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 grid grid-cols-2 gap-4">
+                                <div>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Total Amount</p>
+                                    <p className="text-2xl font-black text-slate-900">
+                                        {val.TotalValue?.toLocaleString()} <span className="text-xs text-slate-400">{val.InvoiceCurrency}</span>
+                                    </p>
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black text-slate-400 uppercase mb-1">Tax (15%)</p>
+                                    <p className="text-2xl font-black text-indigo-600">
+                                        {val.TaxValue?.toLocaleString()} <span className="text-xs text-slate-400">{val.InvoiceCurrency}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="overflow-x-auto">
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <CollapsibleSection title="Buyer Details" icon={User} defaultOpen>
+                            <div className="space-y-0 text-left">
+                                <DetailRow label="Name" value={buyer.LegalName} />
+                                <DetailRow label="TIN" value={buyer.Tin} />
+                                <DetailRow label="VAT" value={buyer.VatNumber} />
+                                <DetailRow label="Phone" value={buyer.Phone} />
+                                <DetailRow label="Email" value={buyer.Email} />
+                                <DetailRow label="Address" value={`${buyer.Region}, ${buyer.City}, ${buyer.Wereda}`} />
+                            </div>
+                        </CollapsibleSection>
+
+                        <CollapsibleSection title="Seller Details" icon={Building2} defaultOpen>
+                            <div className="space-y-0 text-left">
+                                <DetailRow label="Name" value={seller.LegalName} />
+                                <DetailRow label="TIN" value={seller.Tin} />
+                                <DetailRow label="VAT" value={seller.VatNumber} />
+                                <DetailRow label="Phone" value={seller.Phone} />
+                                <DetailRow label="Email" value={seller.Email} />
+                                <DetailRow label="Address" value={`${seller.Region}, ${seller.City}, ${seller.Wereda}`} />
+                            </div>
+                        </CollapsibleSection>
+                    </div>
+
+                    {/* Items Table */}
+                    <div className="border border-slate-100 rounded-2xl overflow-hidden mt-4">
                         <table className="w-full text-sm">
-                            <thead>
-                                <tr className="bg-slate-50">
-                                    {[
-                                        "Serial No",
-                                        "Harmonization Code",
-                                        "Nature of Supplies",
-                                        "Product Description",
-                                        "Item Code",
-                                        "Unit",
-                                        "Quantity",
-                                        "Unit Price",
-                                        "Pre Tax Value",
-                                        "Tax Code",
-                                        "Tax Amount",
-                                        "Discount",
-                                        "Excise Tax Amount",
-                                        "Total Amount",
-                                    ].map((h) => (
-                                        <th
-                                            key={h}
-                                            className="px-4 py-3 text-left text-[10px] font-extrabold text-slate-400 uppercase tracking-wider whitespace-nowrap border-b border-slate-100"
-                                        >
-                                            {h}
-                                        </th>
-                                    ))}
+                            <thead className="bg-slate-50 border-b border-slate-100">
+                                <tr>
+                                    <th className="px-4 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">#</th>
+                                    <th className="px-4 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Description</th>
+                                    <th className="px-4 py-4 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Qty</th>
+                                    <th className="px-4 py-4 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Price</th>
+                                    <th className="px-4 py-4 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Tax</th>
+                                    <th className="px-4 py-4 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Total</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-50">
-                                {items.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={14} className="px-6 py-10 text-center text-sm text-slate-400 italic">
-                                            No items
+                                {items.map((item, idx) => (
+                                    <tr key={idx} className="hover:bg-slate-50/50">
+                                        <td className="px-4 py-4 font-bold text-slate-700">{item.LineNumber}</td>
+                                        <td className="px-4 py-4">
+                                            <p className="font-bold text-slate-900">{item.ProductDescription}</p>
+                                            <p className="text-[10px] text-slate-400 font-mono">{item.ItemCode}</p>
                                         </td>
+                                        <td className="px-4 py-4 text-right font-medium">{item.Quantity} {item.Unit}</td>
+                                        <td className="px-4 py-4 text-right font-medium">{item.UnitPrice?.toLocaleString()}</td>
+                                        <td className="px-4 py-4 text-right font-bold text-indigo-500">{item.TaxAmount?.toLocaleString()}</td>
+                                        <td className="px-4 py-4 text-right font-black text-slate-900">{item.TotalLineAmount?.toLocaleString()}</td>
                                     </tr>
-                                ) : (
-                                    items.map((item, idx) => (
-                                        <tr key={idx} className="hover:bg-slate-50/60 transition-colors">
-                                            <td className="px-4 py-3 text-xs font-bold text-slate-700">{item.LineNumber ?? idx + 1}</td>
-                                            <td className="px-4 py-3 text-xs text-slate-500">{item.HarmonizationCode ?? "—"}</td>
-                                            <td className="px-4 py-3 text-xs text-slate-600">{item.NatureOfSupplies}</td>
-                                            <td className="px-4 py-3 text-xs font-medium text-slate-800">{item.ProductDescription}</td>
-                                            <td className="px-4 py-3 text-xs font-mono text-slate-600">{item.ItemCode}</td>
-                                            <td className="px-4 py-3 text-xs text-slate-600">{item.Unit}</td>
-                                            <td className="px-4 py-3 text-xs text-slate-700">{item.Quantity}</td>
-                                            <td className="px-4 py-3 text-xs font-bold text-slate-800">{Number(item.UnitPrice).toLocaleString()}</td>
-                                            <td className="px-4 py-3 text-xs text-slate-700">{Number(item.PreTaxValue).toLocaleString()}</td>
-                                            <td className="px-4 py-3 text-xs font-mono text-slate-600">{item.TaxCode}</td>
-                                            <td className="px-4 py-3 text-xs text-slate-700">{Number(item.TaxAmount).toLocaleString()}</td>
-                                            <td className="px-4 py-3 text-xs text-slate-600">{item.Discount ?? 0}</td>
-                                            <td className="px-4 py-3 text-xs text-slate-600">{item.ExciseTaxValue ?? 0}</td>
-                                            <td className="px-4 py-3 text-xs font-black text-emerald-600">{Number(item.TotalLineAmount).toLocaleString()}</td>
-                                        </tr>
-                                    ))
-                                )}
+                                ))}
                             </tbody>
                         </table>
                     </div>
+
+                    {/* Footer / Notes */}
+                    <div className="pt-8 flex justify-between items-end border-t border-slate-100">
+                        <div className="space-y-1">
+                            <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Compliance</p>
+                            <div className="flex items-center gap-2 text-emerald-500">
+                                <ShieldCheck className="h-4 w-4" />
+                                <span className="text-xs font-bold">MOR Regulated Transaction</span>
+                            </div>
+                        </div>
+                        <div className="text-right space-y-2">
+                            <div className="flex items-center justify-end gap-10">
+                                <span className="text-sm font-black text-slate-400 uppercase">Subtotal</span>
+                                <span className="text-lg font-bold text-slate-700">{val.TotalValue - val.TaxValue}</span>
+                            </div>
+                            <div className="flex items-center justify-end gap-10">
+                                <span className="text-sm font-black text-indigo-400 uppercase">Tax (15%)</span>
+                                <span className="text-lg font-bold text-indigo-600">{val.TaxValue}</span>
+                            </div>
+                            <div className="flex items-center justify-end gap-10 pt-2 border-t border-slate-100">
+                                <span className="text-sm font-black text-slate-900 uppercase tracking-widest">Amount Due</span>
+                                <span className="text-2xl font-black text-primary">{val.TotalValue?.toLocaleString()} {val.InvoiceCurrency}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {/* QR Code (if available) */}
-                {invoice.qrCode && (
-                    <div className="bg-white border border-slate-100 rounded-2xl shadow-sm p-6 flex flex-col items-center gap-4">
-                        <h2 className="text-base font-black text-slate-800">QR Code</h2>
-                        {invoice.qrCode.startsWith("data:image") ? (
-                            <img src={invoice.qrCode} alt="Invoice QR Code" className="w-48 h-48" />
-                        ) : (
-                            <p className="font-mono text-xs text-slate-500 break-all max-w-sm text-center">{invoice.qrCode}</p>
-                        )}
-                    </div>
-                )}
+                {/* Developer / Raw Data section (remains collapsible outside print) */}
+                <div className="mt-8">
+                    <CollapsibleSection title="Developer Tool: Raw Data" icon={Cpu}>
+                        <div className="bg-slate-900 rounded-2xl p-6 overflow-x-auto">
+                            <pre className="text-[10px] text-emerald-400 font-mono">
+                                {JSON.stringify(invoice, null, 2)}
+                            </pre>
+                        </div>
+                    </CollapsibleSection>
+                </div>
             </div>
         </DetailLayout>
     );

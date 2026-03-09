@@ -125,6 +125,7 @@ export default function InvoiceUploadPage() {
                             NatureOfSupplies: "goods",
                             Discount: 0,
                             ExciseTaxValue: 0,
+                            LineNumber: 1,
                         },
                     ],
                 };
