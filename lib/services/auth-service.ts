@@ -114,6 +114,7 @@ class AuthService {
       phoneNumber: backendUser.phoneNumber,
       profileImage: backendUser.profileImage,
       orgId: backendUser.orgId,
+      isVatIncluded: backendUser.isVatIncluded,
       permissions: backendUser.permissions || [],
       createdAt: backendUser.createdAt || new Date().toISOString(),
       isPasswordSet: backendUser.isPasswordSet,

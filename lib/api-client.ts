@@ -60,7 +60,9 @@ apiClient.interceptors.response.use(
         }
 
         if (isMutation && data && data.message && data.success !== false) {
-            if (!response.config.url?.includes('refresh')) { // Don't toast on refresh
+            const isRefresh = response.config.url?.includes('refresh');
+            const isTouch = response.config.url?.includes('touch');
+            if (!isRefresh && !isTouch) {
                 toast.success(data.message);
             }
         }

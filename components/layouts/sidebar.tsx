@@ -147,6 +147,7 @@ export function Sidebar({ onItemClick }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
 
+  const isSystemAdmin = user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.SYSTEM_ADMIN;
   const isParkingSuperAdmin = user?.role === UserRole.PARKING_SUPER_ADMIN;
   const isParkingManager = user?.role === UserRole.PARKING_MANAGER;
   const isParkingLevelUser = isParkingSuperAdmin || isParkingManager;
@@ -163,6 +164,13 @@ export function Sidebar({ onItemClick }: SidebarProps) {
   // Filter flat navigation items
   const filteredItems = navigationItems.filter((item) => {
     if (!hasPermission(item.permission)) return false;
+
+    // Logic for Invoice visibility based on VAT (Bypass for System Admins)
+    const isInvoiceRelated = item.label.toLowerCase().includes("invoice");
+    if (isInvoiceRelated && !isSystemAdmin && isParkingLevelUser && user?.isVatIncluded === false) {
+      return false;
+    }
+
     if (isParkingManager) {
       const allowedForManager = [
         "/dashboard",
@@ -178,6 +186,7 @@ export function Sidebar({ onItemClick }: SidebarProps) {
   // Whether the Invoice group should show
   const showInvoiceGroup =
     hasPermission(invoiceGroup.permission) &&
+    (isSystemAdmin || (isParkingLevelUser ? (user?.isVatIncluded !== false) : true)) &&
     (isParkingManager
       ? false
       : isParkingSuperAdmin
@@ -185,7 +194,7 @@ export function Sidebar({ onItemClick }: SidebarProps) {
         : true);
 
   return (
-    <div className="w-full md:w-64 border-r border-border bg-sidebar flex flex-col h-full">
+    <div className="w-full md:w-72 border-r border-border bg-sidebar flex flex-col h-full shrink-0">
       {/* Logo */}
       <div className="h-16 md:h-20 flex items-center px-4 md:px-6 border-b border-sidebar-border">
         <Link href="/dashboard" className="flex items-center gap-2 md:gap-3 group">
@@ -225,7 +234,7 @@ export function Sidebar({ onItemClick }: SidebarProps) {
                     )}
                   >
                     <FileText className="w-5 h-5 md:w-5.5 md:h-5.5 shrink-0" />
-                    <span className="flex-1 text-left">Invoice</span>
+                    <span className="flex-1 text-left whitespace-nowrap truncate">Invoice</span>
                     <ChevronDown
                       className={cn(
                         "h-4 w-4 transition-transform duration-200",
@@ -255,7 +264,7 @@ export function Sidebar({ onItemClick }: SidebarProps) {
                             )}
                           >
                             <ChildIcon className="w-4 h-4 shrink-0" />
-                            <span>{child.label}</span>
+                            <span className="flex-1 text-left whitespace-nowrap truncate">{child.label}</span>
                           </button>
                         );
                       })}
@@ -283,8 +292,8 @@ export function Sidebar({ onItemClick }: SidebarProps) {
                       : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:pl-5 md:hover:pl-7",
                   )}
                 >
-                  <Icon className="w-5 h-5 md:w-5.5 md:h-5.5" />
-                  {item.label}
+                  <Icon className="w-5 h-5 md:w-5.5 md:h-5.5 shrink-0" />
+                  <span className="flex-1 text-left whitespace-nowrap truncate">{item.label}</span>
                 </button>
               </Link>
             </div>
@@ -304,7 +313,7 @@ export function Sidebar({ onItemClick }: SidebarProps) {
               )}
             >
               <FileText className="w-5 h-5 shrink-0" />
-              <span className="flex-1 text-left">Invoice</span>
+              <span className="flex-1 text-left whitespace-nowrap truncate">Invoice</span>
               <ChevronDown className={cn("h-4 w-4 transition-transform duration-200", invoiceOpen ? "rotate-180" : "")} />
             </button>
             {invoiceOpen && (
@@ -324,7 +333,7 @@ export function Sidebar({ onItemClick }: SidebarProps) {
                       )}
                     >
                       <ChildIcon className="w-4 h-4 shrink-0" />
-                      <span>{child.label}</span>
+                      <span className="flex-1 text-left whitespace-nowrap truncate">{child.label}</span>
                     </button>
                   );
                 })}

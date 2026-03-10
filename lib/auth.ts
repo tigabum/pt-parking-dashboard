@@ -33,6 +33,7 @@ export interface User {
   status?: UserStatus;
   profileImage?: string;
   orgId?: string;
+  isVatIncluded?: boolean;
   permissions?: string[];
   createdAt: string | Date;
   updatedAt?: string | Date;
