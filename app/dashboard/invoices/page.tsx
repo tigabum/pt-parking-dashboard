@@ -729,11 +729,11 @@ export default function InvoicesPage() {
                 />
 
                 <DashboardPagination
-                    currentPage={page}
+                    page={page}
                     totalPages={totalPages}
                     onPageChange={setPage}
-                    totalItems={total}
-                    itemsPerPage={limit}
+                    total={total}
+                    limit={limit}
                     onLimitChange={setLimit}
                 />
             </div>

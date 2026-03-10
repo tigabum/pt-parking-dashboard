@@ -1,0 +1,2 @@
+app/dashboard/invoices/page.tsx(732,21): error TS2322: Type '{ currentPage: number; totalPages: number; onPageChange: Dispatch<SetStateAction<number>>; totalItems: number; itemsPerPage: number; onLimitChange: Dispatch<SetStateAction<number>>; }' is not assignable to type 'IntrinsicAttributes & DashboardPaginationProps'.
+  Property 'currentPage' does not exist on type 'IntrinsicAttributes & DashboardPaginationProps'.
