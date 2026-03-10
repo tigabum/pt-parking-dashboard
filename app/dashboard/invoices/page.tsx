@@ -268,10 +268,7 @@ export default function InvoicesPage() {
         } catch (error: any) {
             console.error("Registration failed", error);
             const errorMsg = error.response?.data?.message || "Failed to register invoice with MOR";
-            toast.error(errorMsg, {
-                duration: 10000,
-                description: typeof errorMsg === 'string' && errorMsg.includes('{') ? "Validation Rule Mismatch" : undefined
-            });
+            toast.error(errorMsg, { duration: 8000 });
         } finally {
             setRegistering(false);
         }

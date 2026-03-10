@@ -8,9 +8,10 @@ import {
     RefreshCw,
     Printer,
     Loader2,
-    CheckCircle2,
-    XCircle,
-    QrCode,
+    SlidersHorizontal,
+    X,
+    ChevronLeft,
+    ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,78 +25,179 @@ export default function ReceiptPage() {
     const parkingId = user?.orgId;
     const router = useRouter();
 
-    const [invoices, setInvoices] = useState<any[]>([]);
+    const [receipts, setReceipts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [generating, setGenerating] = useState<string | null>(null);
+    const [total, setTotal] = useState(0);
+    const [page, setPage] = useState(1);
 
-    const loadInvoices = async () => {
+    // Filters
+    const [rrn, setRrn] = useState("");
+    const [receiptType, setReceiptType] = useState("");
+    const [sellerTin, setSellerTin] = useState("");
+
+    const [activeFilters, setActiveFilters] = useState<string[]>([]);
+
+    const loadReceipts = async () => {
         if (!parkingId) return;
         setLoading(true);
         try {
-            const data = await invoiceService.getHistory(parkingId);
-            // Only show invoices eligible for receipt: REGISTERED or VERIFIED, with IRN
-            setInvoices((data || []).filter((inv: any) =>
-                (inv.status === "REGISTERED" || inv.status === "VERIFIED") && inv.irn
-            ));
+            const response = await invoiceService.getReceipts(parkingId, {
+                page,
+                limit: 10,
+                rrn,
+                type: receiptType,
+                sellerTin
+            });
+            setReceipts(response.data || []);
+            setTotal(response.total || 0);
         } catch (e) {
-            toast.error("Failed to load invoices");
+            toast.error("Failed to load receipts");
         } finally {
             setLoading(false);
         }
     };
 
-    useEffect(() => { loadInvoices(); }, [parkingId]);
+    useEffect(() => { loadReceipts(); }, [parkingId, page]);
 
-    const handleGenerate = async (invoice: any) => {
-        setGenerating(invoice.id);
-        const t = toast.loading("Generating receipt...");
-        try {
-            await invoiceService.generateReceipt(invoice.id);
-            toast.success("Receipt generated successfully", { id: t });
-            loadInvoices();
-        } catch (err: any) {
-            toast.error(err.response?.data?.message || "Receipt generation failed", { id: t });
-        } finally {
-            setGenerating(null);
-        }
+    const handleSearch = () => {
+        setPage(1);
+        loadReceipts();
+
+        const filters = [];
+        if (rrn) filters.push(rrn);
+        if (receiptType) filters.push(receiptType);
+        if (sellerTin) filters.push(sellerTin);
+        setActiveFilters(filters);
     };
 
-    const filtered = invoices.filter((inv) =>
-        inv.irn?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        inv.buyerTin?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        inv.buyerName?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const clearFilters = () => {
+        setRrn("");
+        setReceiptType("");
+        setSellerTin("");
+        setActiveFilters([]);
+        setPage(1);
+        // We'll let the effect or manual call handle reload
+    };
 
     return (
-        <div className="p-6 space-y-6 animate-in fade-in duration-500">
-            <PageHeader
-                title="Sales Receipt"
-                description="Generate MOR-compliant sales receipts for registered and verified invoices."
-            >
-                <div className="flex items-center gap-3 mt-2">
-                    <div className="relative w-72">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+        <div className="p-6 space-y-6 animate-in fade-in duration-500 bg-slate-50/30 min-h-screen">
+            {/* Search Section */}
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+                <h2 className="text-lg font-bold text-slate-800 mb-6">Search</h2>
+
+                <div className="flex flex-wrap items-end gap-4">
+                    <div className="flex-1 min-w-[300px] space-y-2">
+                        <label className="text-xs font-black uppercase tracking-widest text-slate-400">RRN</label>
                         <Input
-                            placeholder="Search by IRN or Buyer TIN..."
-                            className="pl-10 h-11 rounded border-slate-200"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            value={rrn}
+                            onChange={(e) => setRrn(e.target.value)}
+                            placeholder="Enter RRN"
+                            className="h-11 border-blue-400 focus-visible:ring-blue-400 rounded-lg font-mono text-sm"
                         />
                     </div>
-                    <Button onClick={loadInvoices} variant="ghost" size="icon" className="h-11 w-11 rounded border hover:bg-white">
-                        <RefreshCw className={loading ? "h-4 w-4 animate-spin" : "h-4 w-4"} />
-                    </Button>
-                </div>
-            </PageHeader>
 
-            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                    <div className="w-64 space-y-2">
+                        <label className="text-xs font-black uppercase tracking-widest text-slate-400">Receipt Type</label>
+                        <Input
+                            value={receiptType}
+                            onChange={(e) => setReceiptType(e.target.value)}
+                            placeholder="Enter Receipt Type"
+                            className="h-11 border-slate-200 rounded-lg text-sm"
+                        />
+                    </div>
+
+                    <div className="w-64 space-y-2">
+                        <label className="text-xs font-black uppercase tracking-widest text-slate-400">Seller TIN</label>
+                        <Input
+                            value={sellerTin}
+                            onChange={(e) => setSellerTin(e.target.value)}
+                            placeholder="Enter Seller TIN"
+                            className="h-11 border-slate-200 rounded-lg text-sm"
+                        />
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <Button
+                            onClick={handleSearch}
+                            className="h-11 w-11 bg-primary hover:opacity-90 rounded-lg p-0"
+                        >
+                            <Search className="h-5 w-5 text-white" />
+                        </Button>
+                        <Button
+                            variant="outline"
+                            className="h-11 w-11 border-slate-200 rounded-lg p-0"
+                        >
+                            <SlidersHorizontal className="h-5 w-5 text-slate-500" />
+                        </Button>
+                    </div>
+                </div>
+
+                {activeFilters.length > 0 && (
+                    <div className="flex items-center gap-2 mt-6 flex-wrap">
+                        {activeFilters.map((f, i) => (
+                            <div key={i} className="flex items-center gap-2 bg-orange-50 border border-orange-100 text-orange-700 px-3 py-1.5 rounded-lg text-sm font-medium">
+                                {f}
+                                <button className="hover:text-orange-900"><X className="h-3.5 w-3.5" /></button>
+                            </div>
+                        ))}
+                        <button
+                            onClick={clearFilters}
+                            className="flex items-center gap-2 text-orange-600 hover:text-orange-800 text-sm font-bold ml-2 bg-orange-50 px-3 py-1.5 rounded-lg"
+                        >
+                            Clear All <X className="h-3.5 w-3.5" />
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            {/* Invoices Table Section */}
+            <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                <div className="p-6 flex items-center justify-between border-b border-slate-100">
+                    <h2 className="text-2xl font-black text-slate-800 tracking-tight">Invoices</h2>
+
+                    <div className="flex items-center gap-6">
+                        <Button variant="outline" className="h-10 border-slate-200 rounded-lg gap-2 font-bold text-slate-600">
+                            Columns <ChevronLeft className="h-4 w-4 rotate-270 translate-y-0.5" />
+                        </Button>
+
+                        <div className="flex items-center gap-4 text-xs font-bold text-slate-500">
+                            <span>Showing: {(page - 1) * 10 + 1} - {Math.min(page * 10, total)} of {total}</span>
+                            <div className="flex items-center gap-1">
+                                <Button
+                                    disabled={page === 1}
+                                    onClick={() => setPage(page - 1)}
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 px-3 font-bold text-slate-600"
+                                >
+                                    Previous
+                                </Button>
+                                <div className="bg-primary text-white h-7 w-7 flex items-center justify-center rounded-md font-bold text-[11px]">
+                                    {page}
+                                </div>
+                                <Button
+                                    disabled={page * 10 >= total}
+                                    onClick={() => setPage(page + 1)}
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 px-3 font-bold text-slate-600"
+                                >
+                                    Next
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="bg-slate-50 border-b-2 border-primary/10">
-                                {["#", "IRN", "Buyer TIN", "Buyer Name", "Total Amount", "Status", "Date", "Actions"].map((h) => (
-                                    <th key={h} className="px-4 py-4 text-left text-[10px] font-extrabold text-slate-400 uppercase tracking-widest whitespace-nowrap">
+                    <table className="w-full text-sm">
+                        <thead className="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                {[
+                                    "Receipt Number", "Receipt Type", "Receipt Date", "Receipt Counter",
+                                    "Manual Receipt Number", "Receipt Currency", "Seller TIN", "Exchange Rate"
+                                ].map((h) => (
+                                    <th key={h} className="px-6 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest whitespace-nowrap">
                                         {h}
                                     </th>
                                 ))}
@@ -104,56 +206,36 @@ export default function ReceiptPage() {
                         <tbody className="divide-y divide-slate-50">
                             {loading ? (
                                 <tr>
-                                    <td colSpan={8} className="py-20 text-center">
+                                    <td colSpan={8} className="py-24 text-center">
                                         <div className="flex flex-col items-center gap-3">
-                                            <div className="h-10 w-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Loading...</span>
+                                            <Loader2 className="h-8 w-8 text-primary animate-spin" />
+                                            <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Fetching Data...</span>
                                         </div>
                                     </td>
                                 </tr>
-                            ) : filtered.length === 0 ? (
+                            ) : receipts.length === 0 ? (
                                 <tr>
-                                    <td colSpan={8} className="py-12 text-center text-sm text-slate-400 italic">
-                                        No invoices eligible for receipt generation
+                                    <td colSpan={8} className="py-16 text-center text-slate-400 italic font-medium">
+                                        No generated receipts found matching your criteria.
                                     </td>
                                 </tr>
                             ) : (
-                                filtered.map((inv, idx) => (
+                                receipts.map((rec) => (
                                     <tr
-                                        key={inv.id}
-                                        className="hover:bg-primary/5 transition-colors cursor-pointer"
-                                        onClick={() => router.push(`/dashboard/invoices/${inv.id}`)}
+                                        key={rec.id}
+                                        className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
+                                        onClick={() => router.push(`/dashboard/invoices/${rec.invoiceId}`)}
                                     >
-                                        <td className="px-4 py-3 text-xs font-bold text-slate-700">{inv.invoiceCounter ?? idx + 1}</td>
-                                        <td className="px-4 py-3 text-xs font-mono text-slate-500 max-w-[180px] truncate">{inv.irn}</td>
-                                        <td className="px-4 py-3 text-xs font-mono text-blue-600 font-bold">{inv.buyerTin ?? "—"}</td>
-                                        <td className="px-4 py-3 text-xs font-medium text-slate-800">{inv.buyerName ?? "—"}</td>
-                                        <td className="px-4 py-3 text-xs font-black text-emerald-700">
-                                            ETB {Number(inv.totalAmount).toLocaleString()}
+                                        <td className="px-6 py-4 font-mono text-xs text-slate-600 font-bold group-hover:text-primary">{rec.receiptNumber}</td>
+                                        <td className="px-6 py-4 font-bold text-slate-800 text-xs">{rec.receiptType}</td>
+                                        <td className="px-6 py-4 text-xs text-slate-500">
+                                            {rec.receiptDate ? format(new Date(rec.receiptDate), "MMM dd, yyyy, hh:mm a") : "—"}
                                         </td>
-                                        <td className="px-4 py-3">
-                                            <span className={`text-[11px] font-bold ${inv.status === "VERIFIED" ? "text-indigo-600" : "text-emerald-600"}`}>
-                                                {inv.status}
-                                            </span>
-                                        </td>
-                                        <td className="px-4 py-3 text-xs text-slate-500">
-                                            {inv.createdAt ? format(new Date(inv.createdAt), "dd MMM yyyy") : "—"}
-                                        </td>
-                                        <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
-                                            <Button
-                                                size="sm"
-                                                onClick={() => handleGenerate(inv)}
-                                                disabled={generating === inv.id}
-                                                className="h-8 px-4 rounded-lg font-bold text-xs gap-1.5"
-                                            >
-                                                {generating === inv.id ? (
-                                                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                                                ) : (
-                                                    <Printer className="h-3.5 w-3.5" />
-                                                )}
-                                                Generate
-                                            </Button>
-                                        </td>
+                                        <td className="px-6 py-4 font-bold text-slate-700">{rec.receiptCounter}</td>
+                                        <td className="px-6 py-4 font-bold text-slate-700">{rec.manualReceiptNumber}</td>
+                                        <td className="px-6 py-4 font-black text-slate-900 text-xs">{rec.receiptCurrency}</td>
+                                        <td className="px-6 py-4 font-mono text-xs text-slate-600">{rec.sellerTin}</td>
+                                        <td className="px-6 py-4 text-xs text-slate-400 italic">{rec.exchangeRate || "—"}</td>
                                     </tr>
                                 ))
                             )}
@@ -161,6 +243,10 @@ export default function ReceiptPage() {
                     </table>
                 </div>
             </div>
+
+            <style jsx global>{`
+                .rotate-270 { transform: rotate(90deg); }
+            `}</style>
         </div>
     );
 }

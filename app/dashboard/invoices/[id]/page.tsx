@@ -22,6 +22,7 @@ import {
     XCircle,
     CheckCircle2,
     AlertCircle,
+    FileSpreadsheet,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -29,6 +30,7 @@ import { toast } from "sonner";
 import { useRef } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { PrintableInvoice } from "@/components/invoices/printable-invoice";
 
 // ─── Collapsible Section ──────────────────────────────────────────────────────
 function CollapsibleSection({
@@ -105,6 +107,7 @@ export default function InvoiceDetailPage() {
     const [loading, setLoading] = useState(true);
     const [processing, setProcessing] = useState(false);
     const printRef = useRef<HTMLDivElement>(null);
+    const printableRef = useRef<HTMLDivElement>(null);
 
     const loadInvoice = async () => {
         if (!id) return;
@@ -172,10 +175,10 @@ export default function InvoiceDetailPage() {
     };
 
     const downloadPDF = async () => {
-        if (!printRef.current) return;
-        const loadingToast = toast.loading("Preparing PDF for download...");
+        if (!printableRef.current) return;
+        const loadingToast = toast.loading("Preparing formal PDF for download...");
         try {
-            const element = printRef.current;
+            const element = printableRef.current;
             const canvas = await html2canvas(element, {
                 scale: 2,
                 useCORS: true,
@@ -196,16 +199,17 @@ export default function InvoiceDetailPage() {
             const imgHeight = canvas.height;
             const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
 
+            // Center image on page
             const imgX = (pdfWidth - imgWidth * ratio) / 2;
             const imgY = 20;
 
             pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth * ratio, imgHeight * ratio);
             pdf.save(`Invoice_${invoice.invoiceCounter || id.substring(0, 8)}.pdf`);
 
-            toast.success("Invoice downloaded successfully!", { id: loadingToast });
+            toast.success("Formal invoice downloaded!", { id: loadingToast });
         } catch (error) {
             console.error("PDF generation failed", error);
-            toast.error("Failed to generate PDF download", { id: loadingToast });
+            toast.error("Failed to generate PDF", { id: loadingToast });
         }
     };
 
@@ -271,6 +275,17 @@ export default function InvoiceDetailPage() {
                             Cancel Invoice
                         </Button>
                     </div>
+                </div>
+                <div className="flex items-center gap-2">
+                    <Button
+                        onClick={() => {
+                            window.print();
+                        }}
+                        className="bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl"
+                    >
+                        <Printer className="h-4 w-4 mr-2" />
+                        Print Formal
+                    </Button>
                     <Button
                         onClick={downloadPDF}
                         disabled={processing}
@@ -442,6 +457,31 @@ export default function InvoiceDetailPage() {
                     </div>
                 </div>
 
+                {/* Hidden Printable Invoice for PDF generation and browser printing */}
+                <div className="hidden-print" style={{ position: 'absolute', top: '-9999px', left: '-9999px' }}>
+                    <PrintableInvoice ref={printableRef} invoice={invoice} />
+                </div>
+
+                <style jsx global>{`
+                    @media print {
+                        body * {
+                            visibility: hidden;
+                        }
+                        .hidden-print, .hidden-print * {
+                            visibility: visible;
+                        }
+                        .hidden-print {
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            width: 100%;
+                            height: auto;
+                            margin: 0;
+                            padding: 0;
+                        }
+                    }
+                `}</style>
+
                 {/* Developer / Raw Data section (remains collapsible outside print) */}
                 <div className="mt-8">
                     <CollapsibleSection title="Developer Tool: Raw Data" icon={Cpu}>
@@ -453,6 +493,6 @@ export default function InvoiceDetailPage() {
                     </CollapsibleSection>
                 </div>
             </div>
-        </DetailLayout>
+        </DetailLayout >
     );
 }

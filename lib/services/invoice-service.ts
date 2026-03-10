@@ -64,4 +64,9 @@ export const invoiceService = {
         const response = await apiClient.post(`/invoice/withholding/${id}`, data);
         return response.data;
     },
+
+    getReceipts: async (parkingId: string, params: any = {}) => {
+        const response = await apiClient.get(`/invoice/receipts/${parkingId}`, { params });
+        return response.data;
+    },
 };
