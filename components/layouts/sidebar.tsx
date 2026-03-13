@@ -67,13 +67,6 @@ const navigationItems = [
     showInParkingDashboard: true,
   },
   {
-    label: "Commission",
-    href: "/dashboard/configurations/commissions",
-    icon: Star,
-    permission: PERMISSIONS.REVENUE_VIEW,
-    showInParkingDashboard: false,
-  },
-  {
     label: "Customers",
     href: "/dashboard/customers",
     icon: UserRound,
@@ -101,20 +94,8 @@ const navigationItems = [
     permission: PERMISSIONS.SETTINGS_RESET_PASSWORD,
     showInParkingDashboard: true,
   },
-  {
-    label: "Configurations",
-    href: "/dashboard/configurations",
-    icon: Settings2,
-    permission: PERMISSIONS.CONFIGURATION_VIEW,
-    showInParkingDashboard: false,
-  },
-  {
-    label: "Invoice Credentials",
-    href: "/dashboard/invoice-credentials",
-    icon: Receipt,
-    permission: PERMISSIONS.INVOICE_CREDENTIAL_VIEW,
-    showInParkingDashboard: true,
-  },
+
+
   {
     label: "Settings",
     href: "/dashboard/settings",
@@ -125,16 +106,18 @@ const navigationItems = [
 ];
 
 // ─── Invoice group (collapsible) ─────────────────────────────────────────────
-const invoiceGroup = {
-  label: "Invoice",
-  icon: FileText,
-  permission: PERMISSIONS.INVOICE_VIEW,
+const configurationsGroup = {
+  label: "Configurations",
+  icon: Settings2,
+  permission: PERMISSIONS.CONFIGURATION_VIEW,
   showInParkingDashboard: true,
   children: [
-    { label: "Report", href: "/dashboard/invoices", icon: BarChart2 },
-    { label: "Upload", href: "/dashboard/invoices/upload", icon: Upload },
-    { label: "Receipt", href: "/dashboard/invoices/receipt", icon: FileOutput },
-    { label: "Withholding Receipt", href: "/dashboard/invoices/withholding", icon: FileMinus },
+    { label: "Commission Configs", href: "/dashboard/configurations/commissions", icon: Star },
+    { label: "Invoice Credentials", href: "/dashboard/invoice-credentials", icon: Receipt },
+    { label: "Invoice Records", href: "/dashboard/invoices", icon: BarChart2 },
+    { label: "Invoice Upload", href: "/dashboard/invoices/upload", icon: Upload },
+    { label: "Receipts Ledger", href: "/dashboard/invoices/receipt", icon: FileOutput },
+    { label: "Withholding Ledger", href: "/dashboard/invoices/withholding", icon: FileMinus },
   ],
 };
 
@@ -155,6 +138,12 @@ export function Sidebar({ onItemClick }: SidebarProps) {
   // Determine if Invoice group is open by default (if currently on any invoice route)
   const isOnInvoicePage = pathname.startsWith("/dashboard/invoices") || pathname.startsWith("/dashboard/invoice");
   const [invoiceOpen, setInvoiceOpen] = useState(isOnInvoicePage);
+
+  const isOnConfigPage =
+    pathname.startsWith("/dashboard/configurations") ||
+    pathname.startsWith("/dashboard/invoice-credentials") ||
+    pathname.startsWith("/dashboard/invoices");
+  const [configsOpen, setConfigsOpen] = useState(isOnConfigPage);
 
   const handleLogout = async () => {
     await logout();
@@ -184,13 +173,12 @@ export function Sidebar({ onItemClick }: SidebarProps) {
   });
 
   // Whether the Invoice group should show
-  const showInvoiceGroup =
-    hasPermission(invoiceGroup.permission) &&
-    (isSystemAdmin || (isParkingLevelUser ? (user?.isVatIncluded !== false) : true)) &&
+  const showConfigsGroup =
+    hasPermission(configurationsGroup.permission) &&
     (isParkingManager
       ? false
       : isParkingSuperAdmin
-        ? invoiceGroup.showInParkingDashboard
+        ? configurationsGroup.showInParkingDashboard
         : true);
 
   return (
@@ -220,33 +208,33 @@ export function Sidebar({ onItemClick }: SidebarProps) {
 
           return (
             <div key={item.href}>
-              {/* Insert Invoice group before Settings */}
-              {isSettingsItem && showInvoiceGroup && (
+              {/* Insert Configurations group before Settings */}
+              {isSettingsItem && showConfigsGroup && (
                 <div className="mb-0.5 md:mb-1">
                   {/* Group Header */}
                   <button
-                    onClick={() => setInvoiceOpen((o) => !o)}
+                    onClick={() => setConfigsOpen((o) => !o)}
                     className={cn(
                       "w-full flex items-center gap-3 md:gap-4 px-4 md:px-6 py-3 md:py-4 rounded text-sm md:text-base font-medium transition-colors my-0.5 md:my-1",
-                      isOnInvoicePage
+                      isOnConfigPage
                         ? "bg-primary/10 text-primary"
                         : "text-sidebar-foreground hover:bg-sidebar-accent/50",
                     )}
                   >
-                    <FileText className="w-5 h-5 md:w-5.5 md:h-5.5 shrink-0" />
-                    <span className="flex-1 text-left whitespace-nowrap truncate">Invoice</span>
+                    <Settings2 className="w-5 h-5 md:w-5.5 md:h-5.5 shrink-0" />
+                    <span className="flex-1 text-left whitespace-nowrap truncate">Configurations</span>
                     <ChevronDown
                       className={cn(
                         "h-4 w-4 transition-transform duration-200",
-                        invoiceOpen ? "rotate-180" : "",
+                        configsOpen ? "rotate-180" : "",
                       )}
                     />
                   </button>
 
                   {/* Sub-items */}
-                  {invoiceOpen && (
+                  {configsOpen && (
                     <div className="ml-4 md:ml-6 pl-4 border-l border-slate-200 space-y-0.5 mt-0.5 mb-1">
-                      {invoiceGroup.children.map((child) => {
+                      {configurationsGroup.children.map((child) => {
                         const ChildIcon = child.icon;
                         const isChildActive = pathname === child.href;
                         return (
@@ -300,47 +288,7 @@ export function Sidebar({ onItemClick }: SidebarProps) {
           );
         })}
 
-        {/* Fallback: show Invoice group even if Settings is not in the list */}
-        {showInvoiceGroup && !filteredItems.some((i) => i.href === "/dashboard/settings") && (
-          <div className="mb-0.5 md:mb-1">
-            <button
-              onClick={() => setInvoiceOpen((o) => !o)}
-              className={cn(
-                "w-full flex items-center gap-3 md:gap-4 px-4 md:px-6 py-3 md:py-4 rounded text-sm md:text-base font-medium transition-colors my-0.5 md:my-1",
-                isOnInvoicePage
-                  ? "bg-primary/10 text-primary"
-                  : "text-sidebar-foreground hover:bg-sidebar-accent/50",
-              )}
-            >
-              <FileText className="w-5 h-5 shrink-0" />
-              <span className="flex-1 text-left whitespace-nowrap truncate">Invoice</span>
-              <ChevronDown className={cn("h-4 w-4 transition-transform duration-200", invoiceOpen ? "rotate-180" : "")} />
-            </button>
-            {invoiceOpen && (
-              <div className="ml-4 md:ml-6 pl-4 border-l border-slate-200 space-y-0.5 mt-0.5 mb-1">
-                {invoiceGroup.children.map((child) => {
-                  const ChildIcon = child.icon;
-                  const isChildActive = pathname === child.href;
-                  return (
-                    <button
-                      key={child.href}
-                      onClick={() => { router.push(child.href); onItemClick?.(); }}
-                      className={cn(
-                        "w-full flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium transition-colors",
-                        isChildActive
-                          ? "bg-primary text-primary-foreground shadow-sm"
-                          : "text-sidebar-foreground hover:bg-sidebar-accent/50",
-                      )}
-                    >
-                      <ChildIcon className="w-4 h-4 shrink-0" />
-                      <span className="flex-1 text-left whitespace-nowrap truncate">{child.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        )}
+
       </nav>
     </div>
   );
