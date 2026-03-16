@@ -36,8 +36,8 @@ export const PrintableInvoice = React.forwardRef<HTMLDivElement, PrintableInvoic
                         <img src="/login-brand.png" alt="Logo" className="max-h-20 max-w-full" />
                     </div>
                     <div className="w-2/4 p-4 border-r border-slate-300">
-                        <h2 className="font-bold text-lg">{seller.LegalName || "Gelagle Park"}</h2>
-                        <p className="text-xs">{seller.Address || "N/A, 101"}</p>
+                        <h2 className="font-bold text-lg">{seller.LegalName || "possible technology plc"}</h2>
+                        <p className="text-xs">{seller.City || "Addis Ababa"}, {seller.SubCity || ""}, {seller.Region || "1"}</p>
                     </div>
                     <div className="w-1/4 p-4 text-xs">
                         <div className="flex justify-between">
@@ -95,12 +95,12 @@ export const PrintableInvoice = React.forwardRef<HTMLDivElement, PrintableInvoic
                         </div>
                         <div className="grid grid-cols-3 border-b border-slate-300">
                             <div className="p-1 border-r border-slate-300">ወረዳ <br /> Woreda <p className="font-bold">{seller.Wereda || "13"}</p></div>
-                            <div className="p-1 border-r border-slate-300">ቀበሌ <br /> Kebele <p className="font-bold">{seller.Kebele || "N/A"}</p></div>
-                            <div className="p-1">የቤት ቁ <br /> H/No <p className="font-bold">{seller.HouseNo || "N/A"}</p></div>
+                            <div className="p-1 border-r border-slate-300">ቀበሌ <br /> Kebele <p className="font-bold">{seller.Locality || "N/A"}</p></div>
+                            <div className="p-1">የቤት ቁ <br /> H/No <p className="font-bold">{seller.HouseNumber || "N/A"}</p></div>
                         </div>
                         <div className="grid grid-cols-2 border-b border-slate-300">
                             <div className="p-1 border-r border-slate-300">የሻጭ የግብር ከፋይ መለያ ቁጥር <br /> Seller's TIN <p className="font-bold underline">{seller.Tin}</p></div>
-                            <div className="p-1">ንዑስ-TIN <br /> Sub-TIN <p className="font-bold">{seller.SubTin || "N/A"}</p></div>
+                            <div className="p-1">ንዑስ-ከተማ <br /> Sub-City <p className="font-bold">{seller.SubCity || "N/A"}</p></div>
                         </div>
                         <div className="p-1 border-b border-slate-300">የሻጭ የኤ.እ.ታ ምዝገባ ቁጥር <br /> Seller's VAT Reg.No <p className="font-bold">{seller.VatNumber || "43256663343256663322"}</p></div>
                         <div className="p-1">ለተ.እ.ታ የምዝገባ ቀን <br /> Date of VAT Registration <p className="font-bold underline">{seller.VatRegistrationDate || "N/A"}</p></div>
@@ -119,12 +119,12 @@ export const PrintableInvoice = React.forwardRef<HTMLDivElement, PrintableInvoic
                         </div>
                         <div className="grid grid-cols-3 border-b border-slate-300">
                             <div className="p-1 border-r border-slate-300">ወረዳ <br /> Woreda <p className="font-bold">{buyer.Wereda || "13"}</p></div>
-                            <div className="p-1 border-r border-slate-300">ቀበሌ <br /> Kebele <p className="font-bold">{buyer.Kebele || "N/A"}</p></div>
-                            <div className="p-1">የቤት ቁ <br /> H/No <p className="font-bold">{buyer.HouseNo || "101"}</p></div>
+                            <div className="p-1 border-r border-slate-300">ቀበሌ <br /> Kebele <p className="font-bold">{buyer.Locality || "N/A"}</p></div>
+                            <div className="p-1">የቤት ቁ <br /> H/No <p className="font-bold">{buyer.HouseNumber || "101"}</p></div>
                         </div>
                         <div className="grid grid-cols-2 border-b border-slate-300">
                             <div className="p-1 border-r border-slate-300">የደንበኛ የግብር ከፋይ መለያ ቁጥር <br /> Customer's TIN <p className="font-bold underline">{buyer.Tin}</p></div>
-                            <div className="p-1">ንዑስ-TIN <br /> Sub-TIN <p className="font-bold">{buyer.SubTin || "N/A"}</p></div>
+                            <div className="p-1">ንዑስ-ከተማ <br /> Sub-City <p className="font-bold">{buyer.SubCity || "N/A"}</p></div>
                         </div>
                         <div className="p-1 border-b border-slate-300">የደንበኛ የኤ.እ.ታ ምዝገባ ቁጥር <br /> Customer's VAT Reg.No <p className="font-bold">{buyer.VatNumber || "43256663343256663322"}</p></div>
                         <div className="p-1">ስልክ ቁጥር <br /> Phone.No <p className="font-bold underline">{buyer.Phone}</p></div>
