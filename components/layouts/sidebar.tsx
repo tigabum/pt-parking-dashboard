@@ -14,8 +14,11 @@ import {
   ParkingCircle,
   Calendar,
   Star,
+  UserRound,
+  Car,
   Settings2,
   Wallet,
+  FileText,
   CreditCard,
   Receipt,
   ChevronDown,
@@ -44,6 +47,20 @@ const navigationItems = [
     showInParkingDashboard: true,
   },
   {
+    label: "Customers",
+    href: "/dashboard/customers",
+    icon: UserRound,
+    permission: PERMISSIONS.CUSTOMER_VIEW,
+    showInParkingDashboard: false,
+  },
+  {
+    label: "Vehicles",
+    href: "/dashboard/vehicles",
+    icon: Car,
+    permission: PERMISSIONS.VEHICLE_VIEW,
+    showInParkingDashboard: false,
+  },
+  {
     label: "Users",
     href: "/dashboard/users",
     icon: Users,
@@ -62,7 +79,14 @@ const navigationItems = [
     href: "/dashboard/wallets",
     icon: Wallet,
     permission: PERMISSIONS.REVENUE_VIEW,
-    showInParkingDashboard: false,
+    showInParkingDashboard: true,
+  },
+  {
+    label: "Commissions",
+    href: "/dashboard/commissions",
+    icon: FileText,
+    permission: PERMISSIONS.REVENUE_VIEW,
+    showInParkingDashboard: true,
   },
 ];
 
