@@ -2,12 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/app/context/auth-context";
-import { InvoiceCredentialForm } from "@/components/forms/invoice-credential-form";
+import { TelebirrConfigForm } from "@/components/forms/telebirr-config-form";
 import { PageHeader } from "@/components/layouts/page-header";
-import { Receipt, AlertCircle, Building2, Plus } from "lucide-react";
-import { RegisterInvoiceDialog } from "@/components/invoices/register-invoice-dialog";
+import { CreditCard, AlertCircle, Building2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
     Select,
@@ -18,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { UserRole } from "@/lib/auth";
 
-export default function InvoiceCredentialsPage() {
+export default function TelebirrConfigPage() {
     const { user } = useAuth();
 
     // For Parking Admins, orgId is their parking ID
@@ -34,19 +32,9 @@ export default function InvoiceCredentialsPage() {
     return (
         <div className="flex flex-col gap-8 p-4 md:p-8 animate-in fade-in duration-500">
             <PageHeader
-                title="Invoice Configuration"
-                description="Configure your connection to the Ethiopian Ministry of Revenue CORE API"
-            >
-                <RegisterInvoiceDialog
-                    parkingId={selectedParkingId}
-                    trigger={
-                        <Button className="h-11 rounded px-6 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 transition-all">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Add Invoice
-                        </Button>
-                    }
-                />
-            </PageHeader>
+                title="Telebirr Configuration"
+                description="Manage your Telebirr integration credentials and merchant settings"
+            />
 
             {isSystemAdmin && (
                 <div className="max-w-5xl mx-auto w-full space-y-4">
@@ -65,7 +53,7 @@ export default function InvoiceCredentialsPage() {
                     <AlertCircle className="h-4 w-4" />
                     <AlertTitle>No Parking Assigned</AlertTitle>
                     <AlertDescription>
-                        Your account is not assigned to any parking facility. Please contact your administrator to set up your parking association.
+                        Your account is not assigned to any parking facility. Please contact your administrator.
                     </AlertDescription>
                 </Alert>
             )}
@@ -77,7 +65,7 @@ export default function InvoiceCredentialsPage() {
                     </div>
                     <h3 className="text-xl font-bold text-slate-900 mb-2">Select an Agent</h3>
                     <p className="text-slate-500 text-center max-w-md">
-                        Please select a parking agent from the dropdown above to manage their specific invoice credentials.
+                        Please select a parking agent from the dropdown above to manage their Telebirr configuration.
                     </p>
                 </div>
             )}
@@ -85,15 +73,15 @@ export default function InvoiceCredentialsPage() {
             {selectedParkingId && (
                 <div className="space-y-6">
                     <Alert className="max-w-5xl mx-auto border-primary/20 bg-primary/5 rounded">
-                        <Receipt className="h-4 w-4 text-primary" />
-                        <AlertTitle className="text-primary font-bold">Active Configuration Interface</AlertTitle>
+                        <CreditCard className="h-4 w-4 text-primary" />
+                        <AlertTitle className="text-primary font-bold">Active Integration Interface</AlertTitle>
                         <AlertDescription className="text-slate-600">
-                            Editing these credentials will update the connection parameters for the selected agent.
-                            Ensure all API keys and secrets are current to prevent invoice registration failures.
+                            Updating these settings will change how payments are processed for the selected agent.
+                            Ensure your merchant code and RSA keys match your Telebirr developer portal settings.
                         </AlertDescription>
                     </Alert>
 
-                    <InvoiceCredentialForm parkingId={selectedParkingId} />
+                    <TelebirrConfigForm parkingId={selectedParkingId} />
                 </div>
             )}
         </div>
@@ -122,7 +110,7 @@ function ParkingSelect({ value, onChange }: { value: string, onChange: (v: strin
             <SelectContent className="rounded shadow-2xl">
                 {parkings.map(p => (
                     <SelectItem key={p.id} value={p.id} className="font-bold py-3">
-                        {p.name} ({p.parkingCode})
+                        {p.name} ({p.parkingCode || "No Code"})
                     </SelectItem>
                 ))}
             </SelectContent>

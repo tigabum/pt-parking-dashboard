@@ -4,36 +4,36 @@ import { Commission } from "@/components/types";
 
 export const commissionService = {
     getCommissions: async (params?: any) => {
-        const res = await apiClient.get<ServiceResponse<any>>("/commissions", { params });
+        const res = await apiClient.get<ServiceResponse<any>>("/system-config/commissions", { params });
         return res.data;
     },
 
     getCommission: async (id: string) => {
-        const res = await apiClient.get<ServiceResponse<Commission>>(`/commissions/${id}`);
+        const res = await apiClient.get<ServiceResponse<Commission>>(`/system-config/commissions/${id}`);
         return res.data;
     },
 
     createCommission: async (data: Partial<Commission>) => {
-        const res = await apiClient.post<ServiceResponse<Commission>>("/commissions/create", data);
+        const res = await apiClient.post<ServiceResponse<Commission>>("/system-config/commissions", data);
         return res.data;
     },
 
     updateCommission: async (id: string, data: Partial<Commission>) => {
-        const res = await apiClient.patch<ServiceResponse<Commission>>(`/commissions/${id}`, data);
+        const res = await apiClient.patch<ServiceResponse<Commission>>(`/system-config/commissions/${id}`, data);
         return res.data;
     },
 
     deleteCommission: async (id: string) => {
-        const res = await apiClient.delete<ServiceResponse<null>>(`/commissions/${id}`);
+        const res = await apiClient.delete<ServiceResponse<null>>(`/system-config/commissions/${id}`);
         return res.data;
     },
 
     getBookingCommissions: async (params?: any) => {
-        const res = await apiClient.get<ServiceResponse<any>>("/commissions/bookings", { params });
+        const res = await apiClient.get<ServiceResponse<any>>("/system-config/commissions/bookings", { params });
         return res.data;
     },
     getCommissionStats: async (params?: any) => {
-        const res = await apiClient.get<ServiceResponse<any>>("/commissions/stats", { params });
+        const res = await apiClient.get<ServiceResponse<any>>("/system-config/commissions/stats", { params });
         return res.data;
     },
 };

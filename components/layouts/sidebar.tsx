@@ -21,12 +21,15 @@ import {
   Settings2,
   Wallet,
   FileText,
+  CreditCard,
   Receipt,
   ChevronDown,
   BarChart2,
   Upload,
   FileOutput,
   FileMinus,
+  User,
+  Lock,
 } from "lucide-react";
 
 // ─── Flat navigation items ────────────────────────────────────────────────────
@@ -87,37 +90,44 @@ const navigationItems = [
     permission: PERMISSIONS.REVENUE_VIEW,
     showInParkingDashboard: false,
   },
-  {
-    label: "Reset Password",
-    href: "/dashboard/forgot-password",
-    icon: KeyRound,
-    permission: PERMISSIONS.SETTINGS_RESET_PASSWORD,
-    showInParkingDashboard: true,
-  },
-
-
-  {
-    label: "Settings",
-    href: "/dashboard/settings",
-    icon: Settings,
-    permission: PERMISSIONS.SETTINGS_VIEW,
-    showInParkingDashboard: true,
-  },
 ];
 
-// ─── Invoice group (collapsible) ─────────────────────────────────────────────
+// ─── Settings group (collapsible) ─────────────────────────────────────────────
+const settingsGroup = {
+  label: "Settings",
+  icon: Settings,
+  permission: PERMISSIONS.SETTINGS_VIEW,
+  showInParkingDashboard: true,
+  children: [
+    { label: "Profile", href: "/dashboard/settings", icon: User },
+    { label: "Reset Password", href: "/dashboard/settings", icon: Lock },
+  ],
+};
+
+// ─── Configuration group (collapsible) ─────────────────────────────────────────────
 const configurationsGroup = {
   label: "Configurations",
   icon: Settings2,
   permission: PERMISSIONS.CONFIGURATION_VIEW,
   showInParkingDashboard: true,
   children: [
-    { label: "Commission Configs", href: "/dashboard/configurations/commissions", icon: Star },
-    { label: "Invoice Credentials", href: "/dashboard/invoice-credentials", icon: Receipt },
-    { label: "Invoice Records", href: "/dashboard/invoices", icon: BarChart2 },
-    { label: "Invoice Upload", href: "/dashboard/invoices/upload", icon: Upload },
-    { label: "Receipts Ledger", href: "/dashboard/invoices/receipt", icon: FileOutput },
-    { label: "Withholding Ledger", href: "/dashboard/invoices/withholding", icon: FileMinus },
+    { label: "Commission Config", href: "/dashboard/configurations/commissions", icon: Star },
+    { label: "Invoice Config", href: "/dashboard/invoice-credentials", icon: Receipt },
+    { label: "Telebirr Config", href: "/dashboard/telebirr-config", icon: CreditCard },
+  ],
+};
+
+// ─── Invoice group (collapsible) ─────────────────────────────────────────────
+const invoicesGroup = {
+  label: "Invoices",
+  icon: Receipt,
+  permission: PERMISSIONS.INVOICE_VIEW,
+  showInParkingDashboard: true,
+  children: [
+    { label: "Report", href: "/dashboard/invoices", icon: BarChart2 },
+    { label: "Upload", href: "/dashboard/invoices/upload", icon: Upload },
+    { label: "Receipts", href: "/dashboard/invoices/receipt", icon: FileOutput },
+    { label: "Withholding", href: "/dashboard/invoices/withholding", icon: FileMinus },
   ],
 };
 
@@ -135,14 +145,22 @@ export function Sidebar({ onItemClick }: SidebarProps) {
   const isParkingManager = user?.role === UserRole.PARKING_MANAGER;
   const isParkingLevelUser = isParkingSuperAdmin || isParkingManager;
 
-  // Determine if Invoice group is open by default (if currently on any invoice route)
-  const isOnInvoicePage = pathname.startsWith("/dashboard/invoices") || pathname.startsWith("/dashboard/invoice");
-  const [invoiceOpen, setInvoiceOpen] = useState(isOnInvoicePage);
+  // Determine if groups are open by default
+  const isOnInvoicePage =
+    pathname.startsWith("/dashboard/invoices") ||
+    pathname.startsWith("/dashboard/invoice-upload") ||
+    pathname.startsWith("/dashboard/invoices/receipt") ||
+    pathname.startsWith("/dashboard/invoices/withholding");
+  const [invoicesOpen, setInvoicesOpen] = useState(isOnInvoicePage);
 
   const isOnConfigPage =
     pathname.startsWith("/dashboard/configurations") ||
-    pathname.startsWith("/dashboard/invoice-credentials") ||
-    pathname.startsWith("/dashboard/invoices");
+    pathname.startsWith("/dashboard/telebirr-config");
+  const [configOpen, setConfigOpen] = useState(isOnConfigPage);
+
+  const isOnSettingsPage = pathname.startsWith("/dashboard/settings");
+  const [settingsOpen, setSettingsOpen] = useState(isOnSettingsPage);
+  pathname.startsWith("/dashboard/invoice-credentials");
   const [configsOpen, setConfigsOpen] = useState(isOnConfigPage);
 
   const handleLogout = async () => {
@@ -172,7 +190,6 @@ export function Sidebar({ onItemClick }: SidebarProps) {
     return true;
   });
 
-  // Whether the Invoice group should show
   const showConfigsGroup =
     hasPermission(configurationsGroup.permission) &&
     (isParkingManager
@@ -180,6 +197,20 @@ export function Sidebar({ onItemClick }: SidebarProps) {
       : isParkingSuperAdmin
         ? configurationsGroup.showInParkingDashboard
         : true);
+
+  const showInvoicesGroup =
+    hasPermission(invoicesGroup.permission) &&
+    (isParkingManager
+      ? false
+      : isParkingSuperAdmin
+        ? invoicesGroup.showInParkingDashboard
+        : true);
+
+  const showSettingsGroup =
+    hasPermission(settingsGroup.permission) &&
+    (isParkingSuperAdmin
+      ? settingsGroup.showInParkingDashboard
+      : true);
 
   return (
     <div className="w-full md:w-72 border-r border-border bg-sidebar flex flex-col h-full shrink-0">
@@ -208,6 +239,57 @@ export function Sidebar({ onItemClick }: SidebarProps) {
 
           return (
             <div key={item.href}>
+              {/* Insert Invoices group before Settings */}
+              {isSettingsItem && showInvoicesGroup && (
+                <div className="mb-0.5 md:mb-1">
+                  <button
+                    onClick={() => setInvoicesOpen((o) => !o)}
+                    className={cn(
+                      "w-full flex items-center gap-3 md:gap-4 px-4 md:px-6 py-3 md:py-4 rounded text-sm md:text-base font-medium transition-colors my-0.5 md:my-1",
+                      isOnInvoicePage
+                        ? "bg-primary/10 text-primary"
+                        : "text-sidebar-foreground hover:bg-sidebar-accent/50",
+                    )}
+                  >
+                    <Receipt className="w-5 h-5 md:w-5.5 md:h-5.5 shrink-0" />
+                    <span className="flex-1 text-left whitespace-nowrap truncate">Invoices</span>
+                    <ChevronDown
+                      className={cn(
+                        "h-4 w-4 transition-transform duration-200",
+                        invoicesOpen ? "rotate-180" : "",
+                      )}
+                    />
+                  </button>
+
+                  {invoicesOpen && (
+                    <div className="ml-4 md:ml-6 pl-4 border-l border-slate-200 space-y-0.5 mt-0.5 mb-1">
+                      {invoicesGroup.children.map((child) => {
+                        const ChildIcon = child.icon;
+                        const isChildActive = pathname === child.href;
+                        return (
+                          <button
+                            key={child.href}
+                            onClick={() => {
+                              router.push(child.href);
+                              onItemClick?.();
+                            }}
+                            className={cn(
+                              "w-full flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium transition-colors",
+                              isChildActive
+                                ? "bg-primary text-primary-foreground shadow-sm"
+                                : "text-sidebar-foreground/70 hover:text-primary hover:bg-primary/5",
+                            )}
+                          >
+                            <ChildIcon className="w-4 h-4 shrink-0" />
+                            <span className="truncate">{child.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+
               {/* Insert Configurations group before Settings */}
               {isSettingsItem && showConfigsGroup && (
                 <div className="mb-0.5 md:mb-1">

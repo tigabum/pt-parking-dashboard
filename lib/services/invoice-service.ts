@@ -15,7 +15,7 @@ export interface InvoiceCredential {
 export const invoiceService = {
     getCredentials: async (parkingId: string) => {
         try {
-            const response = await apiClient.get(`/invoice/credentials/${parkingId}`);
+            const response = await apiClient.get(`/system-config/invoice-credentials/${parkingId}`);
             return response.data;
         } catch (error: any) {
             if (error.response?.status === 404) {
@@ -26,7 +26,7 @@ export const invoiceService = {
     },
 
     saveCredentials: async (parkingId: string, data: InvoiceCredential) => {
-        const response = await apiClient.post(`/invoice/credentials/${parkingId}`, data);
+        const response = await apiClient.post(`/system-config/invoice-credentials/${parkingId}`, data);
         return response.data;
     },
 
