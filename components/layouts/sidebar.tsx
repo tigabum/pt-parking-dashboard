@@ -14,13 +14,8 @@ import {
   ParkingCircle,
   Calendar,
   Star,
-  UserCog,
-  KeyRound,
-  UserRound,
-  Car,
   Settings2,
   Wallet,
-  FileText,
   CreditCard,
   Receipt,
   ChevronDown,
@@ -42,27 +37,6 @@ const navigationItems = [
     showInParkingDashboard: true,
   },
   {
-    label: "Staff Users",
-    href: "/dashboard/users",
-    icon: Users,
-    permission: PERMISSIONS.USER_VIEW,
-    showInParkingDashboard: false,
-  },
-  {
-    label: "Parking Users",
-    href: "/dashboard/parking-users",
-    icon: UserCog,
-    permission: PERMISSIONS.USER_VIEW,
-    showInParkingDashboard: true,
-  },
-  {
-    label: "Parkings",
-    href: "/dashboard/parkings",
-    icon: ParkingCircle,
-    permission: PERMISSIONS.PARKING_VIEW,
-    showInParkingDashboard: true,
-  },
-  {
     label: "Bookings",
     href: "/dashboard/bookings",
     icon: Calendar,
@@ -70,18 +44,18 @@ const navigationItems = [
     showInParkingDashboard: true,
   },
   {
-    label: "Customers",
-    href: "/dashboard/customers",
-    icon: UserRound,
-    permission: PERMISSIONS.CUSTOMER_VIEW,
+    label: "Users",
+    href: "/dashboard/users",
+    icon: Users,
+    permission: PERMISSIONS.USER_VIEW,
     showInParkingDashboard: false,
   },
   {
-    label: "Vehicles",
-    href: "/dashboard/vehicles",
-    icon: Car,
-    permission: PERMISSIONS.VEHICLE_VIEW,
-    showInParkingDashboard: false,
+    label: "Parkings",
+    href: "/dashboard/parkings",
+    icon: ParkingCircle,
+    permission: PERMISSIONS.PARKING_VIEW,
+    showInParkingDashboard: true,
   },
   {
     label: "Wallets",
@@ -155,13 +129,12 @@ export function Sidebar({ onItemClick }: SidebarProps) {
 
   const isOnConfigPage =
     pathname.startsWith("/dashboard/configurations") ||
-    pathname.startsWith("/dashboard/telebirr-config");
-  const [configOpen, setConfigOpen] = useState(isOnConfigPage);
+    pathname.startsWith("/dashboard/telebirr-config") ||
+    pathname.startsWith("/dashboard/invoice-credentials");
+  const [configsOpen, setConfigsOpen] = useState(isOnConfigPage);
 
   const isOnSettingsPage = pathname.startsWith("/dashboard/settings");
   const [settingsOpen, setSettingsOpen] = useState(isOnSettingsPage);
-  pathname.startsWith("/dashboard/invoice-credentials");
-  const [configsOpen, setConfigsOpen] = useState(isOnConfigPage);
 
   const handleLogout = async () => {
     await logout();
@@ -212,6 +185,59 @@ export function Sidebar({ onItemClick }: SidebarProps) {
       ? settingsGroup.showInParkingDashboard
       : true);
 
+  const renderGroup = (group: any, isOpen: boolean, setIsOpen: (o: any) => void, active: boolean) => {
+    const GroupIcon = group.icon;
+    return (
+      <div className="mb-0.5 md:mb-1">
+        <button
+          onClick={() => setIsOpen((o: boolean) => !o)}
+          className={cn(
+            "w-full flex items-center gap-3 md:gap-4 px-4 md:px-6 py-3 md:py-4 rounded text-sm md:text-base font-medium transition-colors my-0.5 md:my-1",
+            active
+              ? "bg-primary/10 text-primary"
+              : "text-sidebar-foreground hover:bg-sidebar-accent/50",
+          )}
+        >
+          <GroupIcon className="w-5 h-5 md:w-5.5 md:h-5.5 shrink-0" />
+          <span className="flex-1 text-left whitespace-nowrap truncate">{group.label}</span>
+          <ChevronDown
+            className={cn(
+              "h-4 w-4 transition-transform duration-200",
+              isOpen ? "rotate-180" : "",
+            )}
+          />
+        </button>
+
+        {isOpen && (
+          <div className="ml-4 md:ml-6 pl-4 border-l border-slate-200 space-y-0.5 mt-0.5 mb-1">
+            {group.children.map((child: any) => {
+              const ChildIcon = child.icon;
+              const isChildActive = pathname === child.href;
+              return (
+                <button
+                  key={child.href + child.label}
+                  onClick={() => {
+                    router.push(child.href);
+                    onItemClick?.();
+                  }}
+                  className={cn(
+                    "w-full flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium transition-colors",
+                    isChildActive
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-sidebar-foreground/70 hover:text-primary hover:bg-primary/5",
+                  )}
+                >
+                  <ChildIcon className="w-4 h-4 shrink-0" />
+                  <span className="truncate">{child.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div className="w-full md:w-72 border-r border-border bg-sidebar flex flex-col h-full shrink-0">
       {/* Logo */}
@@ -234,116 +260,8 @@ export function Sidebar({ onItemClick }: SidebarProps) {
           const Icon = item.icon;
           const isActive = pathname === item.href;
 
-          // Inject Invoice collapsible group before Settings
-          const isSettingsItem = item.href === "/dashboard/settings";
-
           return (
             <div key={item.href}>
-              {/* Insert Invoices group before Settings */}
-              {isSettingsItem && showInvoicesGroup && (
-                <div className="mb-0.5 md:mb-1">
-                  <button
-                    onClick={() => setInvoicesOpen((o) => !o)}
-                    className={cn(
-                      "w-full flex items-center gap-3 md:gap-4 px-4 md:px-6 py-3 md:py-4 rounded text-sm md:text-base font-medium transition-colors my-0.5 md:my-1",
-                      isOnInvoicePage
-                        ? "bg-primary/10 text-primary"
-                        : "text-sidebar-foreground hover:bg-sidebar-accent/50",
-                    )}
-                  >
-                    <Receipt className="w-5 h-5 md:w-5.5 md:h-5.5 shrink-0" />
-                    <span className="flex-1 text-left whitespace-nowrap truncate">Invoices</span>
-                    <ChevronDown
-                      className={cn(
-                        "h-4 w-4 transition-transform duration-200",
-                        invoicesOpen ? "rotate-180" : "",
-                      )}
-                    />
-                  </button>
-
-                  {invoicesOpen && (
-                    <div className="ml-4 md:ml-6 pl-4 border-l border-slate-200 space-y-0.5 mt-0.5 mb-1">
-                      {invoicesGroup.children.map((child) => {
-                        const ChildIcon = child.icon;
-                        const isChildActive = pathname === child.href;
-                        return (
-                          <button
-                            key={child.href}
-                            onClick={() => {
-                              router.push(child.href);
-                              onItemClick?.();
-                            }}
-                            className={cn(
-                              "w-full flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium transition-colors",
-                              isChildActive
-                                ? "bg-primary text-primary-foreground shadow-sm"
-                                : "text-sidebar-foreground/70 hover:text-primary hover:bg-primary/5",
-                            )}
-                          >
-                            <ChildIcon className="w-4 h-4 shrink-0" />
-                            <span className="truncate">{child.label}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Insert Configurations group before Settings */}
-              {isSettingsItem && showConfigsGroup && (
-                <div className="mb-0.5 md:mb-1">
-                  {/* Group Header */}
-                  <button
-                    onClick={() => setConfigsOpen((o) => !o)}
-                    className={cn(
-                      "w-full flex items-center gap-3 md:gap-4 px-4 md:px-6 py-3 md:py-4 rounded text-sm md:text-base font-medium transition-colors my-0.5 md:my-1",
-                      isOnConfigPage
-                        ? "bg-primary/10 text-primary"
-                        : "text-sidebar-foreground hover:bg-sidebar-accent/50",
-                    )}
-                  >
-                    <Settings2 className="w-5 h-5 md:w-5.5 md:h-5.5 shrink-0" />
-                    <span className="flex-1 text-left whitespace-nowrap truncate">Configurations</span>
-                    <ChevronDown
-                      className={cn(
-                        "h-4 w-4 transition-transform duration-200",
-                        configsOpen ? "rotate-180" : "",
-                      )}
-                    />
-                  </button>
-
-                  {/* Sub-items */}
-                  {configsOpen && (
-                    <div className="ml-4 md:ml-6 pl-4 border-l border-slate-200 space-y-0.5 mt-0.5 mb-1">
-                      {configurationsGroup.children.map((child) => {
-                        const ChildIcon = child.icon;
-                        const isChildActive = pathname === child.href;
-                        return (
-                          <button
-                            key={child.href}
-                            onClick={() => {
-                              router.push(child.href);
-                              onItemClick?.();
-                            }}
-                            className={cn(
-                              "w-full flex items-center gap-3 px-3 py-2.5 rounded text-sm font-medium transition-colors",
-                              isChildActive
-                                ? "bg-primary text-primary-foreground shadow-sm"
-                                : "text-sidebar-foreground hover:bg-sidebar-accent/50",
-                            )}
-                          >
-                            <ChildIcon className="w-4 h-4 shrink-0" />
-                            <span className="flex-1 text-left whitespace-nowrap truncate">{child.label}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Regular flat item */}
               <Link href={item.href}>
                 <button
                   onClick={(e) => {
@@ -370,6 +288,10 @@ export function Sidebar({ onItemClick }: SidebarProps) {
           );
         })}
 
+        {/* Groups */}
+        {showInvoicesGroup && renderGroup(invoicesGroup, invoicesOpen, setInvoicesOpen, isOnInvoicePage)}
+        {showConfigsGroup && renderGroup(configurationsGroup, configsOpen, setConfigsOpen, isOnConfigPage)}
+        {showSettingsGroup && renderGroup(settingsGroup, settingsOpen, setSettingsOpen, isOnSettingsPage)}
 
       </nav>
     </div>
