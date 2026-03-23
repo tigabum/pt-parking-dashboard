@@ -68,6 +68,13 @@ const navigationItems = [
     showInParkingDashboard: false,
   },
   {
+    label: "Parking Users",
+    href: "/dashboard/parking-users",
+    icon: Users,
+    permission: PERMISSIONS.USER_VIEW,
+    showInParkingDashboard: true,
+  },
+  {
     label: "Parkings",
     href: "/dashboard/parkings",
     icon: ParkingCircle,
