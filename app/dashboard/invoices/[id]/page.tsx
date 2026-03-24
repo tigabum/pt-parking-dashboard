@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "next/navigation";
 import { invoiceService } from "@/lib/services/invoice-service";
 import { DetailLayout } from "@/components/layouts/detail-layout";
@@ -12,25 +12,22 @@ import {
     Building2,
     FileText,
     CreditCard,
-    Link2,
     Cpu,
-    Package,
     Loader2,
     ShieldCheck,
     Printer,
-    Download,
     XCircle,
-    CheckCircle2,
-    AlertCircle,
-    FileSpreadsheet,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useRef } from "react";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
+import dynamic from "next/dynamic";
 import { PrintableInvoice } from "@/components/invoices/printable-invoice";
+
+const InvoicePDFGenerator = dynamic(
+    () => import("@/components/invoices/invoice-pdf-generator"),
+    { ssr: false }
+);
 
 // ─── Collapsible Section ──────────────────────────────────────────────────────
 function CollapsibleSection({
@@ -174,45 +171,6 @@ export default function InvoiceDetailPage() {
         }
     };
 
-    const downloadPDF = async () => {
-        if (!printableRef.current) return;
-        const loadingToast = toast.loading("Preparing formal PDF for download...");
-        try {
-            const element = printableRef.current;
-            const canvas = await html2canvas(element, {
-                scale: 2,
-                useCORS: true,
-                logging: false,
-                backgroundColor: "#ffffff"
-            });
-            const imgData = canvas.toDataURL("image/png");
-
-            const pdf = new jsPDF({
-                orientation: "portrait",
-                unit: "px",
-                format: "a4"
-            });
-
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
-            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-
-            // Center image on page
-            const imgX = (pdfWidth - imgWidth * ratio) / 2;
-            const imgY = 20;
-
-            pdf.addImage(imgData, "PNG", imgX, imgY, imgWidth * ratio, imgHeight * ratio);
-            pdf.save(`Invoice_${invoice.invoiceCounter || id.substring(0, 8)}.pdf`);
-
-            toast.success("Formal invoice downloaded!", { id: loadingToast });
-        } catch (error) {
-            console.error("PDF generation failed", error);
-            toast.error("Failed to generate PDF", { id: loadingToast });
-        }
-    };
-
     if (loading) {
         return (
             <div className="flex-1 flex items-center justify-center h-full p-20">
@@ -231,10 +189,6 @@ export default function InvoiceDetailPage() {
 
     const buyer = invoice.buyerDetails ?? {};
     const seller = invoice.sellerDetails ?? {};
-    const doc = invoice.documentDetails ?? {};
-    const payment = invoice.paymentDetails ?? {};
-    const ref = invoice.referenceDetails ?? {};
-    const src = invoice.sourceSystem ?? {};
     const val = invoice.valueDetails ?? {};
     const items: any[] = invoice.itemList ?? [];
 
@@ -286,14 +240,12 @@ export default function InvoiceDetailPage() {
                         <Printer className="h-4 w-4 mr-2" />
                         Print Formal
                     </Button>
-                    <Button
-                        onClick={downloadPDF}
+                    <InvoicePDFGenerator
+                        printableRef={printableRef}
+                        invoiceId={id}
+                        invoiceCounter={invoice.invoiceCounter}
                         disabled={processing}
-                        className="bg-primary hover:opacity-90 font-black rounded-xl shadow-lg shadow-primary/20"
-                    >
-                        <Download className="h-4 w-4 mr-2" />
-                        Download PDF
-                    </Button>
+                    />
                 </div>
 
                 <div ref={printRef} className="space-y-6 bg-white p-4 md:p-8 rounded-2xl shadow-sm border border-slate-50">

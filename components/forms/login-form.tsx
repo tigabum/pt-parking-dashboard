@@ -80,9 +80,8 @@ export function LoginForm() {
         password,
         !isEmail ? identifier.trim() : undefined,
       );
-
-      // We stay in loading state while useEffect handles the redirect
-      // This prevents the button from flickering back to "Sign In"
+      // Redirect immediately — no need to wait for useEffect
+      router.replace("/dashboard");
     } catch (err: any) {
       const errorMessage = err?.message || "Login failed. Please try again.";
       setError(errorMessage);
@@ -111,17 +110,9 @@ export function LoginForm() {
 
       const { user: userData } = await authService.setPassword(resetToken, password);
 
-      if (typeof loginWithData === "function") {
-        loginWithData(userData);
-      } else {
-        const isEmail = identifier.includes("@");
-        await login(
-          isEmail ? identifier.trim().toLowerCase() : "",
-          password,
-          !isEmail ? identifier.trim() : undefined,
-        );
-      }
-      // Stay in loading state for redirect
+      loginWithData(userData);
+      // Redirect immediately — no need to wait for useEffect
+      router.replace("/dashboard");
     } catch (err: any) {
       const errorMessage = err?.message || "Failed to set password.";
       setError(errorMessage);

@@ -60,9 +60,11 @@ apiClient.interceptors.response.use(
         }
 
         if (isMutation && data && data.message && data.success !== false) {
-            const isRefresh = response.config.url?.includes('refresh');
-            const isTouch = response.config.url?.includes('touch');
-            if (!isRefresh && !isTouch) {
+            const url = response.config.url || '';
+            const isRefresh = url.includes('refresh');
+            const isTouch = url.includes('touch');
+            const isAuthEndpoint = url.includes('/auth/') || url.includes('login') || url.includes('logout') || url.includes('set-password') || url.includes('pre-login') || url.includes('register') || url.includes('reset-password');
+            if (!isRefresh && !isTouch && !isAuthEndpoint) {
                 toast.success(data.message);
             }
         }

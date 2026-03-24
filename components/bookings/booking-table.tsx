@@ -106,9 +106,9 @@ function ConfirmationPopup({
               className={cn(
                 "flex-1 h-9 rounded text-[10px] uppercase font-black tracking-wider",
                 confirmVariant === "default" &&
-                  "bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20",
+                "bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20",
                 confirmVariant === "destructive" &&
-                  "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-200",
+                "bg-red-500 hover:bg-red-600 shadow-lg shadow-red-200",
               )}
             >
               {confirmText}
@@ -321,8 +321,7 @@ export function BookingsTable({
       key: "time",
       header: "Parking Time",
       render: (row) =>
-        `${formatDateTime(row.startTime)} → ${
-          row.endTime ? formatDateTime(row.endTime) : "Ongoing"
+        `${formatDateTime(row.startTime)} → ${row.endTime ? formatDateTime(row.endTime) : "Ongoing"
         }`,
     },
 
@@ -339,6 +338,30 @@ export function BookingsTable({
       header: "Actions",
       render: (row) => (
         <div className="flex items-center gap-2">
+          {row.status === "PENDING" &&
+            onConfirmArrival &&
+            !isSystemAdmin && (
+              <ConfirmationPopup
+                title="Confirm Arrival"
+                description={`Start parking session for ${row.plateNumber} now?`}
+                onConfirm={() => onConfirmArrival?.(row)}
+                trigger={
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={actionId === row.id}
+                    className="h-8 rounded-lg bg-primary/10 text-primary border-primary/20 hover:bg-primary/20 font-bold text-[10px] uppercase tracking-wider"
+                  >
+                    {actionId === row.id ? (
+                      <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                    ) : (
+                      <PlayCircle className="h-3 w-3 mr-1" />
+                    )}
+                    Confirm Arrival
+                  </Button>
+                }
+              />
+            )}
           {row.status === "WAITING_CONFIRMATION" &&
             onConfirmPayment &&
             !isSystemAdmin && (
@@ -358,7 +381,7 @@ export function BookingsTable({
                     ) : (
                       <Banknote className="h-3 w-3 mr-1" />
                     )}
-                    Confirm
+                    Confirm Payment
                   </Button>
                 }
               />
