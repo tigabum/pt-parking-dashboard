@@ -241,15 +241,20 @@ export default function WalletsPage() {
         title="Parking Wallets"
         description="Monitor and manage parking wallet balance."
       >
-        <div className="relative w-full lg:w-72">
-          {/* Search is relevant for Admin mostly, but okay to keep */}
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <Input
-            placeholder="Search parking name..."
-            className="pl-10 h-11 rounded border-slate-200"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 w-full mt-2">
+          <div className="flex flex-col lg:flex-row lg:items-center flex-1 gap-3 overflow-hidden">
+            <div className="relative w-full lg:w-[320px] shrink-0">
+              {/* Search is relevant for Admin mostly, but okay to keep */}
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Input
+                placeholder="Search parking name..."
+                className="pl-10 h-11 rounded border-slate-200 bg-slate-50 focus:bg-white w-full"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            {/* Additional filters can be added to this row in the future */}
+          </div>
         </div>
       </PageHeader>
 

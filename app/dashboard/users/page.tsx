@@ -160,90 +160,74 @@ export default function UsersPage() {
         description="Manage administrative roles and support staff for the platform."
         className="flex-col items-start! w-full! gap-4"
       >
-        <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between w-full gap-4 mt-2">
-          {/* Left: Search */}
-          <div className="relative w-full xl:w-72 shrink-0">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <Input
-              placeholder="Search staff..."
-              className="pl-10 h-11 rounded border-slate-200 w-full"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          {/* Middle: Filters */}
-          <div className="flex flex-wrap items-center gap-2 md:gap-3 flex-1 lg:justify-start xl:justify-center">
-            <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[150px] h-11 rounded border-slate-200 bg-white">
-                <SelectValue placeholder="Role" />
-              </SelectTrigger>
-              <SelectContent className="rounded">
-                <SelectItem value="ALL">All Roles</SelectItem>
-                <SelectItem value={UserRole.SYSTEM_SUPER_ADMIN}>
-                  Super Admin
-                </SelectItem>
-                <SelectItem value={UserRole.SYSTEM_ADMIN}>
-                  System Admin
-                </SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[130px] h-11 rounded border-slate-200 bg-white">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent className="rounded">
-                <SelectItem value="ALL">All Status</SelectItem>
-                <SelectItem value="ACTIVE">Active</SelectItem>
-                <SelectItem value="PENDING">Pending</SelectItem>
-                <SelectItem value="DISABLED">Disabled</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <div className="w-full sm:w-auto flex-1 sm:flex-none">
-              <DatePickerWithRange date={dateRange} setDate={setDateRange} />
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 w-full mt-2">
+          {/* Left: Search & Scrollable Filters */}
+          <div className="flex flex-col lg:flex-row lg:items-center flex-1 gap-3 overflow-hidden">
+            {/* Search */}
+            <div className="relative w-full lg:w-72 shrink-0">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Input
+                placeholder="Search staff..."
+                className="pl-10 h-11 rounded border-slate-200 w-full bg-slate-50 focus:bg-white"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
 
-            {(searchTerm !== "" ||
-              roleFilter !== "ALL" ||
-              statusFilter !== "ALL" ||
-              dateRange?.from) && (
+            {/* Scrollable Filters Strip */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide flex-1">
+              <Select value={roleFilter} onValueChange={setRoleFilter}>
+                <SelectTrigger className="w-[150px] shrink-0 h-11 rounded border-slate-200 bg-white">
+                  <SelectValue placeholder="Role" />
+                </SelectTrigger>
+                <SelectContent className="rounded">
+                  <SelectItem value="ALL">All Roles</SelectItem>
+                  <SelectItem value={UserRole.SYSTEM_SUPER_ADMIN}>Super Admin</SelectItem>
+                  <SelectItem value={UserRole.SYSTEM_ADMIN}>System Admin</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-[130px] shrink-0 h-11 rounded border-slate-200 bg-white">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent className="rounded">
+                  <SelectItem value="ALL">All Status</SelectItem>
+                  <SelectItem value="ACTIVE">Active</SelectItem>
+                  <SelectItem value="PENDING">Pending</SelectItem>
+                  <SelectItem value="DISABLED">Disabled</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <div className="w-[240px] shrink-0">
+                <DatePickerWithRange date={dateRange} setDate={setDateRange} className="h-11" />
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Actions */}
+          <div className="flex items-center gap-2 shrink-0 border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-100">
+            {(searchTerm !== "" || roleFilter !== "ALL" || statusFilter !== "ALL" || dateRange?.from) && (
               <Button
                 variant="ghost"
-                size="icon"
                 onClick={clearFilters}
-                className="h-11 w-11 rounded hidden sm:flex"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-
-            {(searchTerm !== "" ||
-              roleFilter !== "ALL" ||
-              statusFilter !== "ALL" ||
-              dateRange?.from) && (
-              <Button
-                variant="outline"
-                onClick={clearFilters}
-                className="h-11 rounded sm:hidden flex-1 border-slate-200"
+                className="h-11 rounded text-slate-500 hover:text-slate-800 shrink-0 px-4"
               >
                 <X className="h-4 w-4 mr-2" />
                 Clear
               </Button>
             )}
-          </div>
 
-          {/* Right: Add Button */}
-          {hasPermission(PERMISSIONS.USER_CREATE) && (
-            <Button
-              onClick={handleAddUser}
-              className="h-11 rounded px-6 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 shrink-0 w-full xl:w-auto"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Staff
-            </Button>
-          )}
+            {hasPermission(PERMISSIONS.USER_CREATE) && (
+              <Button
+                onClick={handleAddUser}
+                className="h-11 rounded px-6 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 shrink-0 w-full sm:w-auto"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add Staff
+              </Button>
+            )}
+          </div>
         </div>
       </PageHeader>
 

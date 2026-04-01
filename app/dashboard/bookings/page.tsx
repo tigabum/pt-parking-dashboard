@@ -283,28 +283,24 @@ export default function BookingsPage() {
         title="Active Bookings"
         description="Oversee reservations, subscriptions, and real-time space utilization."
       >
-        {/* Single Row Layout Container */}
-        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 w-full p-1">
-          {/* Left Side: Search & Filters Group */}
-          <div className="flex flex-1 flex-col lg:flex-row flex-wrap gap-3 pb-2 lg:pb-0">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 w-full mt-2">
+          {/* Left Side: Search & Scrollable Filters */}
+          <div className="flex flex-col lg:flex-row lg:items-center flex-1 gap-3 overflow-hidden">
             {/* Search */}
-            <div className="relative flex-grow lg:flex-grow-0 lg:w-[320px]">
+            <div className="relative w-full lg:w-[320px] shrink-0">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
-                placeholder="Search..."
-                className="pl-10 h-10 rounded border-slate-200 bg-slate-50 focus:bg-white transition-all shadow-sm w-full"
+                placeholder="Search bookings..."
+                className="pl-10 h-11 rounded border-slate-200 bg-slate-50 focus:bg-white w-full"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
 
-            {/* Divider for visual separation on large screens */}
-            <div className="hidden lg:block w-px h-10 bg-slate-100 mx-1" />
-
-            {/* Filters Row */}
-            <div className="flex flex-wrap items-center gap-2">
+            {/* Scrollable Filters Strip */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide flex-1">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[140px] h-10 rounded border-slate-200 font-bold text-xs">
+                <SelectTrigger className="w-[140px] shrink-0 h-11 rounded border-slate-200 font-bold text-xs bg-white">
                   <div className="flex items-center gap-2 truncate">
                     {statusFilter === "ALL" ? (
                       <CheckCircle2 className="h-3.5 w-3.5 text-slate-400" />
@@ -319,78 +315,58 @@ export default function BookingsPage() {
                 <SelectContent className="rounded">
                   <SelectItem value="ALL">All Status</SelectItem>
                   <SelectItem value={BookingStatus.ACTIVE}>Active</SelectItem>
-                  <SelectItem value={BookingStatus.WAITING_CONFIRMATION}>
-                    Waiting
-                  </SelectItem>
+                  <SelectItem value={BookingStatus.WAITING_CONFIRMATION}>Waiting</SelectItem>
                   <SelectItem value={BookingStatus.PAID}>Paid</SelectItem>
                   <SelectItem value={BookingStatus.PENDING}>Pending</SelectItem>
-                  <SelectItem value={BookingStatus.CANCELLED}>
-                    Cancelled
-                  </SelectItem>
+                  <SelectItem value={BookingStatus.CANCELLED}>Cancelled</SelectItem>
                 </SelectContent>
               </Select>
 
               {(user?.role === UserRole.SYSTEM_SUPER_ADMIN ||
                 user?.role === UserRole.PARKING_SUPER_ADMIN) &&
                 managers.length > 0 && (
-                  <Select
-                    value={managerFilter}
-                    onValueChange={setManagerFilter}
-                  >
-                    <SelectTrigger className="w-[160px] h-10 rounded border-slate-200 font-bold text-xs">
+                  <Select value={managerFilter} onValueChange={setManagerFilter}>
+                    <SelectTrigger className="w-[160px] shrink-0 h-11 rounded border-slate-200 font-bold text-xs bg-white">
                       <div className="flex items-center gap-2 truncate">
                         <UserIcon className="h-3.5 w-3.5 text-slate-400" />
                         <span className="truncate">
-                          {managers.find((m) => m.id === managerFilter)
-                            ?.fullName || "All Managers"}
+                          {managers.find((m) => m.id === managerFilter)?.fullName || "All Managers"}
                         </span>
                       </div>
                     </SelectTrigger>
                     <SelectContent className="rounded">
                       <SelectItem value="ALL">All Managers</SelectItem>
                       {managers.map((m: any) => (
-                        <SelectItem key={m.id} value={m.id}>
-                          {m.fullName}
-                        </SelectItem>
+                        <SelectItem key={m.id} value={m.id}>{m.fullName}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 )}
 
-              <div className="w-[240px]">
-                <DatePickerWithRange
-                  date={dateRange}
-                  setDate={setDateRange}
-                  className="h-10"
-                />
+              <div className="w-[240px] shrink-0">
+                <DatePickerWithRange date={dateRange} setDate={setDateRange} className="h-11" />
               </div>
             </div>
           </div>
 
           {/* Right Side: Actions */}
-          <div className="flex items-center gap-2 shrink-0 border-t xl:border-t-0 pt-3 xl:pt-0 border-slate-50">
-            {(searchQuery ||
-              statusFilter !== "ALL" ||
-              managerFilter !== "ALL" ||
-              dateRange?.from) && (
-                <Button
-                  onClick={clearFilters}
-                  variant="ghost"
-                  size="sm"
-                  className="h-10 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-700"
-                >
-                  <X className="h-4 w-4 mr-2" />
-                  Clear
-                </Button>
-              )}
+          <div className="flex items-center gap-2 shrink-0 border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-100">
+            {(searchQuery || statusFilter !== "ALL" || managerFilter !== "ALL" || dateRange?.from) && (
+              <Button
+                onClick={clearFilters}
+                variant="ghost"
+                className="h-11 rounded text-slate-500 hover:bg-slate-100 hover:text-slate-800 shrink-0 px-4"
+              >
+                <X className="h-4 w-4 mr-2" />
+                Clear
+              </Button>
+            )}
 
             {hasPermission(PERMISSIONS.BOOKING_CREATE) &&
-              (user?.role === UserRole.PARKING_MANAGER ||
-                user?.role === UserRole.PARKING_SUPER_ADMIN) && (
+              (user?.role === UserRole.PARKING_MANAGER || user?.role === UserRole.PARKING_SUPER_ADMIN) && (
                 <Button
                   onClick={handleAdd}
-                  size="sm"
-                  className="h-10 rounded bg-primary hover:opacity-90 shadow-lg shadow-primary/20 font-bold px-5"
+                  className="h-11 rounded px-5 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 shrink-0"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   New Booking

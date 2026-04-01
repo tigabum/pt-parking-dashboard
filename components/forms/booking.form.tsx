@@ -516,19 +516,28 @@ export function BookingForm({
                       <Label className="text-[11px] uppercase font-black text-primary tracking-[0.2em]">
                         Customer Phone *
                       </Label>
-                      <Input
-                        value={booking.customerPhone || ""}
-                        onChange={(e) => {
-                          setBooking({
-                            ...booking,
-                            customerPhone: e.target.value,
-                          });
-                          if (errors.customerPhone)
-                            setErrors({ ...errors, customerPhone: "" });
-                        }}
-                        placeholder="Enter Phone Number"
-                        className={`h-14 rounded-2xl bg-white border-2 focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all font-bold text-lg px-6 ${errors.customerPhone ? "border-red-500 bg-red-50" : "border-primary/5"}`}
-                      />
+                      <div className="relative flex items-center">
+                        <div className="absolute left-0 h-full flex items-center px-3 bg-slate-200 border-r border-slate-300 rounded-l-2xl text-slate-700 font-bold z-10 pointer-events-none text-sm shadow-sm select-none">
+                          <span className="mr-1.5 text-base">🇪🇹</span> +251
+                        </div>
+                        <Input
+                          className={`h-14 w-full rounded-2xl rounded-l-none bg-white border-2 border-l-0 focus:border-primary/50 focus:ring-4 focus:ring-primary/5 transition-all font-bold text-lg pl-[105px] pr-6 ${errors.customerPhone ? "border-red-500 bg-red-50" : "border-primary/5"}`}
+                          placeholder="9XXXXXXXX"
+                          maxLength={9}
+                          value={(booking.customerPhone || "").replace(/^\+?251/, "")}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/\D/g, "");
+                            let formatted = "";
+                            if (val === "" || /^[97]\d{0,8}$/.test(val)) {
+                              formatted = val ? `+251${val}` : "";
+                            } else {
+                              formatted = booking.customerPhone; 
+                            }
+                            setBooking({ ...booking, customerPhone: formatted });
+                            if (errors.customerPhone) setErrors({ ...errors, customerPhone: "" });
+                          }}
+                        />
+                      </div>
                       {errors.customerPhone && (
                         <p className="text-xs text-red-500 font-medium">
                           {errors.customerPhone}

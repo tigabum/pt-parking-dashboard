@@ -297,67 +297,75 @@ export default function InvoicesPage() {
                 </Alert>
             )}
 
-            <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between w-full gap-4">
-                <div className="relative w-full xl:w-72 shrink-0">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                    <Input
-                        placeholder="Search by IRN or ID..."
-                        className="pl-10 h-11 rounded border-slate-200 w-full"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2 md:gap-3 flex-1 lg:justify-start xl:justify-center">
-                    <Select value={statusFilter} onValueChange={setStatusFilter}>
-                        <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[150px] h-11 rounded border-slate-200 bg-white">
-                            <SelectValue placeholder="Status" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded">
-                            <SelectItem value="ALL">All Status</SelectItem>
-                            <SelectItem value="REGISTERED">Registered</SelectItem>
-                            <SelectItem value="VERIFIED">Verified</SelectItem>
-                            <SelectItem value="CANCELLED">Cancelled</SelectItem>
-                            <SelectItem value="FAILED">Failed</SelectItem>
-                        </SelectContent>
-                    </Select>
-
-                    <Select value={typeFilter} onValueChange={setTypeFilter}>
-                        <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[130px] h-11 rounded border-slate-200 bg-white">
-                            <SelectValue placeholder="Type" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded">
-                            <SelectItem value="ALL">All Types</SelectItem>
-                            <SelectItem value="B2B">B2B</SelectItem>
-                            <SelectItem value="B2C">B2C</SelectItem>
-                        </SelectContent>
-                    </Select>
-
-                    <div className="w-full sm:w-auto flex-1 sm:flex-none">
-                        <DatePickerWithRange date={dateRange} setDate={setDateRange} />
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 w-full mt-2">
+                {/* Left: Search & Scrollable Filters */}
+                <div className="flex flex-col lg:flex-row lg:items-center flex-1 gap-3 overflow-hidden">
+                    {/* Search */}
+                    <div className="relative w-full lg:w-72 shrink-0">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                        <Input
+                            placeholder="Search by IRN or ID..."
+                            className="pl-10 h-11 rounded border-slate-200 w-full bg-slate-50 focus:bg-white"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
                     </div>
 
+                    {/* Scrollable Filters Strip */}
+                    <div className="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide flex-1">
+                        <Select value={statusFilter} onValueChange={setStatusFilter}>
+                            <SelectTrigger className="w-[150px] shrink-0 h-11 rounded border-slate-200 bg-white">
+                                <SelectValue placeholder="Status" />
+                            </SelectTrigger>
+                            <SelectContent className="rounded">
+                                <SelectItem value="ALL">All Status</SelectItem>
+                                <SelectItem value="REGISTERED">Registered</SelectItem>
+                                <SelectItem value="VERIFIED">Verified</SelectItem>
+                                <SelectItem value="CANCELLED">Cancelled</SelectItem>
+                                <SelectItem value="FAILED">Failed</SelectItem>
+                            </SelectContent>
+                        </Select>
+
+                        <Select value={typeFilter} onValueChange={setTypeFilter}>
+                            <SelectTrigger className="w-[130px] shrink-0 h-11 rounded border-slate-200 bg-white">
+                                <SelectValue placeholder="Type" />
+                            </SelectTrigger>
+                            <SelectContent className="rounded">
+                                <SelectItem value="ALL">All Types</SelectItem>
+                                <SelectItem value="B2B">B2B</SelectItem>
+                                <SelectItem value="B2C">B2C</SelectItem>
+                            </SelectContent>
+                        </Select>
+
+                        <div className="w-[240px] shrink-0">
+                            <DatePickerWithRange date={dateRange} setDate={setDateRange} className="h-11" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right: Actions */}
+                <div className="flex items-center gap-2 shrink-0 border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-100">
                     {(searchTerm !== "" || statusFilter !== "ALL" || typeFilter !== "ALL" || dateRange?.from) && (
                         <Button
                             variant="ghost"
-                            size="icon"
                             onClick={clearFilters}
-                            className="h-11 w-11 rounded"
+                            className="h-11 rounded text-slate-500 hover:text-slate-800 shrink-0 px-4"
                         >
-                            <X className="h-4 w-4" />
+                            <X className="h-4 w-4 mr-2" />
+                            Clear
                         </Button>
                     )}
-                </div>
 
-                <div className="flex items-center gap-2 shrink-0 w-full xl:w-auto">
-                    <RegisterInvoiceDialog
-                        parkingId={currentParkingId}
-                        onSuccess={() => loadInvoices()}
-                    />
+                    <div className="flex items-center gap-2">
+                        <RegisterInvoiceDialog
+                            parkingId={currentParkingId}
+                            onSuccess={() => loadInvoices()}
+                        />
 
-                    <Button variant="outline" size="icon" onClick={() => loadInvoices()} disabled={loading} className="h-11 w-11 rounded border-slate-200">
-                        <RefreshCw className={loading ? "h-4 w-4 animate-spin" : "h-4 w-4"} />
-                    </Button>
+                        <Button variant="outline" size="icon" onClick={() => loadInvoices()} disabled={loading} className="h-11 w-11 shrink-0 rounded border-slate-200">
+                            <RefreshCw className={loading ? "h-4 w-4 animate-spin" : "h-4 w-4"} />
+                        </Button>
+                    </div>
                 </div>
             </div>
 

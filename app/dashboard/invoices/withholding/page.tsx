@@ -32,10 +32,10 @@ export default function WithholdingReceiptPage() {
         if (!parkingId) return;
         setLoading(true);
         try {
-            const data = await invoiceService.getHistory(parkingId);
+            const response = await invoiceService.getHistory(parkingId);
             // Show invoices that have income withhold value > 0
             setInvoices(
-                (data || []).filter((inv: any) => {
+                (response?.data || []).filter((inv: any) => {
                     const withhold = inv.valueDetails?.IncomeWithholdValue ?? 0;
                     return Number(withhold) > 0;
                 })

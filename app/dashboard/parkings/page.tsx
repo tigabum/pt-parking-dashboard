@@ -209,39 +209,37 @@ export default function ParkingPage() {
         description="Manage parking locations, pricing, and operational status."
         className="flex-col !items-start !w-full gap-4"
       >
-        <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between w-full gap-4 mt-2">
-          {/* Left: Search */}
-          <div className="relative w-full xl:w-72 shrink-0">
+        {/* Outer row: search + filter strip + Add button — all in one line on lg+ */}
+        <div className="flex flex-col lg:flex-row lg:items-center gap-3 w-full mt-2">
+
+          {/* Search (shrinks on wide screens) */}
+          <div className="relative w-full lg:w-60 xl:w-72 shrink-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <Input
               placeholder="Search parkings..."
-              className="pl-10 h-11 rounded border-slate-200 w-full"
+              className="pl-10 h-10 rounded border-slate-200 w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
-          {/* Middle: Filters */}
-          <div className="flex flex-wrap items-center gap-2 md:gap-3 flex-1 lg:justify-start xl:justify-center">
+          {/* Filter strip — horizontally scrollable on mobile, flex-row on lg+ */}
+          <div className="flex items-center gap-2 flex-1 overflow-x-auto pb-0.5 min-w-0">
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[140px] h-11 rounded border-slate-200 bg-white">
+              <SelectTrigger className="h-10 w-[130px] shrink-0 rounded border-slate-200 bg-white text-sm">
                 <SelectValue placeholder="Type" />
               </SelectTrigger>
               <SelectContent className="rounded">
                 <SelectItem value="ALL">All Types</SelectItem>
                 <SelectItem value={ParkingType.PUBLIC}>Public</SelectItem>
                 <SelectItem value={ParkingType.PRIVATE}>Private</SelectItem>
-                <SelectItem value={ParkingType.COMMERCIAL}>
-                  Commercial
-                </SelectItem>
-                <SelectItem value={ParkingType.RESIDENTIAL}>
-                  Residential
-                </SelectItem>
+                <SelectItem value={ParkingType.COMMERCIAL}>Commercial</SelectItem>
+                <SelectItem value={ParkingType.RESIDENTIAL}>Residential</SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[140px] h-11 rounded border-slate-200 bg-white">
+              <SelectTrigger className="h-10 w-[130px] shrink-0 rounded border-slate-200 bg-white text-sm">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent className="rounded">
@@ -253,7 +251,7 @@ export default function ParkingPage() {
             </Select>
 
             <Select value={businessModelFilter} onValueChange={setBusinessModelFilter}>
-              <SelectTrigger className="flex-1 sm:flex-none w-full sm:w-[140px] h-11 rounded border-slate-200 bg-white">
+              <SelectTrigger className="h-10 w-[150px] shrink-0 rounded border-slate-200 bg-white text-sm">
                 <SelectValue placeholder="Business Model" />
               </SelectTrigger>
               <SelectContent className="rounded">
@@ -263,7 +261,7 @@ export default function ParkingPage() {
               </SelectContent>
             </Select>
 
-            <div className="w-full sm:w-auto flex-1 sm:flex-none">
+            <div className="shrink-0">
               <DatePickerWithRange date={dateRange} setDate={setDateRange} />
             </div>
 
@@ -271,9 +269,9 @@ export default function ParkingPage() {
               <Button
                 variant="outline"
                 onClick={exportToCSV}
-                className="h-11 rounded px-4 border-slate-200 bg-white hover:bg-slate-50 font-bold flex-1 sm:flex-none"
+                className="h-10 shrink-0 rounded px-3 border-slate-200 bg-white hover:bg-slate-50 font-bold"
               >
-                <Download className="h-4 w-4 mr-2" />
+                <Download className="h-4 w-4 mr-1.5" />
                 Export
               </Button>
             )}
@@ -283,39 +281,25 @@ export default function ParkingPage() {
               businessModelFilter !== "ALL" ||
               searchQuery !== "" ||
               dateRange?.from) && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={clearFilters}
-                  className="h-11 w-11 rounded hidden sm:flex"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              )}
-
-            {(typeFilter !== "ALL" ||
-              statusFilter !== "ALL" ||
-              businessModelFilter !== "ALL" ||
-              searchQuery !== "" ||
-              dateRange?.from) && (
-                <Button
-                  variant="outline"
-                  onClick={clearFilters}
-                  className="h-11 rounded sm:hidden flex-1 border-slate-200"
-                >
-                  <X className="h-4 w-4 mr-2" />
-                  Clear
-                </Button>
-              )}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={clearFilters}
+                title="Clear filters"
+                className="h-10 w-10 shrink-0 rounded"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
           </div>
 
-          {/* Right: Add Button */}
+          {/* Add Parking button pinned to the right */}
           {hasPermission(PERMISSIONS.PARKING_CREATE) &&
             user?.role !== UserRole.PARKING_SUPER_ADMIN &&
             user?.role !== UserRole.PARKING_MANAGER && (
               <Button
                 onClick={handleAdd}
-                className="h-11 rounded px-6 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 shrink-0 w-full xl:w-auto"
+                className="h-10 shrink-0 rounded px-5 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 w-full lg:w-auto"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 Add Parking

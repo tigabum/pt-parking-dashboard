@@ -262,18 +262,28 @@ export default function SettingsPage() {
                   <Label className="text-sm font-bold text-slate-900 ml-1">
                     Phone Number
                   </Label>
-                  <Input
-                    value={profileData.phoneNumber}
-                    onChange={(e) =>
-                      setProfileData({
-                        ...profileData,
-                        phoneNumber: e.target.value,
-                      })
-                    }
-                    className="h-11 rounded bg-slate-50 border-slate-200 text-slate-700 font-medium focus-visible:ring-1 focus-visible:ring-primary/30"
-                    placeholder="+251 ..."
-                    required
-                  />
+                  <div className="relative flex items-center">
+                    <div className="absolute left-0 h-full flex items-center px-3 bg-slate-200 border-r border-slate-300 rounded-l text-slate-700 font-bold z-10 pointer-events-none text-sm shadow-sm select-none">
+                      <span className="mr-1.5 text-base">🇪🇹</span> +251
+                    </div>
+                    <Input
+                      className="h-11 w-full rounded rounded-l-none bg-slate-50 border-slate-200 text-slate-700 font-medium focus-visible:ring-1 focus-visible:ring-primary/30 pl-[105px] pr-4"
+                      placeholder="9XXXXXXXX"
+                      maxLength={9}
+                      value={profileData.phoneNumber.replace(/^\+?251/, "")}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, "");
+                        let formatted = "";
+                        if (val === "" || /^[97]\d{0,8}$/.test(val)) {
+                          formatted = val ? `+251${val}` : "";
+                        } else {
+                          formatted = profileData.phoneNumber; 
+                        }
+                        setProfileData({ ...profileData, phoneNumber: formatted });
+                      }}
+                      required
+                    />
+                  </div>
                 </div>
                 <div className="space-y-2 md:col-span-2">
                   <Label className="text-sm font-bold text-slate-400 ml-1">

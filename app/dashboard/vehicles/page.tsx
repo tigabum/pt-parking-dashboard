@@ -89,49 +89,57 @@ export default function VehiclesPage() {
         title="Vehicle Registry"
         description="Monitor and audit all vehicles currently registered within the platform."
       >
-        <div className="relative flex-1 sm:min-w-65">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-          <Input
-            placeholder="Search vehicles..."
-            className="pl-10 h-11 rounded border-slate-200"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 w-full mt-2">
+          {/* Left: Search & Scrollable Filters */}
+          <div className="flex flex-col lg:flex-row lg:items-center flex-1 gap-3 overflow-hidden">
+            <div className="relative w-full lg:w-[320px] shrink-0">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              <Input
+                placeholder="Search vehicles..."
+                className="pl-10 h-11 rounded border-slate-200 bg-slate-50 focus:bg-white w-full"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-hide flex-1">
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-45 shrink-0 h-11 rounded border-slate-200 bg-white">
+                  <SelectValue placeholder="Sort By" />
+                </SelectTrigger>
+                <SelectContent className="rounded">
+                  <SelectItem value="createdAt">Registered Date</SelectItem>
+                  <SelectItem value="plateNumber">Plate Number</SelectItem>
+                  <SelectItem value="brand">Brand</SelectItem>
+                  <SelectItem value="model">Model</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Button
+                variant="outline"
+                className="h-11 px-4 rounded border-slate-200 bg-white shrink-0"
+                onClick={() => setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC")}
+              >
+                <Filter className={`h-4 w-4 mr-2 ${sortOrder === "DESC" ? "rotate-180" : ""} transition-transform`} />
+                Order
+              </Button>
+            </div>
+          </div>
+
+          {/* Right: Actions */}
+          <div className="flex items-center gap-2 shrink-0 border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-100">
+            {searchQuery !== "" && (
+              <Button
+                variant="ghost"
+                onClick={clearFilters}
+                className="h-11 rounded text-slate-500 hover:text-slate-800 shrink-0 px-4"
+              >
+                <X className="h-4 w-4 mr-2" />
+                Clear
+              </Button>
+            )}
+          </div>
         </div>
-
-        <Select value={sortBy} onValueChange={setSortBy}>
-          <SelectTrigger className="w-45 h-11 rounded border-slate-200">
-            <SelectValue placeholder="Sort By" />
-          </SelectTrigger>
-          <SelectContent className="rounded">
-            <SelectItem value="createdAt">Registered Date</SelectItem>
-            <SelectItem value="plateNumber">Plate Number</SelectItem>
-            <SelectItem value="brand">Brand</SelectItem>
-            <SelectItem value="model">Model</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-11 w-11 rounded"
-          onClick={() => setSortOrder(sortOrder === "ASC" ? "DESC" : "ASC")}
-        >
-          <Filter
-            className={`h-4 w-4 ${sortOrder === "DESC" ? "rotate-180" : ""} transition-transform`}
-          />
-        </Button>
-
-        {searchQuery !== "" && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={clearFilters}
-            className="h-11 w-11 rounded"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        )}
       </PageHeader>
 
       {hasPermission(PERMISSIONS.VEHICLE_VIEW) && (

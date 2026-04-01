@@ -264,6 +264,36 @@ function PortalContent() {
     return `+251${p}`;
   };
 
+  /**
+   * Validate Ethiopian mobile number.
+   * Accepts: +2519XXXXXXXX, +2517XXXXXXXX, 09XXXXXXXX, 07XXXXXXXX, 9XXXXXXXX, 7XXXXXXXX
+   */
+  const isValidEtPhone = (phone: string): boolean => {
+    const stripped = phone.replace(/[\s\-()]/g, "").replace(/^\+/, "");
+    return (
+      /^(9\d{8}|7\d{8})$/.test(stripped) ||
+      /^0(9\d{8}|7\d{8})$/.test(stripped) ||
+      /^251(9\d{8}|7\d{8})$/.test(stripped)
+    );
+  };
+
+  /**
+   * Remove HTML tags, script fragments, and common XSS/injection patterns
+   * from any user-entered string before sending to the API.
+   */
+  const sanitizeField = (value: string): string => {
+    return value
+      .replace(/<[^>]*>/gi, "")          // strip HTML / SVG tags
+      .replace(/on\w+\s*=/gi, "")        // strip inline event handlers
+      .replace(/javascript:/gi, "")      // strip JS pseudo-protocol
+      .replace(/vbscript:/gi, "")        // strip VBScript pseudo-protocol
+      .replace(/data:[^;]+;/gi, "")      // strip data URIs
+      .replace(/\/\*[\s\S]*?\*\//g, "") // strip SQL block comments
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 200);                    // hard cap – prevents oversized payloads
+  };
+
   // Auto-populate effect
   useEffect(() => {
     const timeoutId = setTimeout(async () => {
@@ -322,8 +352,12 @@ function PortalContent() {
   }, [phoneNumber, plateNumber, isExistingCustomer, activeBooking]);
 
   const handleLookup = async () => {
-    if (!phoneNumber || phoneNumber.length < 9)
-      return toast.error("Valid phone number is required");
+    if (!phoneNumber || phoneNumber.trim().length === 0)
+      return toast.error("Phone number is required");
+    if (!isValidEtPhone(phoneNumber))
+      return toast.error(
+        "Please enter a valid Ethiopian mobile number. Accepted formats: 09XXXXXXXX, 07XXXXXXXX, +2519XXXXXXXX, +2517XXXXXXXX"
+      );
     if (!plateNumber || plateNumber.length < 5)
       return toast.error("Valid plate number is required");
 
@@ -436,11 +470,26 @@ function PortalContent() {
     }
     if (!phoneNumber || !plateNumber)
       return toast.error("Required fields are missing");
+    if (!isValidEtPhone(phoneNumber))
+      return toast.error(
+        "Please enter a valid Ethiopian mobile number. Accepted formats: 09XXXXXXXX, 07XXXXXXXX, +2519XXXXXXXX, +2517XXXXXXXX"
+      );
     if (!fullName) return toast.error("Please enter your name");
+
+    // Sanitize all user-supplied string fields before sending
+    const safeName = sanitizeField(fullName)
+      .replace(/\d+/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    const safePlate = sanitizeField(plateNumber).toUpperCase().replace(/\s/g, "");
+    const safeBrand = sanitizeField(brand || "Generic");
+    const safeModel = sanitizeField(model || "Car");
+
+    if (!safeName) return toast.error("Name must contain letters. Please use plain text without numbers.");
+    if (!safePlate) return toast.error("Plate number contains invalid characters.");
 
     try {
       toast.loading("Creating booking session...");
-      // Recalculate times to ensure session starts at 00:00:00 relative to now
       // Recalculate times. Open-ended session: Default to 1 hour initial duration.
       const now = new Date();
       const startObj = new Date(startTime);
@@ -449,11 +498,11 @@ function PortalContent() {
 
       const payload = {
         parkingId: parking.id,
-        customerName: fullName,
+        customerName: safeName,
         customerPhone: normalizePhone(phoneNumber),
-        plateNumber: plateNumber.toUpperCase().replace(/\s/g, ""),
-        vehicleBrand: brand || "Generic",
-        vehicleModel: model || "Car",
+        plateNumber: safePlate,
+        vehicleBrand: safeBrand,
+        vehicleModel: safeModel,
         startTime: now.toISOString(),
         endTime: newEnd.toISOString(),
         bookingType: bookingType,
@@ -566,7 +615,7 @@ function PortalContent() {
         toast.success(response.message || "Redirecting to Telebirr...", {
           id: loadingToast,
         });
-        handleTelebirrPayment();
+        handleTelebirrPayment(response);
       } else {
         toast.success(
           response.message ||
@@ -581,13 +630,14 @@ function PortalContent() {
     }
   };
 
-  const handleTelebirrPayment = async () => {
-    if (!activeBooking) return;
+  const handleTelebirrPayment = async (bookingOverride?: any) => {
+    const targetBooking = bookingOverride || activeBooking;
+    if (!targetBooking) return;
     try {
       toast.loading("Initializing Telebirr payment...");
       const rawUrl = await portalService.initializeTelebirrPayment(
-        (activeBooking.referenceNo || activeBooking.id).trim(),
-        activeBooking.totalAmount.toString(),
+        (targetBooking.referenceNo || targetBooking.id).trim(),
+        targetBooking.totalAmount.toString(),
       );
 
       if (!rawUrl) throw new Error("No payment URL");
@@ -870,13 +920,24 @@ function PortalContent() {
                     <Label className="text-sm font-bold text-slate-800 ml-1">
                       Phone Number
                     </Label>
-                    <Input
-                      type="tel"
-                      value={phoneNumber}
-                      onChange={(e) => setPhoneNumber(e.target.value)}
-                      placeholder="Your Phone Number"
-                      className="h-14 bg-slate-100 border-none rounded text-base px-4 font-bold text-slate-900 placeholder:text-xs placeholder:text-slate-300 placeholder:font-medium focus-visible:ring-2 focus-visible:ring-primary/20"
-                    />
+                    <div className="relative flex items-center">
+                      <div className="absolute left-0 h-full flex items-center px-3 bg-slate-200 border-r border-slate-300 rounded-l text-slate-700 font-bold z-10 pointer-events-none text-sm shadow-sm select-none">
+                        <span className="mr-1.5 text-base">🇪🇹</span> +251
+                      </div>
+                      <Input
+                        type="tel"
+                        value={phoneNumber.replace(/^\+?251/, "")}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, "");
+                          if (val === "" || /^[97]\d{0,8}$/.test(val)) {
+                            setPhoneNumber(val ? `+251${val}` : "");
+                          }
+                        }}
+                        placeholder="9XXXXXXXX"
+                        maxLength={9}
+                        className="h-14 bg-slate-100 border-none rounded rounded-l-none text-base pl-[105px] pr-4 font-bold text-slate-900 placeholder:text-sm placeholder:text-slate-400 focus-visible:ring-2 focus-visible:ring-primary/20"
+                      />
+                    </div>
                   </div>
                 </div>
 

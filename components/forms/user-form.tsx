@@ -401,16 +401,29 @@ export function UserForm({
                         <Phone className="h-3.5 w-3.5 text-primary" />
                         Primary Contact *
                       </Label>
-                      <Input
-                        className={`h-12 w-full rounded border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.phoneNumber ? "border-red-500 bg-red-50" : ""}`}
-                        placeholder="Enter Primary Contact"
-                        value={phoneNumber}
-                        onChange={(e) => {
-                          setPhoneNumber(e.target.value);
-                          if (errors.phoneNumber)
-                            setErrors({ ...errors, phoneNumber: "" });
-                        }}
-                      />
+                      <div className="relative flex items-center">
+                        <div className="absolute left-0 h-full flex items-center px-3 bg-slate-200 border-r border-slate-300 rounded-l text-slate-700 font-bold z-10 pointer-events-none text-sm shadow-sm select-none">
+                          <span className="mr-1.5 text-base">🇪🇹</span> +251
+                        </div>
+                        <Input
+                          className={`h-12 w-full rounded rounded-l-none border-slate-200 bg-slate-50/30 pl-[105px] pr-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.phoneNumber ? "border-red-500 bg-red-50" : ""}`}
+                          placeholder="9XXXXXXXX"
+                          maxLength={9}
+                          value={phoneNumber.replace(/^\+?251/, "")}
+                          onChange={(e) => {
+                            const val = e.target.value.replace(/\D/g, "");
+                            let formatted = "";
+                            if (val === "" || /^[97]\d{0,8}$/.test(val)) {
+                              formatted = val ? `+251${val}` : "";
+                            } else {
+                              // If they enter something invalid, fallback to previous value without prefix
+                              formatted = phoneNumber; 
+                            }
+                            setPhoneNumber(formatted);
+                            if (errors.phoneNumber) setErrors({ ...errors, phoneNumber: "" });
+                          }}
+                        />
+                      </div>
                       {errors.phoneNumber && (
                         <p className="text-[10px] text-red-500 font-bold uppercase tracking-tight mt-1">
                           {errors.phoneNumber}
