@@ -116,7 +116,7 @@ const configurationsGroup = {
   permission: PERMISSIONS.CONFIGURATION_VIEW,
   showInParkingDashboard: true,
   children: [
-    { label: "Commission Config", href: "/dashboard/configurations/commissions", icon: Star },
+    { label: "Commission Config", href: "/dashboard/configurations", icon: Star },
     { label: "Invoice Config", href: "/dashboard/invoice-credentials", icon: Receipt },
     { label: "Telebirr Config", href: "/dashboard/telebirr-config", icon: CreditCard },
   ],
