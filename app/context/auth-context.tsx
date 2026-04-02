@@ -21,8 +21,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-// Must match SESSION_TTL in backend .env (300 seconds = 5 minutes)
-const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000  // 5 minutes – matches Redis SESSION_TTL
+// Must match SESSION_TTL in backend .env (3600 seconds = 1 hour)
+const INACTIVITY_TIMEOUT_MS = 60 * 60 * 1000  // 1 hour – matches Redis SESSION_TTL
 const HEARTBEAT_INTERVAL_MS = 90 * 1000       // Touch session every 90 s (well within 5-min window)
 const TOUCH_THROTTLE_MS = 2 * 60 * 1000       // Throttle activity-triggered Redis touch to once per 2 min
 const ACTIVITY_EVENTS = ["mousedown", "mousemove", "keypress", "scroll", "touchstart", "click"]

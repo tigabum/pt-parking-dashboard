@@ -290,7 +290,7 @@ export function getPermissionsByContext(isParkingDashboard: boolean) {
 }
 
 export const DEFAULT_PERMISSIONS_BY_ROLE: Record<string, string[]> = {
-    "PARKING_SUPER_ADMIN": [
+    "PARKING-SUPER-ADMIN": [
         // Parking (view only, no create/delete/approve)
         PERMISSIONS.PARKING_VIEW,
         PERMISSIONS.PARKING_UPDATE,
@@ -355,7 +355,7 @@ export const DEFAULT_PERMISSIONS_BY_ROLE: Record<string, string[]> = {
         PERMISSIONS.INVOICE_GENERATE,
         PERMISSIONS.INVOICE_CANCEL,
     ],
-    "PARKING_MANAGER": [
+    "PARKING-MANAGER": [
         // Parking (view only)
         PERMISSIONS.PARKING_VIEW,
 
@@ -395,10 +395,10 @@ export const DEFAULT_PERMISSIONS_BY_ROLE: Record<string, string[]> = {
         PERMISSIONS.SETTINGS_VIEW,
         PERMISSIONS.SETTINGS_CHANGE_PASSWORD,
     ],
-    "SYSTEM_ADMIN": [
+    "SYSTEM-ADMIN": [
         ...Object.values(PERMISSIONS),
     ],
-    "SYSTEM_SUPER_ADMIN": [
+    "SYSTEM-SUPER-ADMIN": [
         // Full access to everything
         ...Object.values(PERMISSIONS),
     ],
