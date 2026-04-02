@@ -1072,10 +1072,10 @@ function PortalContent() {
                       Payment Method
                     </Label>
                     <Select
-                      value={paymentCategory}
-                      onValueChange={(v: any) => setPaymentCategory(v)}
+                      value={PaymentMethod.INCASH}
+                      disabled={true}
                     >
-                      <SelectTrigger className="w-full h-14 bg-slate-100 border-none rounded text-base px-4 font-bold text-slate-900 focus:ring-primary/20">
+                      <SelectTrigger className="w-full h-14 bg-slate-100 border-none rounded text-base px-4 font-bold text-slate-900 focus:ring-primary/20 opacity-70 cursor-not-allowed">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="rounded border-none shadow-xl">
@@ -1085,14 +1085,11 @@ function PortalContent() {
                         >
                           Cash Payment
                         </SelectItem>
-                        <SelectItem
-                          value={PaymentMethod.TRANSFER}
-                          className="font-bold py-3"
-                        >
-                          Digital Transfer
-                        </SelectItem>
                       </SelectContent>
                     </Select>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest ml-1 mt-1">
+                      Pay at terminal upon exit
+                    </p>
                   </div>
                 </div>
 
@@ -1155,11 +1152,15 @@ function PortalContent() {
                     </div>
                     <div className="p-5 bg-slate-50 rounded-2xl space-y-1 border border-transparent hover:border-slate-100 transition-all sm:col-span-2">
                       <p className="text-[8px] uppercase font-bold text-slate-400 tracking-[0.2em]">
-                        Session Start
+                        Session Validity
                       </p>
                       <p className="text-slate-900 font-black text-xs">
                         {dayjs(startTime).format("MMM D, HH:mm")} —{" "}
-                        <span className="text-emerald-600">Open Session</span>
+                        {bookingType === "HOURLY" ? (
+                          <span className="text-emerald-600">Open Session</span>
+                        ) : (
+                          <span className="text-primary">{dayjs(endTime).format("MMM D, HH:mm")}</span>
+                        )}
                       </p>
                     </div>
                     <div className="p-6 bg-primary/3 border border-primary/10 rounded-2xl space-y-1 sm:col-span-2 shadow-sm">
@@ -1706,45 +1707,25 @@ function CheckoutView({
               <p className="text-slate-400 text-xs font-medium">
                 Select your preferred settlement pathway.
               </p>
-            </div>
-
-            <div className="grid grid-cols-1 gap-4">
+                  <div className="grid grid-cols-1 gap-4">
               <button
                 onClick={() => onSelectPayment("INCASH")}
-                className="group h-24 rounded bg-white border-2 border-slate-50 hover:border-primary/30 transition-all flex items-center px-8 gap-6 text-left hover:bg-slate-50/50"
+                className="group h-32 rounded bg-white border-2 border-slate-50 hover:border-primary/30 transition-all flex items-center px-10 gap-8 text-left hover:bg-slate-50/50 shadow-sm"
               >
-                <div className="h-12 w-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600 transition-transform group-hover:scale-110">
-                  <Wallet className="h-6 w-6" />
+                <div className="h-16 w-16 bg-emerald-50 rounded-3xl flex items-center justify-center text-emerald-600 transition-transform group-hover:scale-110">
+                  <Wallet className="h-8 w-8" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-black text-slate-900 uppercase tracking-widest text-[11px]">
-                    Pay In Cash
+                  <h4 className="font-extrabold text-slate-900 uppercase tracking-widest text-sm">
+                    In-Person Settlement
                   </h4>
-                  <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.15em] mt-1">
-                    Manual Staff Collection
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-[0.15em] mt-2">
+                    Pay via Telebirr or Cash at the terminal controller.
                   </p>
                 </div>
-                <ChevronRight className="h-5 w-5 text-slate-100 group-hover:text-primary transition-all" />
+                <ChevronRight className="h-6 w-6 text-slate-100 group-hover:text-primary transition-all" />
               </button>
-
-              <button
-                onClick={() => setCheckoutStep("transfer_methods")}
-                className="group h-24 rounded bg-white border-2 border-slate-50 hover:border-primary/30 transition-all flex items-center px-8 gap-6 text-left hover:bg-slate-50/50"
-              >
-                <div className="h-12 w-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 transition-transform group-hover:scale-110">
-                  <Smartphone className="h-6 w-6" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-black text-slate-900 uppercase tracking-widest text-[11px]">
-                    Digital Transfer
-                  </h4>
-                  <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.15em] mt-1">
-                    Telebirr & CBE Birr
-                  </p>
-                </div>
-                <ChevronRight className="h-5 w-5 text-slate-100 group-hover:text-primary transition-all" />
-              </button>
-            </div>
+            </div>        </div>
 
             <Button
               variant="ghost"

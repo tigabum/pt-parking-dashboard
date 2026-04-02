@@ -142,8 +142,11 @@ export default function WithholdingReceiptPage() {
                                 </tr>
                             ) : (
                                 filtered.map((inv, idx) => {
-                                    const val = inv.valueDetails ?? {};
-                                    const pretax = Number(val.TotalValue ?? inv.totalAmount) - Number(val.TaxValue ?? inv.taxAmount);
+                                    const val = inv.valueDetails || {};
+                                    const totalVal = Number(val.TotalValue || inv.totalAmount || 0);
+                                    const taxVal = Number(val.TaxValue || inv.taxAmount || 0);
+                                    const withholdVal = Number(val.IncomeWithholdValue || 0);
+                                    const pretax = totalVal - taxVal;
                                     return (
                                         <tr
                                             key={inv.id}
@@ -154,16 +157,16 @@ export default function WithholdingReceiptPage() {
                                             <td className="px-4 py-3 text-xs font-mono text-slate-500 max-w-[160px] truncate">{inv.irn ?? "—"}</td>
                                             <td className="px-4 py-3 text-xs font-mono text-blue-600 font-bold">{inv.buyerTin ?? "—"}</td>
                                             <td className="px-4 py-3 text-xs font-medium text-slate-800">{inv.buyerName ?? "—"}</td>
-                                            <td className="px-4 py-3 text-xs text-slate-700">{Number(pretax).toLocaleString()}</td>
-                                            <td className="px-4 py-3 text-xs text-slate-700">{Number(val.TaxValue ?? inv.taxAmount).toLocaleString()}</td>
+                                            <td className="px-4 py-3 text-xs text-slate-700">{pretax.toLocaleString()}</td>
+                                            <td className="px-4 py-3 text-xs text-slate-700">{taxVal.toLocaleString()}</td>
                                             <td className="px-4 py-3">
                                                 <span className="text-xs font-black text-orange-600 flex items-center gap-1">
                                                     <DollarSign className="h-3.5 w-3.5" />
-                                                    {Number(val.IncomeWithholdValue).toLocaleString()}
+                                                    {withholdVal.toLocaleString()}
                                                 </span>
                                             </td>
                                             <td className="px-4 py-3 text-xs font-black text-emerald-700">
-                                                {Number(val.TotalValue ?? inv.totalAmount).toLocaleString()}
+                                                {totalVal.toLocaleString()}
                                             </td>
                                             <td className="px-4 py-3 text-xs font-mono text-slate-500">{val.InvoiceCurrency ?? "ETB"}</td>
                                             <td className="px-4 py-3">

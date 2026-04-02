@@ -125,6 +125,28 @@ export function BookingForm({
     return () => clearInterval(timer);
   }, [booking.startTime]);
 
+  // Sync endTime based on startTime and type
+  useEffect(() => {
+    if (!booking.startTime) return;
+    const start = dayjs(booking.startTime);
+    let end = start;
+
+    if (booking.type === BookingType.DAILY) {
+      end = start.add(24, "hour");
+    } else if (booking.type === BookingType.MONTHLY) {
+      end = start.add(1, "month");
+    } else if (booking.type === BookingType.HOURLY) {
+      // For HOURLY, we can either leave it as is or set to 1 hour placeholder
+      // The backend now handles null endTime for HOURLY, so we could clear it
+      // but UI might expect a string. We'll set a 1-hour default for estimate purposes.
+      end = start.add(1, "hour");
+    } else {
+      end = start.add(1, "hour");
+    }
+
+    setBooking((prev) => ({ ...prev, endTime: end.format("YYYY-MM-DDTHH:mm") }));
+  }, [booking.startTime, booking.type]);
+
   useEffect(() => {
     if (initialData) {
       setBooking((prev) => ({ ...prev, ...initialData }));
@@ -687,16 +709,25 @@ export function BookingForm({
                   </div>
                   <div className="space-y-2">
                     <Label className="text-[10px] uppercase font-black text-slate-400 tracking-widest">
-                      End Time *
+                      End Time {booking.type === BookingType.HOURLY ? "(Estimated Checkout)" : "*"}
                     </Label>
                     <Input
                       type="datetime-local"
                       value={booking.endTime || ""}
+                      readOnly={booking.type !== BookingType.HOURLY && booking.type !== BookingType.FLAT_RATE}
                       onChange={(e) =>
                         setBooking({ ...booking, endTime: e.target.value })
                       }
-                      className="h-12 rounded bg-slate-50 border-none font-bold"
+                      className={cn(
+                        "h-12 rounded bg-slate-50 border-none font-bold",
+                        booking.type !== BookingType.HOURLY && booking.type !== BookingType.FLAT_RATE && "opacity-60 grayscale cursor-not-allowed"
+                      )}
                     />
+                    {booking.type !== BookingType.HOURLY && booking.type !== BookingType.FLAT_RATE && (
+                      <p className="text-[8px] text-primary font-bold uppercase tracking-widest mt-1">
+                        Fixed duration based on plan
+                      </p>
+                    )}
                   </div>
                 </div>
 

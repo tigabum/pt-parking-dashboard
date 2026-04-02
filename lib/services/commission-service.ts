@@ -29,11 +29,11 @@ export const commissionService = {
     },
 
     getBookingCommissions: async (params?: any) => {
-        const res = await apiClient.get<ServiceResponse<any>>("/system-config/commissions/bookings", { params });
+        const res = await apiClient.get<ServiceResponse<any>>("/commissions/bookings", { params });
         return res.data;
     },
     getCommissionStats: async (params?: any) => {
-        const res = await apiClient.get<ServiceResponse<any>>("/system-config/commissions/stats", { params });
+        const res = await apiClient.get<ServiceResponse<any>>("/commissions/stats", { params });
         return res.data;
     },
 };
