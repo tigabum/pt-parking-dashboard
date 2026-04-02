@@ -15,17 +15,12 @@ import { PermissionSelector } from "./permission-selector";
 import {
   User as UserIcon,
   Shield,
-  Info,
   Upload,
   X,
   Loader2,
-  CheckCircle2,
   Mail,
   Phone,
   Building2,
-  Search as SearchIcon,
-  Check,
-  ChevronRight,
   LayoutDashboard,
   Calendar,
   Users,
@@ -39,11 +34,8 @@ import {
   Star,
 } from "lucide-react";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
-
 import { SYSTEM_ORG_ID } from "@/lib/constants";
 import {
-  PERMISSION_LABELS,
   getPermissionsByContext,
   DEFAULT_PERMISSIONS_BY_ROLE,
 } from "@/lib/permissions";
@@ -321,7 +313,7 @@ export function UserForm({
 
                     <div className="space-y-3 pt-2">
                       <Label className="text-xs font-black text-slate-900 uppercase tracking-tight">
-                        Organization Registry
+                        Organization
                       </Label>
                       <div className="flex items-center gap-3 p-3 bg-white rounded border border-slate-100 shadow-sm">
                         <Building2 className="h-4 w-4 text-primary" />
@@ -347,7 +339,7 @@ export function UserForm({
                         Personal Information
                       </h3>
                       <p className="text-[10px] text-slate-400 font-bold uppercase tracking-tight">
-                        System access & contact details
+                        System access
                       </p>
                     </div>
                   </div>
@@ -355,11 +347,11 @@ export function UserForm({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8">
                     <div className="space-y-3 md:col-span-2">
                       <Label className="text-xs font-black text-slate-900 uppercase tracking-tight">
-                        Full Legal Name *
+                        Full Name *
                       </Label>
                       <Input
                         className={`h-12 w-full rounded border-slate-200 bg-slate-50/30 px-4 font-bold focus:ring-2 focus:ring-primary/10 transition-all ${errors.fullName ? "border-red-500 bg-red-50" : ""}`}
-                        placeholder="Enter Full Legal Name"
+                        placeholder="Enter Full Name"
                         value={fullName}
                         onChange={(e) => {
                           setFullName(e.target.value);
@@ -417,7 +409,7 @@ export function UserForm({
                               formatted = val ? `+251${val}` : "";
                             } else {
                               // If they enter something invalid, fallback to previous value without prefix
-                              formatted = phoneNumber; 
+                              formatted = phoneNumber;
                             }
                             setPhoneNumber(formatted);
                             if (errors.phoneNumber) setErrors({ ...errors, phoneNumber: "" });
@@ -435,17 +427,10 @@ export function UserForm({
 
                 {/* Access Permissions Field */}
                 <div className="space-y-8 pt-8 border-t border-slate-50">
-                  <div className="flex items-center gap-4">
-                    <div className="h-1 w-12 rounded-full bg-primary/20" />
-                    <h3 className="text-sm font-black text-slate-400 uppercase tracking-widest">
-                      System Capabilities
-                    </h3>
-                  </div>
-
                   <div className="space-y-4">
                     <div className="space-y-3">
                       <Label className="text-xs font-black text-slate-900 uppercase tracking-tight">
-                        Custom Permission Registry
+                        Permissions
                       </Label>
                       <PermissionSelector
                         permissions={permissions}

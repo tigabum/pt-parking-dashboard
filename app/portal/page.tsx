@@ -101,6 +101,22 @@ function PortalContent() {
   );
   const [endTime, setEndTime] = useState(localEnd.toISOString().slice(0, 16));
 
+  // Sync endTime based on startTime and bookingType
+  useEffect(() => {
+    const start = dayjs(startTime);
+    let end = start;
+
+    if (bookingType === "DAILY") {
+      end = start.add(24, "hour");
+    } else if (bookingType === "MONTHLY") {
+      end = start.add(30, "day");
+    } else {
+      end = start.add(1, "hour");
+    }
+
+    setEndTime(end.format("YYYY-MM-DDTHH:mm"));
+  }, [startTime, bookingType]);
+
   const [error, setError] = useState<string | null>(null);
 
   // Initial Load & Session Recovery
@@ -446,15 +462,15 @@ function PortalContent() {
 
     let total = 0;
     if (bookingType === "HOURLY") {
-      const hours = durationMs / (1000 * 60 * 60);
+      const hours = Math.ceil(durationMs / (1000 * 60 * 60));
       total = pricing.price * hours;
     } else if (bookingType === "DAILY") {
-      const days = durationMs / (1000 * 60 * 60 * 24);
-      total = pricing.price * Math.ceil(days);
+      const days = Math.ceil(durationMs / (1000 * 60 * 60 * 24));
+      total = pricing.price * Math.max(1, days);
     } else {
       const days = durationMs / (1000 * 60 * 60 * 24);
-      const months = days / 30;
-      total = pricing.price * months;
+      const months = Math.ceil(days / 30 - 0.05); // Tolerance
+      total = pricing.price * Math.max(1, months);
     }
 
     const discounted = total * (1 - (pricing.discount || 0) / 100);
@@ -490,11 +506,9 @@ function PortalContent() {
 
     try {
       toast.loading("Creating booking session...");
-      // Recalculate times. Open-ended session: Default to 1 hour initial duration.
-      const now = new Date();
-      const startObj = new Date(startTime);
-      // Default End = Start + 1 hour
-      const newEnd = new Date(startObj.getTime() + 60 * 60 * 1000);
+      // Synchronize times using state (which is kept in sync by useEffect)
+      const startISO = dayjs(startTime).toISOString();
+      const endISO = dayjs(endTime).toISOString();
 
       const payload = {
         parkingId: parking.id,
@@ -503,8 +517,8 @@ function PortalContent() {
         plateNumber: safePlate,
         vehicleBrand: safeBrand,
         vehicleModel: safeModel,
-        startTime: now.toISOString(),
-        endTime: newEnd.toISOString(),
+        startTime: startISO,
+        endTime: endISO,
         bookingType: bookingType,
         bookingMethod: "QR",
         paymentMethod: paymentCategory, // Strictly usage of category (TRANSFER / INCASH)
