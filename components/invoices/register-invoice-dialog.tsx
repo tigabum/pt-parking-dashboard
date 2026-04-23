@@ -47,17 +47,17 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
     const [isOpen, setIsOpen] = useState(false);
     const [registering, setRegistering] = useState(false);
 
-    const [testPayload, setTestPayload] = useState({
-        buyerName: "QR Anbessa Technology Development",
-        buyerTin: "0094856874",
-        buyerEmail: "company@anbessait.com",
-        buyerPhone: "+251913654171",
+    const [formData, setFormData] = useState({
+        buyerName: "",
+        buyerTin: "",
+        buyerEmail: "",
+        buyerPhone: "",
         buyerIdType: "KID",
         buyerCity: "101",
         buyerRegion: "1",
         buyerWereda: "13",
         buyerHouseNumber: "101",
-        buyerVatNumber: "43256663343256663322",
+        buyerVatNumber: "",
         buyerLocality: "",
         buyerSubCity: "",
         transactionType: "B2B",
@@ -65,32 +65,21 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
         documentType: "INV",
         paymentMode: "CASH",
         paymentTerm: "IMMIDIATE",
-        cashierName: "System Administrator",
-        salesPersonName: "POS-01",
-        items: [
-            {
-                ProductDescription: "Standard Parking Service",
-                PreTaxValue: 10000,
-                TaxAmount: 1500,
-                ItemCode: "PKG-01",
-                Quantity: 1,
-                Unit: "PCS",
-                NatureOfSupplies: "service",
-                TaxCode: "VAT15"
-            }
-        ]
+        cashierName: "",
+        salesPersonName: "",
+        items: [] as any[]
     });
 
     const addItem = () => {
-        setTestPayload({
-            ...testPayload,
+        setFormData({
+            ...formData,
             items: [
-                ...testPayload.items,
+                ...formData.items,
                 {
                     ProductDescription: "Parking Fee",
                     PreTaxValue: 0,
                     TaxAmount: 0,
-                    ItemCode: `ITEM-${testPayload.items.length + 1}`,
+                    ItemCode: `ITEM-${formData.items.length + 1}`,
                     Quantity: 1,
                     Unit: "PCS",
                     NatureOfSupplies: "service",
@@ -101,13 +90,13 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
     };
 
     const removeItem = (index: number) => {
-        const newItems = [...testPayload.items];
+        const newItems = [...formData.items];
         newItems.splice(index, 1);
-        setTestPayload({ ...testPayload, items: newItems });
+        setFormData({ ...formData, items: newItems });
     };
 
     const updateItem = (index: number, field: string, value: any) => {
-        const newItems = [...testPayload.items];
+        const newItems = [...formData.items];
         newItems[index] = { ...newItems[index], [field]: value };
 
         // Auto-calculate tax if preTax changes
@@ -115,7 +104,7 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
             newItems[index].TaxAmount = Math.round(Number(value) * 0.15);
         }
 
-        setTestPayload({ ...testPayload, items: newItems });
+        setFormData({ ...formData, items: newItems });
     };
 
     const handleSingleRegister = async () => {
@@ -123,7 +112,7 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
             toast.error("Please select a parking agent first");
             return;
         }
-        if (testPayload.items.length === 0) {
+        if (formData.items.length === 0) {
             toast.error("Please add at least one item");
             return;
         }
@@ -132,22 +121,22 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
         try {
             const payload = {
                 parkingId,
-                TransactionType: testPayload.transactionType,
+                TransactionType: formData.transactionType,
                 BuyerDetails: {
-                    IdType: testPayload.buyerIdType || "KID",
-                    City: testPayload.buyerCity || "101",
-                    Email: testPayload.buyerEmail || "",
-                    HouseNumber: testPayload.buyerHouseNumber || "101",
-                    LegalName: testPayload.buyerName || "",
-                    Phone: testPayload.buyerPhone || "",
-                    Region: testPayload.buyerRegion || "1",
-                    Tin: testPayload.buyerTin || "",
-                    VatNumber: testPayload.buyerVatNumber || "",
-                    Wereda: testPayload.buyerWereda || "13",
-                    Locality: testPayload.buyerLocality || null,
-                    SubCity: testPayload.buyerSubCity || null
+                    IdType: formData.buyerIdType || "KID",
+                    City: formData.buyerCity || "101",
+                    Email: formData.buyerEmail || "",
+                    HouseNumber: formData.buyerHouseNumber || "101",
+                    LegalName: formData.buyerName || "",
+                    Phone: formData.buyerPhone || "",
+                    Region: formData.buyerRegion || "1",
+                    Tin: formData.buyerTin || "",
+                    VatNumber: formData.buyerVatNumber || "",
+                    Wereda: formData.buyerWereda || "13",
+                    Locality: formData.buyerLocality || null,
+                    SubCity: formData.buyerSubCity || null
                 },
-                ItemList: testPayload.items.map((item, index) => ({
+                ItemList: formData.items.map((item, index) => ({
                     ...item,
                     PreTaxValue: Number(item.PreTaxValue),
                     TaxAmount: Number(item.TaxAmount),
@@ -160,17 +149,17 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
                 })),
                 DocumentDetails: {
                     DocumentNumber: "AUTO",
-                    Date: testPayload.documentDate,
-                    Type: testPayload.documentType
+                    Date: formData.documentDate,
+                    Type: formData.documentType
                 },
                 PaymentDetails: {
-                    Mode: testPayload.paymentMode,
-                    PaymentTerm: testPayload.paymentTerm
+                    Mode: formData.paymentMode,
+                    PaymentTerm: formData.paymentTerm
                 },
                 SourceSystem: {
-                    CashierName: testPayload.cashierName,
+                    CashierName: formData.cashierName,
                     InvoiceCounter: 0,
-                    SalesPersonName: testPayload.salesPersonName,
+                    SalesPersonName: formData.salesPersonName,
                     SystemNumber: "AUTO",
                     SystemType: "POS"
                 }
@@ -218,7 +207,7 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
                             </TabsTrigger>
                             <TabsTrigger value="items" className="rounded-lg font-bold px-8 py-2.5 data-[state=active]:bg-white data-[state=active]:shadow-sm flex items-center gap-2">
                                 Items
-                                <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-full text-[10px]">{testPayload.items.length}</span>
+                                <span className="bg-primary/10 text-primary px-2 py-0.5 rounded-full text-[10px]">{formData.items.length}</span>
                             </TabsTrigger>
                             <TabsTrigger value="payment" className="rounded-lg font-bold px-8 py-2.5 data-[state=active]:bg-white data-[state=active]:shadow-sm flex items-center gap-2">
                                 Payment
@@ -229,10 +218,9 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
                     <TabsContent value="buyer" className="p-8 m-0 max-h-[50vh] overflow-y-auto">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <div className="space-y-2">
-                                <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Transaction Type</Label>
                                 <Select
-                                    value={testPayload.transactionType}
-                                    onValueChange={(val) => setTestPayload({ ...testPayload, transactionType: val })}
+                                    value={formData.transactionType}
+                                    onValueChange={(val) => setFormData({ ...formData, transactionType: val })}
                                 >
                                     <SelectTrigger className="h-11 rounded-xl border-slate-200"><SelectValue /></SelectTrigger>
                                     <SelectContent className="rounded-xl">
@@ -244,50 +232,50 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
                             <div className="space-y-2 lg:col-span-2">
                                 <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Legal Name</Label>
                                 <Input
-                                    value={testPayload.buyerName}
-                                    onChange={e => setTestPayload({ ...testPayload, buyerName: e.target.value })}
+                                    value={formData.buyerName}
+                                    onChange={e => setFormData({ ...formData, buyerName: e.target.value })}
                                     className="h-11 border-slate-200 font-bold rounded-xl"
                                 />
                             </div>
                             <div className="space-y-2">
                                 <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">TIN</Label>
                                 <Input
-                                    value={testPayload.buyerTin}
-                                    onChange={e => setTestPayload({ ...testPayload, buyerTin: e.target.value })}
+                                    value={formData.buyerTin}
+                                    onChange={e => setFormData({ ...formData, buyerTin: e.target.value })}
                                     className="h-11 border-slate-200 font-mono rounded-xl"
                                 />
                             </div>
                             <div className="space-y-2">
                                 <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">VAT</Label>
                                 <Input
-                                    value={testPayload.buyerVatNumber}
-                                    onChange={e => setTestPayload({ ...testPayload, buyerVatNumber: e.target.value })}
+                                    value={formData.buyerVatNumber}
+                                    onChange={e => setFormData({ ...formData, buyerVatNumber: e.target.value })}
                                     className="h-11 border-slate-200 font-mono rounded-xl"
                                 />
                             </div>
                             <div className="space-y-2">
                                 <Label className="text-[10px) font-black uppercase text-slate-400 tracking-widest">Phone</Label>
                                 <Input
-                                    value={testPayload.buyerPhone}
-                                    onChange={e => setTestPayload({ ...testPayload, buyerPhone: e.target.value })}
+                                    value={formData.buyerPhone}
+                                    onChange={e => setFormData({ ...formData, buyerPhone: e.target.value })}
                                     className="h-11 border-slate-200 rounded-xl"
                                 />
                             </div>
                             <div className="space-y-2">
                                 <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Email</Label>
                                 <Input
-                                    value={testPayload.buyerEmail}
-                                    onChange={e => setTestPayload({ ...testPayload, buyerEmail: e.target.value })}
+                                    value={formData.buyerEmail}
+                                    onChange={e => setFormData({ ...formData, buyerEmail: e.target.value })}
                                     className="h-11 border-slate-200 rounded-xl"
                                 />
                             </div>
                             <div className="space-y-2">
                                 <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">City</Label>
-                                <Input value={testPayload.buyerCity} onChange={e => setTestPayload({ ...testPayload, buyerCity: e.target.value })} className="h-11 border-slate-200 rounded-xl" />
+                                <Input value={formData.buyerCity} onChange={e => setFormData({ ...formData, buyerCity: e.target.value })} className="h-11 border-slate-200 rounded-xl" />
                             </div>
                             <div className="space-y-2">
                                 <Label className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Wereda</Label>
-                                <Input value={testPayload.buyerWereda} onChange={e => setTestPayload({ ...testPayload, buyerWereda: e.target.value })} className="h-11 border-slate-200 rounded-xl" />
+                                <Input value={formData.buyerWereda} onChange={e => setFormData({ ...formData, buyerWereda: e.target.value })} className="h-11 border-slate-200 rounded-xl" />
                             </div>
                         </div>
                     </TabsContent>
@@ -303,7 +291,13 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
                             </Button>
                         </div>
                         <div className="space-y-4">
-                            {testPayload.items.map((item, index) => (
+                            {formData.items.length === 0 ? (
+                                <div className="p-8 text-center bg-slate-50 border border-slate-100 rounded-2xl flex flex-col items-center">
+                                    <ListChecks className="h-10 w-10 text-slate-300 mb-3" />
+                                    <p className="text-slate-500 font-bold mb-1">No items added yet</p>
+                                    <p className="text-sm text-slate-400">Click the button above to add line items.</p>
+                                </div>
+                            ) : formData.items.map((item, index) => (
                                 <div key={index} className="p-6 bg-slate-50 rounded-2xl border border-slate-100 relative group">
                                     <Button
                                         onClick={() => removeItem(index)}
@@ -350,7 +344,7 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <div className="space-y-2">
                                 <Label className="text-[10px] font-black uppercase">Doc Type</Label>
-                                <Select value={testPayload.documentType} onValueChange={(val) => setTestPayload({ ...testPayload, documentType: val })}>
+                                <Select value={formData.documentType} onValueChange={(val) => setFormData({ ...formData, documentType: val })}>
                                     <SelectTrigger className="h-11"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="INV">Invoice (INV)</SelectItem>
@@ -361,7 +355,7 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
                             </div>
                             <div className="space-y-2">
                                 <Label className="text-[10px] font-black uppercase">Payment Mode</Label>
-                                <Select value={testPayload.paymentMode} onValueChange={(val) => setTestPayload({ ...testPayload, paymentMode: val })}>
+                                <Select value={formData.paymentMode} onValueChange={(val) => setFormData({ ...formData, paymentMode: val })}>
                                     <SelectTrigger className="h-11"><SelectValue /></SelectTrigger>
                                     <SelectContent>
                                         <SelectItem value="CASH">Cash</SelectItem>
@@ -371,7 +365,7 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
                             </div>
                             <div className="space-y-2">
                                 <Label className="text-[10px] font-black uppercase">Cashier</Label>
-                                <Input value={testPayload.cashierName} onChange={e => setTestPayload({ ...testPayload, cashierName: e.target.value })} />
+                                <Input value={formData.cashierName} onChange={e => setFormData({ ...formData, cashierName: e.target.value })} placeholder="Cashier Name" />
                             </div>
                         </div>
                     </TabsContent>
@@ -382,7 +376,7 @@ export function RegisterInvoiceDialog({ parkingId, onSuccess, trigger }: Registe
                         <div className="text-left">
                             <p className="text-[9px] font-black uppercase text-slate-400 tracking-widest leading-none mb-1">Grand Total</p>
                             <p className="text-2xl font-black text-emerald-600 leading-none">
-                                {testPayload.items.reduce((sum, item) => sum + (Number(item.PreTaxValue) + Number(item.TaxAmount)), 0).toLocaleString()} <span className="text-[10px] text-slate-400">ETB</span>
+                                {formData.items.reduce((sum, item) => sum + (Number(item.PreTaxValue) + Number(item.TaxAmount)), 0).toLocaleString()} <span className="text-[10px] text-slate-400">ETB</span>
                             </p>
                         </div>
                     </div>
