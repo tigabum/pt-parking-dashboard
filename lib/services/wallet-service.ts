@@ -1,3 +1,4 @@
+import axios from "axios";
 import apiClient from "../api-client";
 
 export const walletService = {
@@ -22,9 +23,13 @@ export const walletService = {
     },
 
     initiateTelebirrPrefund: async (parkingIdOrCode: string, amount: number) => {
-        // Hardcoding the 'working' API endpoint as requested, mirror the HTML page implementation
-        const WORKING_API_URL = `http://157.180.114.86:8080/api/parking/wallets/parking/${parkingIdOrCode}/prefund`;
-        const response = await apiClient.post(WORKING_API_URL, { amount });
+        // Use a direct axios call to the local proxy to avoid CORS 'Network Error' 
+        // and bypass the apiClient's remote baseURL.
+        const token = localStorage.getItem('accessToken');
+        const response = await axios.post(`/api/parking-proxy/wallets/parking/${parkingIdOrCode}/prefund`, 
+            { amount },
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
         return response.data;
     },
 };
