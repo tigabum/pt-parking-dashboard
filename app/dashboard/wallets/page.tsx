@@ -61,10 +61,11 @@ export default function WalletsPage() {
   }, [page, limit, searchQuery, user]);
 
   useEffect(() => {
-    if (wallets.length > 0 && !inputParkingCode) {
-      setInputParkingCode(wallets[0].parking?.parkingCode || "");
+    // Hardcoding for test as requested
+    if (!inputParkingCode) {
+      setInputParkingCode("FOHKSGJ7");
     }
-  }, [wallets, inputParkingCode]);
+  }, [inputParkingCode]);
 
   const loadWallets = async () => {
     try {
