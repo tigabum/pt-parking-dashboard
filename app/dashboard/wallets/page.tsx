@@ -144,6 +144,46 @@ export default function WalletsPage() {
     }
   };
 
+  const handleTelebirrTopUp = async () => {
+    if (!selectedWallet || !topUpAmount) {
+      toast.error("Please enter a top-up amount");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const amount = parseFloat(topUpAmount);
+      if (isNaN(amount) || amount < 1) {
+        toast.error("Please enter a valid amount (minimum 1 ETB)");
+        return;
+      }
+
+      const parkingIdOrCode = selectedWallet.parking?.parkingCode || selectedWallet.parking?.id;
+      if (!parkingIdOrCode) {
+        toast.error("Wallet does not have an associated parking");
+        return;
+      }
+
+      // 1. Call the backend to initiate Telebirr prefund
+      const response = await walletService.initiateTelebirrPrefund(parkingIdOrCode, amount);
+
+      if (response.success && response.data?.paymentUrl) {
+        toast.success("Telebirr order created. Redirecting to payment...");
+        
+        // 2. Open the real Telebirr payment page directly
+        window.location.href = response.data.paymentUrl;
+      } else {
+        toast.error(response.message || "Telebirr integration failed. Please check the backend configuration.");
+      }
+
+    } catch (error: any) {
+      console.error("Telebirr top-up error:", error);
+      toast.error(error.message || "Failed to initiate Telebirr payment");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const columns: Column<any>[] = [
     {
       key: "name",
@@ -281,50 +321,55 @@ export default function WalletsPage() {
           <DialogHeader>
             <DialogTitle>Top Up Wallet</DialogTitle>
             <DialogDescription>
-              Add funds to <b>{selectedWallet?.parking?.name}</b> wallet
-              manually.
+              Add funds to <b>{selectedWallet?.parking?.name}</b> ({selectedWallet?.parking?.parkingCode}).
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="amount">Amount (ETB)</Label>
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-bold text-sm">
+              <Label htmlFor="amount" className="text-xs font-bold uppercase text-slate-500 tracking-wider">Top-up Amount (ETB)</Label>
+              <div className="relative group">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm transition-colors group-focus-within:text-primary">
                   ETB
                 </span>
                 <Input
                   id="amount"
                   type="number"
                   placeholder="0.00"
-                  className="pl-12"
+                  className="pl-12 h-12 text-lg font-bold"
                   value={topUpAmount}
                   onChange={(e) => setTopUpAmount(e.target.value)}
                 />
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">Description (Optional)</Label>
-              <Input
-                id="description"
-                placeholder="Reason for top-up..."
-                value={topUpDescription}
-                onChange={(e) => setTopUpDescription(e.target.value)}
-              />
+              <p className="text-[10px] text-slate-400 italic">
+                You will be redirected to Telebirr to complete the payment.
+              </p>
             </div>
           </div>
 
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsTopUpOpen(false)}>
+          <DialogFooter className="flex flex-col sm:flex-row gap-2">
+            <Button variant="outline" onClick={() => setIsTopUpOpen(false)} className="sm:flex-1">
               Cancel
             </Button>
+            
             <Button
-              onClick={handleTopUp}
+              className="sm:flex-1 bg-primary hover:bg-primary/90 text-white font-bold"
+              onClick={handleTelebirrTopUp}
               disabled={isSubmitting || !topUpAmount}
             >
-              {isSubmitting ? "Processing..." : "Confirm Top Up"}
+              {isSubmitting ? "Processing..." : "Pay with Telebirr"}
             </Button>
+
+            {user?.role === UserRole.SYSTEM_SUPER_ADMIN && (
+              <Button
+                variant="ghost"
+                className="sm:flex-1 text-slate-400 hover:text-slate-600 text-[10px] font-bold uppercase"
+                onClick={handleTopUp}
+                disabled={isSubmitting || !topUpAmount}
+              >
+                Manual Add
+              </Button>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -20,4 +20,11 @@ export const walletService = {
         const response = await apiClient.post(`/wallets/parking/${parkingId}/add-funds`, { amount, description });
         return response.data;
     },
+
+    initiateTelebirrPrefund: async (parkingIdOrCode: string, amount: number) => {
+        // Hardcoding the 'working' API endpoint as requested, mirror the HTML page implementation
+        const WORKING_API_URL = `http://157.180.114.86:8080/api/parking/wallets/parking/${parkingIdOrCode}/prefund`;
+        const response = await apiClient.post(WORKING_API_URL, { amount });
+        return response.data;
+    },
 };
