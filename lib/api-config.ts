@@ -1,6 +1,6 @@
 export const API_CONFIG = {
     // Force local backend if env var is missing or empty
-    BASE_URL: 'https://gelaglepark.com/api/parking',
+    BASE_URL: 'https://gelaglepark.com/api',
     TIMEOUT: 10000, // Reduced from 30s to 10s for faster failure detection
 } as const;
 

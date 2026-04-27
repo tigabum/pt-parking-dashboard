@@ -24,8 +24,8 @@ export const walletService = {
 
     initiateTelebirrPrefund: async (parkingIdOrCode: string, amount: number) => {
         const token = localStorage.getItem("accessToken");
-        // Hardcoding the full production URL to ensure consistency across all environments
-        const WORKING_URL = `https://gelaglepark.com/api/parking/wallets/parking/${parkingIdOrCode}/prefund`;
+        // On production, the base is /api/ and the wallet endpoint is /wallets/...
+        const WORKING_URL = `https://gelaglepark.com/api/wallets/parking/${parkingIdOrCode}/prefund`;
         
         const response = await fetch(WORKING_URL, {
             method: "POST",
