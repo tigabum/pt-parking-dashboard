@@ -60,6 +60,12 @@ export default function WalletsPage() {
     }
   }, [page, limit, searchQuery, user]);
 
+  useEffect(() => {
+    if (wallets.length > 0 && !inputParkingCode) {
+      setInputParkingCode(wallets[0].parking?.parkingCode || "");
+    }
+  }, [wallets, inputParkingCode]);
+
   const loadWallets = async () => {
     try {
       setLoading(true);
@@ -100,7 +106,10 @@ export default function WalletsPage() {
   const handleOpenTopUp = () => {
     setSelectedWallet(null);
     setTopUpAmount("");
-    setInputParkingCode("");
+    // Keep inputParkingCode if already resolved from wallets
+    if (wallets.length > 0) {
+      setInputParkingCode(wallets[0].parking?.parkingCode || "");
+    }
     setTopUpDescription("");
     setIsTopUpOpen(true);
   };
@@ -152,7 +161,7 @@ export default function WalletsPage() {
   };
 
   const handleTelebirrTopUp = async () => {
-    if (!selectedWallet || !topUpAmount) {
+    if (!topUpAmount) {
       toast.error("Please enter a top-up amount");
       return;
     }
@@ -331,19 +340,6 @@ export default function WalletsPage() {
           </DialogHeader>
 
           <div className="space-y-6 py-6">
-            {!selectedWallet && (
-              <div className="space-y-2">
-                <Label htmlFor="parkingCode" className="text-xs font-bold uppercase text-slate-500 tracking-wider">Parking Code</Label>
-                <Input
-                  id="parkingCode"
-                  placeholder="e.g. FOHKSGJ7"
-                  className="h-12 font-mono"
-                  value={inputParkingCode}
-                  onChange={(e) => setInputParkingCode(e.target.value)}
-                />
-              </div>
-            )}
-
             <div className="space-y-2">
               <Label htmlFor="amount" className="text-xs font-bold uppercase text-slate-500 tracking-wider">Top-up Amount (ETB)</Label>
               <div className="relative group">
@@ -360,7 +356,9 @@ export default function WalletsPage() {
                 />
               </div>
               <p className="text-[10px] text-slate-400 italic">
-                You will be redirected to Telebirr to complete the payment.
+                {inputParkingCode 
+                  ? `Target: Parking ${inputParkingCode}. You will be redirected to Telebirr.`
+                  : "Identifying parking... Please wait."}
               </p>
             </div>
           </div>
