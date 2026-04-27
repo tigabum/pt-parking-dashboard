@@ -23,11 +23,11 @@ export const walletService = {
     },
 
     initiateTelebirrPrefund: async (parkingIdOrCode: string, amount: number) => {
-        // Using fetch to match exactly the logic in the prefund page that is known to work
         const token = localStorage.getItem("accessToken");
-        const PROXY_URL = `/api/parking-proxy/wallets/parking/${parkingIdOrCode}/prefund`;
+        // Using the relative path structure that is known to work on the remote server
+        const WORKING_URL = `/api/parking/wallets/parking/${parkingIdOrCode}/prefund`;
         
-        const response = await fetch(PROXY_URL, {
+        const response = await fetch(WORKING_URL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
