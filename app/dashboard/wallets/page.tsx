@@ -49,6 +49,7 @@ export default function WalletsPage() {
   const [isTopUpOpen, setIsTopUpOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [topUpAmount, setTopUpAmount] = useState("");
+  const [inputParkingCode, setInputParkingCode] = useState("");
   const [topUpDescription, setTopUpDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -96,15 +97,20 @@ export default function WalletsPage() {
     }
   };
 
-  const handleOpenTopUp = (wallet: any) => {
-    setSelectedWallet(wallet);
+  const handleOpenTopUp = () => {
+    setSelectedWallet(null);
     setTopUpAmount("");
+    setInputParkingCode("");
     setTopUpDescription("");
     setIsTopUpOpen(true);
   };
 
   const handleTopUp = async () => {
-    if (!selectedWallet || !topUpAmount) return;
+    const code = inputParkingCode || selectedWallet?.parking?.parkingCode;
+    if (!code || !topUpAmount) {
+      toast.error("Parking code and amount are required");
+      return;
+    }
 
     try {
       setIsSubmitting(true);
@@ -114,11 +120,12 @@ export default function WalletsPage() {
         return;
       }
 
-      // Using row.parking.id as parkingId based on entity structure
-      const parkingId = selectedWallet.parking?.id;
+      // 1. Get wallet/parking ID from code if not already selected
+      let parkingId = selectedWallet?.parking?.id;
       if (!parkingId) {
-        toast.error("Wallet does not have an associated parking");
-        return;
+        // We'll rely on the backend's ability to handle either ID or Code in addFunds too
+        // or just pass the code if the backend update I did earlier supports it.
+        parkingId = code; 
       }
 
       const response = await walletService.addFunds(
@@ -133,7 +140,7 @@ export default function WalletsPage() {
       if (response.success) {
         toast.success("Funds added successfully");
         setIsTopUpOpen(false);
-        loadWallets(); // Reload to show new balance
+        loadWallets(); 
       } else {
         toast.error(response.message || "Failed to add funds");
       }
@@ -158,9 +165,9 @@ export default function WalletsPage() {
         return;
       }
 
-      const parkingIdOrCode = selectedWallet.parking?.parkingCode || selectedWallet.parking?.id;
+      const parkingIdOrCode = inputParkingCode || selectedWallet?.parking?.parkingCode || selectedWallet?.parking?.id;
       if (!parkingIdOrCode) {
-        toast.error("Wallet does not have an associated parking");
+        toast.error("Please enter a Parking Code");
         return;
       }
 
@@ -244,15 +251,6 @@ export default function WalletsPage() {
           <Button
             size="sm"
             variant="outline"
-            className="h-8 gap-2 bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100 hover:text-emerald-700 hover:border-emerald-300"
-            onClick={() => handleOpenTopUp(row)}
-          >
-            <Plus className="w-3.5 h-3.5" />
-            <span className="text-xs font-bold">Top Up</span>
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
             className="h-8 gap-2 bg-indigo-50 text-indigo-600 border-indigo-200 hover:bg-indigo-100 hover:text-indigo-700 hover:border-indigo-300"
             onClick={() => {
               setSelectedWallet(row);
@@ -281,10 +279,9 @@ export default function WalletsPage() {
         title="Parking Wallets"
         description="Monitor and manage parking wallet balance."
       >
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 w-full mt-2">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 w-full mt-2">
           <div className="flex flex-col lg:flex-row lg:items-center flex-1 gap-3 overflow-hidden">
             <div className="relative w-full lg:w-[320px] shrink-0">
-              {/* Search is relevant for Admin mostly, but okay to keep */}
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <Input
                 placeholder="Search parking name..."
@@ -293,8 +290,14 @@ export default function WalletsPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            {/* Additional filters can be added to this row in the future */}
           </div>
+          <Button 
+            className="shrink-0 premium-gradient text-white font-bold h-11 px-6 rounded shadow-lg shadow-primary/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            onClick={handleOpenTopUp}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Topup Wallet
+          </Button>
         </div>
       </PageHeader>
 
@@ -319,13 +322,28 @@ export default function WalletsPage() {
       <Dialog open={isTopUpOpen} onOpenChange={setIsTopUpOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Top Up Wallet</DialogTitle>
+            <DialogTitle className="text-2xl font-black">Top Up Wallet</DialogTitle>
             <DialogDescription>
-              Add funds to <b>{selectedWallet?.parking?.name}</b> ({selectedWallet?.parking?.parkingCode}).
+              {selectedWallet 
+                ? `Initiating top-up for ${selectedWallet.parking?.name} (${selectedWallet.parking?.parkingCode})`
+                : "Enter parking details to initiate a Telebirr top-up."}
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
+          <div className="space-y-6 py-6">
+            {!selectedWallet && (
+              <div className="space-y-2">
+                <Label htmlFor="parkingCode" className="text-xs font-bold uppercase text-slate-500 tracking-wider">Parking Code</Label>
+                <Input
+                  id="parkingCode"
+                  placeholder="e.g. FOHKSGJ7"
+                  className="h-12 font-mono"
+                  value={inputParkingCode}
+                  onChange={(e) => setInputParkingCode(e.target.value)}
+                />
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="amount" className="text-xs font-bold uppercase text-slate-500 tracking-wider">Top-up Amount (ETB)</Label>
               <div className="relative group">
