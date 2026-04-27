@@ -23,13 +23,25 @@ export const walletService = {
     },
 
     initiateTelebirrPrefund: async (parkingIdOrCode: string, amount: number) => {
-        // Use a direct axios call to the local proxy to avoid CORS 'Network Error' 
-        // and bypass the apiClient's remote baseURL.
-        const token = localStorage.getItem('accessToken');
-        const response = await axios.post(`/api/parking-proxy/wallets/parking/${parkingIdOrCode}/prefund`, 
-            { amount },
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
-        return response.data;
+        // Using fetch to match exactly the logic in the prefund page that is known to work
+        const token = localStorage.getItem("accessToken");
+        const PROXY_URL = `/api/parking-proxy/wallets/parking/${parkingIdOrCode}/prefund`;
+        
+        const response = await fetch(PROXY_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({ amount }),
+        });
+
+        const data = await response.json().catch(() => null);
+
+        if (!response.ok) {
+            throw new Error(data?.message || `Request failed with status ${response.status}`);
+        }
+
+        return data;
     },
 };
