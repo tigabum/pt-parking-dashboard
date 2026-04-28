@@ -11,7 +11,6 @@ import { Wallet, CreditCard, Lock, ShieldCheck, AlertCircle, CheckCircle2, Loade
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
-const QUICK_AMOUNTS = [50, 100, 200, 500, 1000, 2000];
 const DEFAULT_TEST_PARKING_ID = "885b4cb6-f2aa-4d51-8a2c-fd558c547c5b";
 
 function PrefundContent() {
