@@ -23,25 +23,7 @@ export const walletService = {
     },
 
     initiateTelebirrPrefund: async (parkingIdOrCode: string, amount: number) => {
-        const token = localStorage.getItem("accessToken");
-        // On production, the base is /api/ and the wallet endpoint is /wallets/...
-        const WORKING_URL = `https://gelaglepark.com/api/wallets/parking/${parkingIdOrCode}/prefund`;
-        
-        const response = await fetch(WORKING_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ amount }),
-        });
-
-        const data = await response.json().catch(() => null);
-
-        if (!response.ok) {
-            throw new Error(data?.message || `Request failed with status ${response.status}`);
-        }
-
-        return data;
+        const response = await apiClient.post(`/wallets/parking/${parkingIdOrCode}/prefund`, { amount });
+        return response.data;
     },
 };
