@@ -65,7 +65,8 @@ function PrefundContent() {
 
             // Try direct backend first (works when token has an active Redis session).
             // Falls back to the Next.js proxy which also forwards auth headers server-side.
-            const DIRECT_URL = `http://157.180.114.86:8080/api/parking/wallets/parking/${parkingCode}/prefund`;
+            const BASE_API_URL = process.env.NEXT_PUBLIC_API_URL || "https://gelaglepark.com/api/parking";
+            const DIRECT_URL = `${BASE_API_URL}/wallets/parking/${parkingCode}/prefund`;
             const PROXY_URL = `/api/parking-proxy/wallets/parking/${parkingCode}/prefund`;
 
             const requestInit: RequestInit = {
