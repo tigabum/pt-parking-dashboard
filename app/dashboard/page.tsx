@@ -283,19 +283,19 @@ export default function DashboardPage() {
         <div className="xl:col-span-4 space-y-6">
           {/* Payment Methods */}
           {hasPermission(PERMISSIONS.REVENUE_VIEW) && (
-            <Card className="border-0 shadow-sm ring-1 ring-slate-200 bg-white rounded overflow-hidden h-[400px]">
+            <Card className="border-0 shadow-sm ring-1 ring-slate-200 bg-white rounded">
               <CardHeader className="border-b border-slate-50 px-6 py-4">
                 <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-800">Transaction Channels</CardTitle>
               </CardHeader>
-              <CardContent className="p-4 flex flex-col h-[350px] pb-12">
-                <div className="h-full w-full">
+              <CardContent className="p-0">
+                <div className="h-[320px] w-full pt-8">
                   <ResponsiveContainer width="100%" height="100%">
-                    <PieChart margin={{ top: 20, bottom: 20 }}>
+                    <PieChart>
                       <Pie
                         data={paymentStats}
                         cx="50%"
-                        cy="50%"
-                        outerRadius={85}
+                        cy="45%"
+                        outerRadius={80}
                         dataKey="value"
                         labelLine={false}
                         stroke="none"
@@ -324,7 +324,7 @@ export default function DashboardPage() {
                         iconType="circle"
                         iconSize={8}
                         wrapperStyle={{ 
-                          paddingTop: '40px'
+                          paddingBottom: '30px'
                         }}
                         formatter={(value: string) => (
                           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">
