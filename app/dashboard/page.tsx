@@ -283,29 +283,57 @@ export default function DashboardPage() {
         <div className="xl:col-span-4 space-y-6">
           {/* Payment Methods */}
           {hasPermission(PERMISSIONS.REVENUE_VIEW) && (
-            <Card className="border-0 shadow-sm ring-1 ring-slate-200 bg-white rounded overflow-hidden h-64 sm:h-[350px]">
+            <Card className="border-0 shadow-sm ring-1 ring-slate-200 bg-white rounded overflow-hidden h-[400px]">
               <CardHeader className="border-b border-slate-50 px-6 py-4">
                 <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-800">Transaction Channels</CardTitle>
               </CardHeader>
-              <CardContent className="p-4">
-                <div className="h-full w-full min-h-[180px]">
+              <CardContent className="p-4 flex flex-col h-[340px] pb-10">
+                <div className="flex-1 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
                         data={paymentStats}
                         cx="50%"
                         cy="50%"
-                        innerRadius={60}
-                        outerRadius={80}
-                        paddingAngle={5}
+                        outerRadius={100}
                         dataKey="value"
+                        labelLine={false}
+                        stroke="white"
+                        strokeWidth={2}
                       >
-                        {paymentStats.map((entry: any, index: number) => (
-                          <Cell key={`cell-${index}`} fill={index === 0 ? "var(--primary)" : index === 1 ? "#6366f1" : "#f59e0b"} />
-                        ))}
+                        {paymentStats.map((entry: any, index: number) => {
+                          let color = "var(--primary)";
+                          if (entry.name === 'Cash') color = "#10b981"; // Emerald
+                          if (entry.name === 'Transfer') color = "#3b82f6"; // Blue
+                          if (entry.name === 'Telebirr') color = "#8b5cf6"; // Violet
+                          return <Cell key={`cell-${index}`} fill={color} />;
+                        })}
                       </Pie>
-                      <Tooltip />
-                      <Legend verticalAlign="bottom" height={36} iconType="circle" />
+                      <Tooltip 
+                        contentStyle={{ 
+                          borderRadius: '12px', 
+                          border: 'none', 
+                          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                          fontSize: '12px',
+                          fontWeight: 'bold',
+                          padding: '12px'
+                        }} 
+                      />
+                      <Legend 
+                        verticalAlign="bottom" 
+                        align="center"
+                        iconType="circle"
+                        iconSize={8}
+                        wrapperStyle={{ 
+                          paddingTop: '32px',
+                          position: 'relative'
+                        }}
+                        formatter={(value: string) => (
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">
+                            {value}
+                          </span>
+                        )}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
