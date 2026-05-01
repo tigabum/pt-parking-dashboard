@@ -287,19 +287,18 @@ export default function DashboardPage() {
               <CardHeader className="border-b border-slate-50 px-6 py-4">
                 <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-800">Transaction Channels</CardTitle>
               </CardHeader>
-              <CardContent className="p-4 flex flex-col h-[340px] pb-10">
-                <div className="flex-1 w-full">
+              <CardContent className="p-4 flex flex-col h-[350px] pb-12">
+                <div className="h-full w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
+                    <PieChart margin={{ top: 20, bottom: 20 }}>
                       <Pie
                         data={paymentStats}
                         cx="50%"
                         cy="50%"
-                        outerRadius={100}
+                        outerRadius={85}
                         dataKey="value"
                         labelLine={false}
-                        stroke="white"
-                        strokeWidth={2}
+                        stroke="none"
                       >
                         {paymentStats.map((entry: any, index: number) => {
                           let color = "var(--primary)";
@@ -325,8 +324,7 @@ export default function DashboardPage() {
                         iconType="circle"
                         iconSize={8}
                         wrapperStyle={{ 
-                          paddingTop: '32px',
-                          position: 'relative'
+                          paddingTop: '40px'
                         }}
                         formatter={(value: string) => (
                           <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 ml-1">
