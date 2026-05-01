@@ -55,6 +55,14 @@ apiClient.interceptors.response.use(
 
         if (data && data.success === false) {
             const message = data.message || 'An error occurred';
+            
+            // If the message indicates a session failure, force logout
+            if (message.toLowerCase().includes('session invalidated') || 
+                message.toLowerCase().includes('another device may have logged in')) {
+                handleLogout();
+                return Promise.reject({ message });
+            }
+
             toast.error(message);
             return Promise.reject({ message });
         }
