@@ -6,8 +6,8 @@ export enum UserStatus {
 export enum UserRole {
   SYSTEM_SUPER_ADMIN = "SYSTEM-SUPER-ADMIN",
   SYSTEM_ADMIN = "SYSTEM-ADMIN",
-  PARKING_SUPER_ADMIN = "PARKING-SUPER-ADMIN",
-  PARKING_MANAGER = "PARKING-MANAGER",
+  OWNER = "OWNER",
+  ATTENDANT = "ATTENDANT",
   CUSTOMER = "CUSTOMER",
 }
 
@@ -92,8 +92,8 @@ export const rolePermissions: Record<UserRole, string[]> = {
     "revenue",
     "settings",
   ],
-  "PARKING-SUPER-ADMIN": ["dashboard", "parking_spaces", "booking_logs"],
-  "PARKING-MANAGER": [
+  "OWNER": ["dashboard", "parking_spaces", "booking_logs"],
+  "ATTENDANT": [
     "dashboard",
     "parking_spaces",
     "booking_logs",

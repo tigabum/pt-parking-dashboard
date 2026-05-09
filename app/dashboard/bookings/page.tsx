@@ -84,7 +84,7 @@ export default function BookingsPage() {
     if (
       user &&
       (user.role === UserRole.SYSTEM_SUPER_ADMIN ||
-        user.role === UserRole.PARKING_SUPER_ADMIN)
+        user.role === UserRole.OWNER)
     ) {
       loadManagers();
     }
@@ -93,7 +93,7 @@ export default function BookingsPage() {
   const loadManagers = async () => {
     try {
       const res = await userService.getAllUsers({
-        role: UserRole.PARKING_MANAGER,
+        role: UserRole.ATTENDANT,
         orgId:
           user?.orgId && user.role !== UserRole.SYSTEM_SUPER_ADMIN
             ? user.orgId
@@ -323,7 +323,7 @@ export default function BookingsPage() {
               </Select>
 
               {(user?.role === UserRole.SYSTEM_SUPER_ADMIN ||
-                user?.role === UserRole.PARKING_SUPER_ADMIN) &&
+                user?.role === UserRole.OWNER) &&
                 managers.length > 0 && (
                   <Select value={managerFilter} onValueChange={setManagerFilter}>
                     <SelectTrigger className="w-[160px] shrink-0 h-11 rounded border-slate-200 font-bold text-xs bg-white">
@@ -363,7 +363,7 @@ export default function BookingsPage() {
             )}
 
             {hasPermission(PERMISSIONS.BOOKING_CREATE) &&
-              (user?.role === UserRole.PARKING_MANAGER || user?.role === UserRole.PARKING_SUPER_ADMIN) && (
+              (user?.role === UserRole.ATTENDANT || user?.role === UserRole.OWNER) && (
                 <Button
                   onClick={handleAdd}
                   className="h-11 rounded px-5 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 shrink-0"

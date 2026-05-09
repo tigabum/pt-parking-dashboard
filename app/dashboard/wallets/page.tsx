@@ -71,8 +71,8 @@ export default function WalletsPage() {
     try {
       setLoading(true);
 
-      if (user?.role === UserRole.PARKING_SUPER_ADMIN && user.orgId) {
-        // For Parking Super Admin, fetch only their parking's wallet
+      if (user?.role === UserRole.OWNER && user.orgId) {
+        // For Owner, fetch only their parking's wallet
         // This bypasses the System Admin only restriction on getAllWallets
         const wallet = await walletService.getWalletByParkingId(user.orgId);
         if (wallet) {
@@ -142,7 +142,7 @@ export default function WalletsPage() {
         parkingId,
         amount,
         topUpDescription ||
-        (user?.role === UserRole.PARKING_SUPER_ADMIN
+        (user?.role === UserRole.OWNER
           ? "Parking Admin Top-up"
           : "System Admin Top-up"),
       );

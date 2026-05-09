@@ -122,7 +122,7 @@ export default function ParkingUserDetailPage() {
   return (
     <DetailLayout
       backLink={{ label: "Parking Staff", href: "/dashboard/parking-users" }}
-      title="Parking Manager Profile"
+      title="Attendant Profile"
       subtitle={`ID: ${String(parkingUser.id || "")
         .substring(0, 12)
         .toUpperCase()}`}

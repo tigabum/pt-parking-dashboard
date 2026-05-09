@@ -102,7 +102,7 @@ export function ParkingForm({
   const isSystemAdmin =
     user?.role === UserRole.SYSTEM_SUPER_ADMIN ||
     user?.role === UserRole.SYSTEM_ADMIN;
-  const isParkingAdmin = user?.role === UserRole.PARKING_SUPER_ADMIN;
+  const isParkingAdmin = user?.role === UserRole.OWNER;
 
   // Load commissions
   useEffect(() => {
@@ -167,6 +167,8 @@ export function ParkingForm({
       amenityIds: [],
       isIndoor: true,
       isVatIncluded: false,
+      needInvoice: true,
+      needSms: true,
       pricing: {
         hourly: { price: 0, discount: 0, currency: "ETB" },
         daily: { price: 0, discount: 0, currency: "ETB" },
@@ -179,6 +181,8 @@ export function ParkingForm({
       return {
         ...defaults,
         ...initialData,
+        needInvoice: initialData.needInvoice ?? true,
+        needSms: initialData.needSms ?? true,
         pricing: initialData.pricing || defaults.pricing,
         licenseFiles: initialData.licenseFiles || [],
         galleryImages: initialData.galleryImages || [],
@@ -197,6 +201,8 @@ export function ParkingForm({
       setForm((prev: any) => ({
         ...prev,
         ...initialData,
+        needInvoice: initialData.needInvoice ?? prev.needInvoice,
+        needSms: initialData.needSms ?? prev.needSms,
         pricing: initialData.pricing || prev.pricing,
         licenseFiles: initialData.licenseFiles || [],
         galleryImages: initialData.galleryImages || [],
@@ -725,6 +731,62 @@ export function ParkingForm({
                       )}
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="h-px bg-slate-100" />
+
+            {/* SECTION 1.5: OPERATIONAL SETTINGS */}
+            <div className="space-y-6">
+              <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <div className="w-1 h-6 bg-primary rounded-full" />
+                Operational Settings
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="flex items-center justify-between p-4 rounded-xl border border-slate-100 bg-slate-50/50">
+                  <div className="space-y-0.5">
+                    <Label className="text-sm font-bold text-slate-700">Need Invoicing</Label>
+                    <p className="text-xs text-slate-500">Automatically register invoices with MOR on payment</p>
+                  </div>
+                  <Switch
+                    checked={form.needInvoice}
+                    onCheckedChange={(val) => setForm({ ...form, needInvoice: val })}
+                    disabled={!isSystemAdmin && !!initialData}
+                  />
+                </div>
+                <div className="flex items-center justify-between p-4 rounded-xl border border-slate-100 bg-slate-50/50">
+                  <div className="space-y-0.5">
+                    <Label className="text-sm font-bold text-slate-700">SMS Notifications</Label>
+                    <p className="text-xs text-slate-500">Send SMS alerts for bookings and security codes</p>
+                  </div>
+                  <Switch
+                    checked={form.needSms}
+                    onCheckedChange={(val) => setForm({ ...form, needSms: val })}
+                    disabled={!isSystemAdmin && !!initialData}
+                  />
+                </div>
+                <div className="flex items-center justify-between p-4 rounded-xl border border-slate-100 bg-slate-50/50">
+                  <div className="space-y-0.5">
+                    <Label className="text-sm font-bold text-slate-700">Indoor Parking</Label>
+                    <p className="text-xs text-slate-500">Is this facility located indoors?</p>
+                  </div>
+                  <Switch
+                    checked={form.isIndoor}
+                    onCheckedChange={(val) => setForm({ ...form, isIndoor: val })}
+                    disabled={!isSystemAdmin && !!initialData}
+                  />
+                </div>
+                <div className="flex items-center justify-between p-4 rounded-xl border border-slate-100 bg-slate-50/50">
+                  <div className="space-y-0.5">
+                    <Label className="text-sm font-bold text-slate-700">VAT Included in Pricing</Label>
+                    <p className="text-xs text-slate-500">Price shown to users already includes VAT</p>
+                  </div>
+                  <Switch
+                    checked={form.isVatIncluded}
+                    onCheckedChange={(val) => setForm({ ...form, isVatIncluded: val })}
+                    disabled={!isSystemAdmin && !!initialData}
+                  />
                 </div>
               </div>
             </div>

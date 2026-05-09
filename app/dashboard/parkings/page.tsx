@@ -33,16 +33,16 @@ export default function ParkingPage() {
   useEffect(() => {
     // If it's a parking user, redirect to their own parking detail page
     const isParkingUser =
-      user?.role === UserRole.PARKING_SUPER_ADMIN ||
-      user?.role === UserRole.PARKING_MANAGER;
+      user?.role === UserRole.OWNER ||
+      user?.role === UserRole.ATTENDANT;
     if (isParkingUser && user?.orgId) {
       router.replace(`/dashboard/parkings/${user.orgId}`);
     }
   }, [user, router]);
 
   const isParkingUser =
-    user?.role === UserRole.PARKING_SUPER_ADMIN ||
-    user?.role === UserRole.PARKING_MANAGER;
+    user?.role === UserRole.OWNER ||
+    user?.role === UserRole.ATTENDANT;
 
   if (isParkingUser && user?.orgId) {
     return (
@@ -295,8 +295,8 @@ export default function ParkingPage() {
 
           {/* Add Parking button pinned to the right */}
           {hasPermission(PERMISSIONS.PARKING_CREATE) &&
-            user?.role !== UserRole.PARKING_SUPER_ADMIN &&
-            user?.role !== UserRole.PARKING_MANAGER && (
+            user?.role !== UserRole.OWNER &&
+            user?.role !== UserRole.ATTENDANT && (
               <Button
                 onClick={handleAdd}
                 className="h-10 shrink-0 rounded px-5 bg-primary hover:opacity-90 font-bold shadow-lg shadow-primary/20 w-full lg:w-auto"

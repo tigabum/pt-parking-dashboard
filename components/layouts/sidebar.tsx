@@ -146,8 +146,8 @@ export function Sidebar({ onItemClick }: SidebarProps) {
   const pathname = usePathname();
 
   const isSystemAdmin = user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.SYSTEM_ADMIN;
-  const isParkingSuperAdmin = user?.role === UserRole.PARKING_SUPER_ADMIN;
-  const isParkingManager = user?.role === UserRole.PARKING_MANAGER;
+  const isParkingSuperAdmin = user?.role === UserRole.OWNER;
+  const isParkingManager = user?.role === UserRole.ATTENDANT;
   const isParkingLevelUser = isParkingSuperAdmin || isParkingManager;
 
   // Determine if groups are open by default

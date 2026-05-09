@@ -370,8 +370,8 @@ export default function BookingDetailPage() {
   }
 
   const canExtend = canAccess([
-    UserRole.PARKING_MANAGER,
-    UserRole.PARKING_SUPER_ADMIN,
+    UserRole.ATTENDANT,
+    UserRole.OWNER,
   ]);
 
   return (

@@ -146,70 +146,6 @@ export function UserForm({
     onSave(formData);
   };
 
-  const togglePermission = (permission: string) => {
-    setPermissions((prev) =>
-      prev.includes(permission)
-        ? prev.filter((p) => p !== permission)
-        : [...prev, permission],
-    );
-  };
-
-  const toggleCategory = (categoryPermissions: string[]) => {
-    const allSelected = categoryPermissions.every((p) =>
-      permissions.includes(p),
-    );
-    if (allSelected) {
-      setPermissions((prev) =>
-        prev.filter((p) => !categoryPermissions.includes(p)),
-      );
-    } else {
-      setPermissions((prev) => {
-        const newPerms = [...prev];
-        categoryPermissions.forEach((p) => {
-          if (!newPerms.includes(p)) newPerms.push(p);
-        });
-        return newPerms;
-      });
-    }
-  };
-
-  const selectAllAll = (allPerms: string[]) => {
-    const allSelected = allPerms.every((p) => permissions.includes(p));
-    if (allSelected) {
-      setPermissions([]);
-    } else {
-      setPermissions(allPerms);
-    }
-  };
-
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case "Parking Management":
-        return <MapPin className="h-4 w-4" />;
-      case "Booking Management":
-        return <Calendar className="h-4 w-4" />;
-      case "User Management":
-        return <Users className="h-4 w-4" />;
-      case "Customer Management":
-        return <UserSquare className="h-4 w-4" />;
-      case "Vehicle Management":
-        return <Car className="h-4 w-4" />;
-      case "Wallet & Transactions":
-        return <Wallet className="h-4 w-4" />;
-      case "Reviews & Ratings":
-        return <Star className="h-4 w-4" />;
-      case "Configuration Management":
-        return <Settings className="h-4 w-4" />;
-      case "Dashboard & Analytics":
-        return <LayoutDashboard className="h-4 w-4" />;
-      case "Financial Access":
-        return <CreditCard className="h-4 w-4" />;
-      case "System Settings & Security":
-        return <Shield className="h-4 w-4" />;
-      default:
-        return <Target className="h-4 w-4" />;
-    }
-  };
 
   return (
     <div className="fixed inset-0 z-100 bg-white overflow-hidden flex flex-col">
@@ -436,8 +372,8 @@ export function UserForm({
                         permissions={permissions}
                         onPermissionsChange={setPermissions}
                         categories={getPermissionsByContext(
-                          role === UserRole.PARKING_SUPER_ADMIN ||
-                          role === UserRole.PARKING_MANAGER,
+                          role === UserRole.OWNER ||
+                          role === UserRole.ATTENDANT,
                         )}
                         placeholder="Enter Site Permissions"
                       />

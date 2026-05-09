@@ -43,7 +43,7 @@ export default function EditParkingPage() {
     }
   };
 
-  if (!canAccess([UserRole.SYSTEM_SUPER_ADMIN, UserRole.SYSTEM_ADMIN, UserRole.PARKING_SUPER_ADMIN])) {
+  if (!canAccess([UserRole.SYSTEM_SUPER_ADMIN, UserRole.SYSTEM_ADMIN, UserRole.OWNER])) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-center space-y-4">
         <h1 className="text-2xl font-bold text-red-500">Access Denied</h1>

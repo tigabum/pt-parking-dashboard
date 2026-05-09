@@ -583,7 +583,7 @@ export default function ParkingDetailPage() {
 
           {/* Edit */}
           {(user?.role === UserRole.SYSTEM_SUPER_ADMIN ||
-            user?.role === UserRole.PARKING_SUPER_ADMIN) && (
+            user?.role === UserRole.OWNER) && (
               <Button
                 variant="outline"
                 size="sm"
@@ -1305,7 +1305,7 @@ export default function ParkingDetailPage() {
               </div>
 
               {(user?.role === UserRole.SYSTEM_SUPER_ADMIN ||
-                user?.role === UserRole.PARKING_SUPER_ADMIN) && (
+                user?.role === UserRole.OWNER) && (
                   <Button
                     onClick={() => setIsTopupOpen(true)}
                     className="h-11 px-6 font-semibold bg-primary hover:bg-primary/90 text-white rounded-lg"

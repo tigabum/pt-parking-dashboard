@@ -72,7 +72,7 @@ export default function DashboardPage() {
   }, [user, managerFilter, statusFilter, hasPermission])
 
   useEffect(() => {
-    if (user && (user.role === UserRole.SYSTEM_SUPER_ADMIN || user.role === UserRole.PARKING_SUPER_ADMIN)) {
+    if (user && (user.role === UserRole.SYSTEM_SUPER_ADMIN || user.role === UserRole.OWNER)) {
       loadManagers()
     }
   }, [user])
@@ -80,7 +80,7 @@ export default function DashboardPage() {
   const loadManagers = async () => {
     try {
       const res = await userService.getAllUsers({
-        role: UserRole.PARKING_MANAGER,
+        role: UserRole.ATTENDANT,
         orgId: user?.orgId && user.role !== UserRole.SYSTEM_SUPER_ADMIN ? user.orgId : undefined
       })
       const userList = res.data || res.users
@@ -137,7 +137,7 @@ export default function DashboardPage() {
         className="w-full!"
       >
         <div className="flex flex-col sm:flex-row items-center gap-3">
-          {(user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.PARKING_SUPER_ADMIN) && managers.length > 0 && (
+          {(user?.role === UserRole.SYSTEM_SUPER_ADMIN || user?.role === UserRole.OWNER) && managers.length > 0 && (
             <Select value={managerFilter} onValueChange={setManagerFilter}>
               <SelectTrigger className="w-[200px] h-10 bg-white border-slate-200 text-xs font-bold uppercase tracking-wider rounded">
                 <SelectValue placeholder="All Managers" />
@@ -198,7 +198,7 @@ export default function DashboardPage() {
             icon={<Users className="w-5 h-5" />}
           />
         )}
-        {hasPermission(PERMISSIONS.PARKING_VIEW) && user?.role !== UserRole.PARKING_SUPER_ADMIN && (
+        {hasPermission(PERMISSIONS.PARKING_VIEW) && user?.role !== UserRole.OWNER && (
           <EnterpriseStat
             label="Parking Spaces"
             value={stats.activeParkings}

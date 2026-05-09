@@ -163,7 +163,7 @@ export default function ParkingUsersPage() {
   return (
     <div className="p-6 space-y-6">
       <PageHeader
-        title="Parking Managers"
+        title="Attendants"
         description="Manage assigned parking administrators and their access permissions."
         className="flex-col !items-start !w-full gap-4"
       >
@@ -187,10 +187,10 @@ export default function ParkingUsersPage() {
               </SelectTrigger>
               <SelectContent className="rounded">
                 <SelectItem value="ALL">All Roles</SelectItem>
-                <SelectItem value={UserRole.PARKING_SUPER_ADMIN}>
+                <SelectItem value={UserRole.OWNER}>
                   Facility Supervisor
                 </SelectItem>
-                <SelectItem value={UserRole.PARKING_MANAGER}>
+                <SelectItem value={UserRole.ATTENDANT}>
                   Terminal Manager
                 </SelectItem>
               </SelectContent>

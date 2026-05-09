@@ -43,7 +43,7 @@ export default function EditParkingUserPage() {
         }
     };
 
-    if (!canAccess([UserRole.SYSTEM_SUPER_ADMIN, UserRole.PARKING_SUPER_ADMIN])) {
+    if (!canAccess([UserRole.SYSTEM_SUPER_ADMIN, UserRole.OWNER])) {
         return <div className="p-6 text-center">Access Denied</div>;
     }
 

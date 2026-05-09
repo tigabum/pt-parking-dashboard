@@ -251,11 +251,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const hasPermission = (permission: string) => {
     if (!user) return false
 
-    if (user.role === "SYSTEM-SUPER-ADMIN" || user.role === "SYSTEM-ADMIN" || user.role === "PARKING-SUPER-ADMIN") {
+    if (user.role === "SYSTEM-SUPER-ADMIN" || user.role === "SYSTEM-ADMIN" || user.role === "OWNER") {
       return true
     }
 
-    if (user.role === "PARKING-MANAGER") {
+    if (user.role === "ATTENDANT") {
       const basicPermissions = [
         "DASHBOARD_VIEW",
         "DASHBOARD_TOTAL_BOOKINGS",

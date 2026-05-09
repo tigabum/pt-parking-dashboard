@@ -75,7 +75,7 @@ export function ParkingUserForm({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [role, setRole] = useState(UserRole.PARKING_MANAGER);
+  const [role, setRole] = useState(UserRole.ATTENDANT);
   const [searchTerm, setSearchTerm] = useState("");
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -97,7 +97,7 @@ export function ParkingUserForm({
       setName(initialData.fullName || "");
       setEmail(initialData.email || "");
       setPhoneNumber(initialData.phoneNumber || "");
-      setRole(initialData.role || UserRole.PARKING_MANAGER);
+      setRole(initialData.role || UserRole.ATTENDANT);
       setParkingId(initialData.orgId || "");
       if (
         initialData.profileImage &&
@@ -177,62 +177,6 @@ export function ParkingUserForm({
     await onSave(formData);
   };
 
-  const togglePermission = (permission: string) => {
-    setPermissions((prev) =>
-      prev.includes(permission)
-        ? prev.filter((p) => p !== permission)
-        : [...prev, permission],
-    );
-  };
-
-  const toggleCategory = (categoryPermissions: string[]) => {
-    const allSelected = categoryPermissions.every((p) =>
-      permissions.includes(p),
-    );
-    if (allSelected) {
-      setPermissions((prev) =>
-        prev.filter((p) => !categoryPermissions.includes(p)),
-      );
-    } else {
-      setPermissions((prev) => {
-        const newPerms = [...prev];
-        categoryPermissions.forEach((p) => {
-          if (!newPerms.includes(p)) newPerms.push(p);
-        });
-        return newPerms;
-      });
-    }
-  };
-
-  const selectAllAll = (allPerms: string[]) => {
-    const allSelected = allPerms.every((p) => permissions.includes(p));
-    if (allSelected) {
-      setPermissions([]);
-    } else {
-      setPermissions(allPerms);
-    }
-  };
-
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case "Booking Operations":
-        return <Calendar className="h-4 w-4" />;
-      case "Customer & Vehicle":
-        return <UserSquare className="h-4 w-4" />;
-      case "Financial & Wallet":
-        return <Wallet className="h-4 w-4" />;
-      case "Dashboard & Reports":
-        return <LayoutDashboard className="h-4 w-4" />;
-      case "Reviews Management":
-        return <Star className="h-4 w-4" />;
-      case "Staff Management":
-        return <Users className="h-4 w-4" />;
-      case "Settings":
-        return <Settings className="h-4 w-4" />;
-      default:
-        return <Target className="h-4 w-4" />;
-    }
-  };
 
   const selectedParking = parkings.find((p) => p.id === parkingId);
 
@@ -242,7 +186,7 @@ export function ParkingUserForm({
       <div className="flex items-center justify-between px-4 md:px-8 py-5 shrink-0 bg-white border-b shadow-sm z-20">
         <div>
           <h2 className="text-xl font-bold text-slate-900">
-            {isNew ? "Create Parking Manager" : "Update Manager Assignment"}
+            {isNew ? "Create Attendant" : "Update Manager Assignment"}
           </h2>
           <p className="text-sm text-slate-500 font-medium mt-1">
             Assign staff to manage parking facilities and set permissions
@@ -383,16 +327,16 @@ export function ParkingUserForm({
                         </SelectTrigger>
                         <SelectContent className="rounded shadow-2xl border-slate-100">
                           <SelectItem
-                            value={UserRole.PARKING_SUPER_ADMIN}
+                            value={UserRole.OWNER}
                             className="h-10 font-bold uppercase"
                           >
-                            Parking Super Admin
+                            Owner
                           </SelectItem>
                           <SelectItem
-                            value={UserRole.PARKING_MANAGER}
+                            value={UserRole.ATTENDANT}
                             className="h-10 font-bold uppercase"
                           >
-                            Parking Manager
+                            Attendant
                           </SelectItem>
                         </SelectContent>
                       </Select>

@@ -31,7 +31,7 @@ export default function CreateBookingPage() {
         }
     };
 
-    if (!canAccess([UserRole.SYSTEM_SUPER_ADMIN, UserRole.PARKING_MANAGER, UserRole.PARKING_SUPER_ADMIN])) {
+    if (!canAccess([UserRole.SYSTEM_SUPER_ADMIN, UserRole.ATTENDANT, UserRole.OWNER])) {
         return <div className="p-6 text-center">Access Denied</div>;
     }
 
