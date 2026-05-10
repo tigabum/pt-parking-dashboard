@@ -69,8 +69,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   // ── Touch session (heartbeat) ─────────────────────────────────────────────
-  const touchSession = useCallback(async () => {
-    if (!userRef.current) return
+  const touchSession = useCallback(async (isInit = false) => {
+    if (!userRef.current && !isInit) return
 
     const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null
     if (!token) return
@@ -191,12 +191,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const initAuth = async () => {
       const storedUser = localStorage.getItem("user")
-      if (storedUser) {
+      const token = localStorage.getItem("accessToken")
+
+      if (storedUser && token) {
         try {
           const parsed = JSON.parse(storedUser)
           setUser(parsed)
-        } catch {
+          // Proactively verify session with backend on load
+          await touchSession(true)
+        } catch (err) {
           localStorage.removeItem("user")
+          localStorage.removeItem("accessToken")
+          localStorage.removeItem("refreshToken")
+          setUser(null)
         }
       }
       setLoading(false)
@@ -204,6 +211,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     initAuth()
+  }, [])
+
+  // ── Listen for cross-tab logout ──────────────────────────────────────────
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "accessToken" && !e.newValue) {
+        // Token was removed (likely logout)
+        setUser(null)
+        window.location.href = "/"
+      }
+    }
+
+    window.addEventListener("storage", handleStorageChange)
+    return () => window.removeEventListener("storage", handleStorageChange)
   }, [])
 
 

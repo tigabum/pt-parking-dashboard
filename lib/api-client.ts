@@ -179,7 +179,8 @@ function handleLogout() {
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
 
-    if (typeof window !== 'undefined' && window.location.pathname !== '/') {
+    if (typeof window !== 'undefined') {
+        // Force a full reload to clear all React state and sync with cleared localStorage
         window.location.href = '/';
     }
 }

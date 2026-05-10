@@ -668,10 +668,15 @@ export default function ParkingDetailPage() {
 
               {/* Feature image */}
               {parking.featureImage && (
-                <div className="h-52 w-full rounded-xl overflow-hidden border border-slate-200">
+                <button
+                  onClick={() =>
+                    setPreviewDoc({ url: getImageUrl(parking.featureImage), title: "Cover Image" })
+                  }
+                  className="h-52 w-full rounded-xl overflow-hidden border border-slate-200 group relative cursor-zoom-in"
+                >
                   <img
                     src={getImageUrl(parking.featureImage)}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     alt="Feature"
                     onError={(e) => {
                       (e.currentTarget as HTMLImageElement).style.display = "none";
@@ -679,7 +684,12 @@ export default function ParkingDetailPage() {
                         '<div class="flex items-center justify-center h-full text-slate-300 text-sm font-medium">Image unavailable</div>';
                     }}
                   />
-                </div>
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all">
+                    <div className="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/30 text-white text-xs font-bold shadow-lg">
+                      View Full Image
+                    </div>
+                  </div>
+                </button>
               )}
 
               {/* Divider */}
@@ -691,7 +701,7 @@ export default function ParkingDetailPage() {
                   <ReadField label="Parking Name" value={parking.name} />
                   <ReadField label="Parking Code" value={parking.parkingCode} />
                   <ReadField label="Parking Type" value={parking.parkingType} />
-                  <ReadField label="License Number" value={(parking as any).licenseNumber} />
+                  <ReadField label="License Number" value={parking.licenseNumber} />
                   <ReadField label="TIN / Tax ID" value={parking.tinNumber} />
                   <ReadField label="VAT Number" value={parking.vatRegistrationNumber} />
                   <ReadField
@@ -706,6 +716,16 @@ export default function ParkingDetailPage() {
                     label="Managed By"
                     value={parking.createdBy?.fullName}
                   />
+                </div>
+              </FormSection>
+
+              <div className="h-px bg-slate-100" />
+
+              {/* SECTION 1.5 – Contact Information */}
+              <FormSection title="Contact Information">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <ReadField label="Email Address" value={parking.email} />
+                  <ReadField label="Phone Number" value={parking.phoneNumber} />
                 </div>
               </FormSection>
 
@@ -828,6 +848,8 @@ export default function ParkingDetailPage() {
                   <ReadField label="Woreda" value={parking.woreda} />
                   <ReadField label="Kebele" value={parking.kebele} />
                   <ReadField label="Street Name" value={parking.streetName} />
+                  <ReadField label="House Number" value={parking.houseNumber} />
+                  <ReadField label="Locality / Landmark" value={parking.locality} />
                   <ReadField
                     label="Coordinates"
                     value={
