@@ -60,12 +60,14 @@ export default function WalletsPage() {
     }
   }, [page, limit, searchQuery, user]);
 
+  // Remove hardcoding as requested
+  /*
   useEffect(() => {
-    // Hardcoding for test as requested
     if (!inputParkingCode) {
       setInputParkingCode("FOHKSGJ7");
     }
   }, [inputParkingCode]);
+  */
 
   const loadWallets = async () => {
     try {

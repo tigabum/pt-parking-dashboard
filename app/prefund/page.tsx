@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Wallet, CreditCard, Lock, ShieldCheck, AlertCircle, CheckCircle2, Loader2, Coins } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 const DEFAULT_TEST_PARKING_ID = "885b4cb6-f2aa-4d51-8a2c-fd558c547c5b";
