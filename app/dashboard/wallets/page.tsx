@@ -303,13 +303,15 @@ export default function WalletsPage() {
               />
             </div>
           </div>
-          <Button 
-            className="shrink-0 premium-gradient text-white font-bold h-11 px-6 rounded shadow-lg shadow-primary/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
-            onClick={handleOpenTopUp}
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Topup Wallet
-          </Button>
+          {user?.role === UserRole.OWNER && (
+            <Button 
+              className="shrink-0 premium-gradient text-white font-bold h-11 px-6 rounded shadow-lg shadow-primary/10 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              onClick={handleOpenTopUp}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Topup Wallet
+            </Button>
+          )}
         </div>
       </PageHeader>
 

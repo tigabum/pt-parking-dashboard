@@ -190,7 +190,16 @@ export function Sidebar({ onItemClick }: SidebarProps) {
       ];
       return allowedForManager.includes(item.href);
     }
-    if (isParkingSuperAdmin) return item.showInParkingDashboard === true;
+    if (isParkingSuperAdmin) {
+      if (item.label === "Wallets") return true;
+      return item.showInParkingDashboard === true;
+    }
+
+    // Explicitly hide Wallets for System Admins
+    if (isSystemAdmin && item.label === "Wallets") {
+      return false;
+    }
+
     return true;
   });
 
