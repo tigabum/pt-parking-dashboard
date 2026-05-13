@@ -80,6 +80,8 @@ export default function CreateParkingPage() {
             }
 
             formData.append("isVatIncluded", String(data.isVatIncluded));
+            formData.append("needInvoice", String(data.needInvoice));
+            formData.append("needSms", String(data.needSms));
 
             // Feature Image
             if (data.featureImage instanceof File) {

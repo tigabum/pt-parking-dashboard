@@ -112,6 +112,8 @@ export default function EditParkingPage() {
       }
 
       formData.append("isVatIncluded", String(data.isVatIncluded));
+      formData.append("needInvoice", String(data.needInvoice));
+      formData.append("needSms", String(data.needSms));
 
       if (data.featureImage instanceof File) {
         formData.append("image", data.featureImage);
