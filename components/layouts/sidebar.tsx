@@ -114,7 +114,7 @@ const configurationsGroup = {
   label: "Configurations",
   icon: Settings2,
   permission: PERMISSIONS.CONFIGURATION_VIEW,
-  showInParkingDashboard: true,
+  showInParkingDashboard: false,
   children: [
     { label: "Commission Config", href: "/dashboard/configurations", icon: Star },
     { label: "Invoice Config", href: "/dashboard/invoice-credentials", icon: Receipt },
@@ -203,13 +203,7 @@ export function Sidebar({ onItemClick }: SidebarProps) {
     return true;
   });
 
-  const showConfigsGroup =
-    hasPermission(configurationsGroup.permission) &&
-    (isParkingManager
-      ? false
-      : isParkingSuperAdmin
-        ? configurationsGroup.showInParkingDashboard
-        : true);
+  const showConfigsGroup = isSystemAdmin && hasPermission(configurationsGroup.permission);
 
   const showInvoicesGroup =
     hasPermission(invoicesGroup.permission) &&
