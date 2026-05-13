@@ -34,6 +34,8 @@ export interface User {
   profileImage?: string;
   orgId?: string;
   isVatIncluded?: boolean;
+  needInvoice?: boolean;
+  needSms?: boolean;
   permissions?: string[];
   createdAt: string | Date;
   updatedAt?: string | Date;
