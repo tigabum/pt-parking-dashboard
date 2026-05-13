@@ -93,7 +93,7 @@ const navigationItems = [
     href: "/dashboard/commissions",
     icon: FileText,
     permission: PERMISSIONS.REVENUE_VIEW,
-    showInParkingDashboard: true,
+    showInParkingDashboard: false,
   },
 ];
 
@@ -195,8 +195,8 @@ export function Sidebar({ onItemClick }: SidebarProps) {
       return item.showInParkingDashboard === true;
     }
 
-    // Explicitly hide Wallets for System Admins
-    if (isSystemAdmin && item.label === "Wallets") {
+    // Restrict Commissions to SYSTEM_SUPER_ADMIN only
+    if (item.label === "Commissions" && user?.role !== UserRole.SYSTEM_SUPER_ADMIN) {
       return false;
     }
 

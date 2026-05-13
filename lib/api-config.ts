@@ -1,7 +1,7 @@
 export const API_CONFIG = {
     // Force local backend if env var is missing or empty
     BASE_URL: 'https://gelaglepark.com/api',
-    TIMEOUT: 10000, // Reduced from 30s to 10s for faster failure detection
+    TIMEOUT: 30000, // Increased to 30s to handle slow network or cold starts
 } as const;
 
 // console.log('API config loaded. BASE_URL:', API_CONFIG.BASE_URL);
