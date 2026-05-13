@@ -115,6 +115,8 @@ class AuthService {
       profileImage: backendUser.profileImage,
       orgId: backendUser.orgId,
       isVatIncluded: backendUser.isVatIncluded,
+      needInvoice: backendUser.needInvoice,
+      needSms: backendUser.needSms,
       permissions: backendUser.permissions || [],
       createdAt: backendUser.createdAt || new Date().toISOString(),
       isPasswordSet: backendUser.isPasswordSet,

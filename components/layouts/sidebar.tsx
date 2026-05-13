@@ -178,7 +178,7 @@ export function Sidebar({ onItemClick }: SidebarProps) {
 
     // Logic for Invoice visibility based on VAT (Bypass for System Admins)
     const isInvoiceRelated = item.label.toLowerCase().includes("invoice");
-    if (isInvoiceRelated && !isSystemAdmin && isParkingLevelUser && user?.needInvoice === false) {
+    if (isInvoiceRelated && !isSystemAdmin && isParkingLevelUser && user?.needInvoice !== true) {
       return false;
     }
 
@@ -216,7 +216,7 @@ export function Sidebar({ onItemClick }: SidebarProps) {
     (isParkingManager
       ? false
       : isParkingSuperAdmin
-        ? (invoicesGroup.showInParkingDashboard && user?.needInvoice !== false)
+        ? (invoicesGroup.showInParkingDashboard && user?.needInvoice === true)
         : true);
 
   const showSettingsGroup =

@@ -197,8 +197,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
           const parsed = JSON.parse(storedUser)
           setUser(parsed)
-          // Proactively verify session with backend on load
-          await touchSession(true)
+          
+          // Fetch fresh profile to sync settings (needInvoice, needSms, etc)
+          const { authService } = require("@/lib/services/auth-service")
+          const freshUser = await authService.getCurrentUser()
+          if (freshUser) {
+            setUser(freshUser)
+            localStorage.setItem("user", JSON.stringify(freshUser))
+          }
         } catch (err) {
           localStorage.removeItem("user")
           localStorage.removeItem("accessToken")

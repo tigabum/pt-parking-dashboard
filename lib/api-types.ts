@@ -33,6 +33,9 @@ export interface BackendUser {
     isPasswordSet: boolean;
     isPhoneVerified?: boolean;
     isEmailVerified?: boolean;
+    isVatIncluded?: boolean;
+    needInvoice?: boolean;
+    needSms?: boolean;
     createdAt: string | Date;
     updatedAt?: string | Date;
 }
@@ -47,6 +50,9 @@ export interface LoginResponse {
         role: UserRole;
         profileImage?: string;
         orgId?: string;
+        isVatIncluded?: boolean;
+        needInvoice?: boolean;
+        needSms?: boolean;
         permissions?: string[];
     };
 }
