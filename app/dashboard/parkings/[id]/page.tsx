@@ -1326,8 +1326,7 @@ export default function ParkingDetailPage() {
                 </p>
               </div>
 
-              {(user?.role === UserRole.SYSTEM_SUPER_ADMIN ||
-                user?.role === UserRole.OWNER) && (
+              {user?.role === UserRole.OWNER && (
                   <Button
                     onClick={() => setIsTopupOpen(true)}
                     className="h-11 px-6 font-semibold bg-primary hover:bg-primary/90 text-white rounded-lg"

@@ -1233,34 +1233,7 @@ export function ParkingForm({
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-4">
-                <div className="space-y-0.5">
-                  <Label className="text-sm font-bold">Indoor Parking</Label>
-                  <p className="text-xs text-slate-500">
-                    Is this an indoor assigned parking?
-                  </p>
-                </div>
-                <Switch
-                  checked={form.isIndoor}
-                  onCheckedChange={(c) => setForm({ ...form, isIndoor: c })}
-                />
-              </div>
 
-              <div className="flex items-center justify-between pt-4">
-                <div className="space-y-0.5">
-                  <Label className="text-sm font-bold">VAT Included</Label>
-                  <p className="text-xs text-slate-500">
-                    Are prices inclusive of VAT (15%)?
-                  </p>
-                </div>
-                <Switch
-                  checked={form.isVatIncluded}
-                  onCheckedChange={(c) =>
-                    setForm({ ...form, isVatIncluded: c })
-                  }
-                  disabled={!isSystemAdmin && !!initialData}
-                />
-              </div>
             </div>
 
             <div className="h-px bg-slate-100" />
