@@ -91,6 +91,29 @@ export function LoginForm() {
     }
   };
 
+  const getSetPasswordResetToken = async () => {
+    const existingToken = resetToken || sessionStorage.getItem(RESET_TOKEN_KEY);
+    if (existingToken) return existingToken;
+
+    if (!identifier.trim()) {
+      throw new Error("Please enter your email or phone number again.");
+    }
+
+    const isEmail = identifier.includes("@");
+    const { nextStep, token } = await authService.preLogin(
+      isEmail ? identifier.trim().toLowerCase() : undefined,
+      !isEmail ? identifier.trim() : undefined,
+    );
+
+    if (nextStep !== "set-password" || !token) {
+      throw new Error("Your account already has a password. Please sign in.");
+    }
+
+    setResetToken(token);
+    sessionStorage.setItem(RESET_TOKEN_KEY, token);
+    return token;
+  };
+
   const handleSetPasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -110,10 +133,7 @@ export function LoginForm() {
     setLoading(true);
 
     try {
-      const token = resetToken || sessionStorage.getItem(RESET_TOKEN_KEY) || undefined;
-      if (!token) {
-        throw new Error("Missing reset token. Please go back and continue again.");
-      }
+      const token = await getSetPasswordResetToken();
 
       const { user: userData } = await authService.setPassword(token, password);
 

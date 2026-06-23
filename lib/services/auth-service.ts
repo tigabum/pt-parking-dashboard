@@ -36,15 +36,17 @@ class AuthService {
       throw new Error(response.data.message || "Login failed");
     }
 
-    const { accessToken, refreshToken } = response.data.data;
+    const { accessToken, refreshToken, user } = this.extractAuthPayload(response.data.data);
 
     // Store tokens
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 
-    const user = this.transformTokenToUser(accessToken);
+    const authUser = user
+      ? this.transformBackendUser(user)
+      : this.transformTokenToUser(accessToken);
 
-    return { user, accessToken, refreshToken };
+    return { user: authUser, accessToken, refreshToken };
   }
 
   /**
@@ -103,15 +105,36 @@ class AuthService {
       throw new Error(response.data.message || "Failed to set password");
     }
 
-    const { accessToken, refreshToken } = response.data.data;
+    const { accessToken, refreshToken, user } = this.extractAuthPayload(response.data.data);
 
     // Store tokens
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 
-    const user = this.transformTokenToUser(accessToken);
+    const authUser = user
+      ? this.transformBackendUser(user)
+      : this.transformTokenToUser(accessToken);
 
-    return { user, accessToken, refreshToken };
+    return { user: authUser, accessToken, refreshToken };
+  }
+
+  private extractAuthPayload(data: any): {
+    accessToken: string;
+    refreshToken: string;
+    user?: any;
+  } {
+    const accessToken = data?.accessToken || data?.tokens?.accessToken;
+    const refreshToken = data?.refreshToken || data?.tokens?.refreshToken;
+
+    if (!accessToken || !refreshToken) {
+      throw new Error("Authentication tokens are missing from backend response");
+    }
+
+    return {
+      accessToken,
+      refreshToken,
+      user: data?.user,
+    };
   }
 
   private decodeToken(token: string): AuthTokenPayload {
