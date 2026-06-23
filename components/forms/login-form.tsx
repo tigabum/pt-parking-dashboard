@@ -12,6 +12,8 @@ import { AlertCircle, ArrowLeft } from "lucide-react";
 import { authService } from "@/lib/services/auth-service";
 import { LoginStep } from "@/components/types";
 
+const SET_PASSWORD_TOKEN_KEY = "pendingSetPasswordToken";
+
 export function LoginForm() {
   const [step, setStep] = useState<LoginStep>("identifier");
   const [identifier, setIdentifier] = useState("");
@@ -53,9 +55,11 @@ export function LoginForm() {
       setPassword("");
       setConfirmPassword("");
       if (nextStep === "password") {
+        sessionStorage.removeItem(SET_PASSWORD_TOKEN_KEY);
         setStep("password");
       } else {
         setSetPasswordToken(token);
+        sessionStorage.setItem(SET_PASSWORD_TOKEN_KEY, token);
         setStep("set-password");
       }
     } catch (err: any) {
@@ -106,12 +110,14 @@ export function LoginForm() {
     setLoading(true);
 
     try {
-      if (!setPasswordToken) {
+      const token = setPasswordToken || sessionStorage.getItem(SET_PASSWORD_TOKEN_KEY) || undefined;
+      if (!token) {
         throw new Error("Missing set password token");
       }
 
-      const { user: userData } = await authService.setPassword(setPasswordToken, password);
+      const { user: userData } = await authService.setPassword(token, password);
 
+      sessionStorage.removeItem(SET_PASSWORD_TOKEN_KEY);
       loginWithData(userData);
       // Redirect immediately — no need to wait for useEffect
       router.replace("/dashboard");
@@ -240,7 +246,11 @@ export function LoginForm() {
               type="button"
               variant="outline"
               className="w-full h-12"
-              onClick={() => setStep("identifier")}
+              onClick={() => {
+                sessionStorage.removeItem(SET_PASSWORD_TOKEN_KEY);
+                setSetPasswordToken(undefined);
+                setStep("identifier");
+              }}
               disabled={loading}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -294,7 +304,11 @@ export function LoginForm() {
               type="button"
               variant="outline"
               className="w-full h-12"
-              onClick={() => setStep("identifier")}
+              onClick={() => {
+                sessionStorage.removeItem(SET_PASSWORD_TOKEN_KEY);
+                setSetPasswordToken(undefined);
+                setStep("identifier");
+              }}
               disabled={loading}
             >
               <ArrowLeft className="mr-2 h-4 w-4" />

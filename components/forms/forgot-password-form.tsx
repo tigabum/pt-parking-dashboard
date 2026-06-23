@@ -9,6 +9,8 @@ import { AlertCircle, ArrowLeft, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import { authService } from "@/lib/services/auth-service";
 
+const RESET_TOKEN_KEY = "pendingPasswordResetToken";
+
 export function ForgotPasswordForm() {
   const [identifier, setIdentifier] = useState("");
   const [otpCode, setOtpCode] = useState("");
@@ -49,6 +51,7 @@ export function ForgotPasswordForm() {
     try {
       const result = await authService.requestPasswordReset(identifier);
       setResetToken(result.resetToken);
+      sessionStorage.setItem(RESET_TOKEN_KEY, result.resetToken);
       setDeliveryChannel(result.deliveryChannel);
       setStep("confirm");
     } catch (err: any) {
@@ -60,7 +63,8 @@ export function ForgotPasswordForm() {
 
   const handleConfirmSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!resetToken) {
+    const token = resetToken || sessionStorage.getItem(RESET_TOKEN_KEY) || undefined;
+    if (!token) {
       setError("Missing reset token. Please request a new OTP.");
       return;
     }
@@ -74,13 +78,14 @@ export function ForgotPasswordForm() {
     setLoading(true);
     try {
       const response = await authService.confirmPasswordReset(
-        resetToken,
+        token,
         otpCode.trim(),
         newPassword
       );
       if (!response.success) {
         throw new Error(response.message || "Failed to reset password");
       }
+      sessionStorage.removeItem(RESET_TOKEN_KEY);
       setStep("success");
     } catch (err: any) {
       setError(err?.response?.data?.message || err?.message || "Failed to reset password");
@@ -248,7 +253,11 @@ export function ForgotPasswordForm() {
             variant="outline"
             className="w-full"
             disabled={loading}
-            onClick={() => setStep("request")}
+            onClick={() => {
+              sessionStorage.removeItem(RESET_TOKEN_KEY);
+              setResetToken(undefined);
+              setStep("request");
+            }}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Use different account

@@ -54,7 +54,11 @@ class AuthService {
     email?: string,
     phoneNumber?: string
   ): Promise<{ nextStep: "password" | "set-password"; token: string }> {
-    const response = await apiClient.post<ServiceResponse<PreLoginResponse>>(
+    const response = await apiClient.post<ServiceResponse<PreLoginResponse & {
+      resetToken?: string;
+      setPasswordToken?: string;
+      isPasswordSet?: boolean;
+    }>>(
       API_ENDPOINTS.AUTH.USER_PRE_LOGIN,
       { email, phoneNumber }
     );
@@ -63,11 +67,17 @@ class AuthService {
       throw new Error(response.data.message || "Pre-login failed");
     }
 
-    const { token } = response.data.data;
-    const payload = this.decodeToken(token);
+    const data = response.data.data;
+    const token = data.token || data.setPasswordToken || data.resetToken || "";
+    const payload = token ? this.decodeToken(token) : null;
+    const isPasswordSet = payload?.isPasswordSet ?? data.isPasswordSet;
+
+    if (!isPasswordSet && !token) {
+      throw new Error("Set password token is missing from server response");
+    }
 
     return {
-      nextStep: payload.isPasswordSet ? "password" : "set-password",
+      nextStep: isPasswordSet ? "password" : "set-password",
       token,
     };
   }
