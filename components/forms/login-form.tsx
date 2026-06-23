@@ -85,7 +85,11 @@ export function LoginForm() {
       // Redirect immediately — no need to wait for useEffect
       router.replace("/dashboard");
     } catch (err: any) {
-      const errorMessage = err?.message || "Login failed. Please try again.";
+      // apiClient interceptor rejects with plain { message } objects when success=false
+      const errorMessage =
+        err?.message ||
+        (err?.response?.data?.message) ||
+        "Login failed. Please try again.";
       setError(errorMessage);
       setLoading(false);
     }

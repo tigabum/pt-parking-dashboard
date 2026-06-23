@@ -70,9 +70,19 @@ class AuthService {
     }
 
     const data = response.data.data;
+
+    // Use the explicit isPasswordSet flag from the backend response (most reliable).
+    // Fallback: try decoding the token if the field is missing (older API versions).
+    let isPasswordSet: boolean;
+    if (typeof data.isPasswordSet === "boolean") {
+      isPasswordSet = data.isPasswordSet;
+    } else {
+      const token = data.token || data.setPasswordToken || data.resetToken || "";
+      const payload = token ? this.safeDecodeToken(token) : null;
+      isPasswordSet = payload?.isPasswordSet ?? false;
+    }
+
     const token = data.token || data.setPasswordToken || data.resetToken || "";
-    const payload = token ? this.decodeToken(token) : null;
-    const isPasswordSet = payload?.isPasswordSet ?? data.isPasswordSet;
 
     if (!isPasswordSet && !token) {
       throw new Error("Set password token is missing from server response");
@@ -111,9 +121,17 @@ class AuthService {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 
-    const authUser = user
-      ? this.transformBackendUser(user)
-      : this.transformTokenToUser(accessToken);
+    let authUser: User;
+    if (user) {
+      authUser = this.transformBackendUser(user);
+    } else {
+      // Decode the access token to get user data when backend doesn't send a user object.
+      const decoded = this.safeDecodeToken(accessToken);
+      if (!decoded) {
+        throw new Error("Failed to read user data from login response. Please try again.");
+      }
+      authUser = this.transformBackendUser(decoded);
+    }
 
     return { user: authUser, accessToken, refreshToken };
   }
@@ -153,6 +171,15 @@ class AuthService {
     );
 
     return JSON.parse(json);
+  }
+
+  /** Safe version of decodeToken – returns null instead of throwing on failure. */
+  private safeDecodeToken(token: string): AuthTokenPayload | null {
+    try {
+      return this.decodeToken(token);
+    } catch {
+      return null;
+    }
   }
 
   private transformTokenToUser(token: string): User {
