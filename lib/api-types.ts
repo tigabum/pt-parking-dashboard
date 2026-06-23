@@ -43,18 +43,29 @@ export interface BackendUser {
 export interface LoginResponse {
     accessToken: string;
     refreshToken: string;
-    user: {
-        id: string;
-        phoneNumber?: string;
-        email?: string;
-        role: UserRole;
-        profileImage?: string;
-        orgId?: string;
-        isVatIncluded?: boolean;
-        needInvoice?: boolean;
-        needSms?: boolean;
-        permissions?: string[];
-    };
+}
+
+export interface PreLoginResponse {
+    token: string;
+}
+
+export interface AuthTokenPayload {
+    sub: string;
+    phoneNumber?: string;
+    email?: string;
+    fullName?: string;
+    role: UserRole;
+    status?: string;
+    profileImage?: string;
+    orgId?: string;
+    permissions?: string[];
+    isPasswordSet?: boolean;
+    isVatIncluded?: boolean;
+    needInvoice?: boolean;
+    needSms?: boolean;
+    type?: string;
+    iat?: number;
+    exp?: number;
 }
 
 export interface UserListResponse {

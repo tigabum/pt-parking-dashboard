@@ -125,8 +125,11 @@ export default function SettingsPage() {
     if (newPassword !== confirmPassword) {
       return toast.error("New passwords do not match");
     }
-    if (newPassword.length < 6) {
-      return toast.error("Password must be at least 6 characters");
+    if (newPassword.length < 8) {
+      return toast.error("Password must be at least 8 characters");
+    }
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(newPassword)) {
+      return toast.error("Password must contain uppercase, lowercase, number, and special character");
     }
 
     try {
@@ -136,10 +139,12 @@ export default function SettingsPage() {
         newPassword,
       );
       if (response.success) {
-        toast.success("Password changed successfully");
+        toast.success("Password changed successfully. Please log in again.");
         setCurrentPassword("");
         setNewPassword("");
         setConfirmPassword("");
+        await authService.logout();
+        window.location.href = "/";
       }
     } catch (error: any) {
       toast.error(

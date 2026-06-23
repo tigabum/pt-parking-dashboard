@@ -4,11 +4,11 @@ import { AuthLayout } from "@/components/layouts/auth-layout";
 import type React from "react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAuth } from "@/app/context/auth-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AlertCircle, ArrowLeft } from "lucide-react";
-import { toast } from "sonner";
 import { authService } from "@/lib/services/auth-service";
 import { LoginStep } from "@/components/types";
 
@@ -17,7 +17,7 @@ export function LoginForm() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [resetToken, setResetToken] = useState<string | undefined>(undefined);
+  const [setPasswordToken, setSetPasswordToken] = useState<string | undefined>(undefined);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [error, setError] = useState("");
@@ -44,20 +44,18 @@ export function LoginForm() {
     try {
       // Determine if identifier is email or phone
       const isEmail = identifier.includes("@");
-      const credentials = isEmail
-        ? { email: identifier.trim().toLowerCase() }
-        : { phoneNumber: identifier.trim() };
 
-      const { isPasswordSet, setPasswordToken: token } =
-        await authService.preLogin(
-          isEmail ? identifier.trim().toLowerCase() : undefined,
-          !isEmail ? identifier.trim() : undefined,
-        );
+      const { nextStep, token } = await authService.preLogin(
+        isEmail ? identifier.trim().toLowerCase() : undefined,
+        !isEmail ? identifier.trim() : undefined,
+      );
 
-      if (isPasswordSet) {
+      setPassword("");
+      setConfirmPassword("");
+      if (nextStep === "password") {
         setStep("password");
       } else {
-        setResetToken(token);
+        setSetPasswordToken(token);
         setStep("set-password");
       }
     } catch (err: any) {
@@ -95,8 +93,12 @@ export function LoginForm() {
       setError("Passwords do not match");
       return;
     }
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters long");
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long");
+      return;
+    }
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(password)) {
+      setError("Password must contain uppercase, lowercase, number, and special character");
       return;
     }
 
@@ -104,11 +106,11 @@ export function LoginForm() {
     setLoading(true);
 
     try {
-      if (!resetToken) {
-        throw new Error("Missing reset token");
+      if (!setPasswordToken) {
+        throw new Error("Missing set password token");
       }
 
-      const { user: userData } = await authService.setPassword(resetToken, password);
+      const { user: userData } = await authService.setPassword(setPasswordToken, password);
 
       loginWithData(userData);
       // Redirect immediately — no need to wait for useEffect
@@ -216,6 +218,14 @@ export function LoginForm() {
                 {errors.password}
               </p>
             )}
+            <div className="text-right">
+              <Link
+                href="/forgot-password"
+                className="text-sm font-medium text-primary hover:underline"
+              >
+                Forgot password?
+              </Link>
+            </div>
           </div>
 
           <div className="flex flex-col gap-3">

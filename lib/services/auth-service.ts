@@ -4,6 +4,8 @@ import {
   ServiceResponse,
   LoginResponse,
   BackendUser,
+  PreLoginResponse,
+  AuthTokenPayload,
 } from "../api-types";
 import { User, UserRole } from "../auth";
 
@@ -11,6 +13,11 @@ export interface LoginCredentials {
   email?: string;
   phoneNumber?: string;
   password: string;
+}
+
+export interface PasswordResetRequestResult {
+  resetToken: string;
+  deliveryChannel?: "SMS" | "EMAIL" | "BOTH";
 }
 
 class AuthService {
@@ -29,14 +36,13 @@ class AuthService {
       throw new Error(response.data.message || "Login failed");
     }
 
-    const { accessToken, refreshToken, user: backendUser } = response.data.data;
+    const { accessToken, refreshToken } = response.data.data;
 
     // Store tokens
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 
-    // Transform backend user to frontend user format
-    const user = this.transformBackendUser(backendUser);
+    const user = this.transformTokenToUser(accessToken);
 
     return { user, accessToken, refreshToken };
   }
@@ -47,18 +53,22 @@ class AuthService {
   async preLogin(
     email?: string,
     phoneNumber?: string
-  ): Promise<{ isPasswordSet: boolean; setPasswordToken?: string }> {
-    const response = await apiClient.post<
-      ServiceResponse<{ isPasswordSet: boolean; resetToken?: string }>
-    >(API_ENDPOINTS.AUTH.USER_PRE_LOGIN, { email, phoneNumber });
+  ): Promise<{ nextStep: "password" | "set-password"; token: string }> {
+    const response = await apiClient.post<ServiceResponse<PreLoginResponse>>(
+      API_ENDPOINTS.AUTH.USER_PRE_LOGIN,
+      { email, phoneNumber }
+    );
 
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.message || "Pre-login failed");
     }
 
+    const { token } = response.data.data;
+    const payload = this.decodeToken(token);
+
     return {
-      isPasswordSet: response.data.data.isPasswordSet,
-      setPasswordToken: response.data.data.resetToken,
+      nextStep: payload.isPasswordSet ? "password" : "set-password",
+      token,
     };
   }
 
@@ -83,16 +93,37 @@ class AuthService {
       throw new Error(response.data.message || "Failed to set password");
     }
 
-    const { accessToken, refreshToken, user: backendUser } = response.data.data;
+    const { accessToken, refreshToken } = response.data.data;
 
     // Store tokens
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 
-    // Transform backend user to frontend user format
-    const user = this.transformBackendUser(backendUser);
+    const user = this.transformTokenToUser(accessToken);
 
     return { user, accessToken, refreshToken };
+  }
+
+  private decodeToken(token: string): AuthTokenPayload {
+    const [, payload] = token.split(".");
+    if (!payload) {
+      throw new Error("Invalid token received from server");
+    }
+
+    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = normalized.padEnd(normalized.length + (4 - (normalized.length % 4)) % 4, "=");
+    const json = decodeURIComponent(
+      atob(padded)
+        .split("")
+        .map((char) => `%${char.charCodeAt(0).toString(16).padStart(2, "0")}`)
+        .join("")
+    );
+
+    return JSON.parse(json);
+  }
+
+  private transformTokenToUser(token: string): User {
+    return this.transformBackendUser(this.decodeToken(token));
   }
 
   /**
@@ -107,7 +138,7 @@ class AuthService {
     const role = backendUser.role as UserRole;
 
     return {
-      id: backendUser.id,
+      id: backendUser.id || backendUser.sub,
       email: backendUser.email || backendUser.phoneNumber || "",
       fullName: backendUser.fullName,
       role,
@@ -167,6 +198,40 @@ class AuthService {
       API_ENDPOINTS.AUTH.USER_PASSWORD_CHANGE,
       { currentPassword, newPassword }
     );
+    return response.data;
+  }
+
+  async requestPasswordReset(identifier: string): Promise<PasswordResetRequestResult> {
+    const value = identifier.trim();
+    const isEmail = value.includes("@");
+    const response = await apiClient.post<
+      ServiceResponse<{ resetToken: string; deliveryChannel?: "SMS" | "EMAIL" | "BOTH" }>
+    >(
+      API_ENDPOINTS.AUTH.USER_PASSWORD_RESET_REQUEST,
+      isEmail ? { email: value.toLowerCase() } : { phoneNumber: value }
+    );
+
+    if (!response.data.success || !response.data.data?.resetToken) {
+      throw new Error(response.data.message || "Failed to request password reset");
+    }
+
+    return {
+      resetToken: response.data.data.resetToken,
+      deliveryChannel: response.data.data.deliveryChannel,
+    };
+  }
+
+  async confirmPasswordReset(resetToken: string, otpCode: string, newPassword: string): Promise<ServiceResponse<any>> {
+    const response = await apiClient.post<ServiceResponse<any>>(
+      API_ENDPOINTS.AUTH.USER_PASSWORD_RESET_CONFIRM,
+      { otpCode, newPassword },
+      {
+        headers: {
+          Authorization: `Bearer ${resetToken}`,
+        },
+      }
+    );
+
     return response.data;
   }
 }

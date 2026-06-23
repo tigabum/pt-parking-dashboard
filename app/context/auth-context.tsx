@@ -21,9 +21,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-// Must match SESSION_TTL in backend .env (3600 seconds = 1 hour)
-const INACTIVITY_TIMEOUT_MS = 60 * 60 * 1000  // 1 hour – matches Redis SESSION_TTL
-const HEARTBEAT_INTERVAL_MS = 90 * 1000       // Touch session every 90 s (well within 5-min window)
+// Must match backend SESSION_TTL. Defaults to 5 minutes.
+const SESSION_IDLE_TIMEOUT_MS = Number(process.env.NEXT_PUBLIC_SESSION_IDLE_MINUTES || "5") * 60 * 1000
 const TOUCH_THROTTLE_MS = 2 * 60 * 1000       // Throttle activity-triggered Redis touch to once per 2 min
 const ACTIVITY_EVENTS = ["mousedown", "mousemove", "keypress", "scroll", "touchstart", "click"]
 
@@ -37,7 +36,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Refs so we can safely reference inside closures without stale state
   const userRef = useRef<User | null>(null)
   const inactivityTimerRef = useRef<NodeJS.Timeout | null>(null)
-  const heartbeatTimerRef = useRef<NodeJS.Timeout | null>(null)
   const lastActivityRef = useRef<number>(Date.now())
   const lastTouchRef = useRef<number>(0)  // Tracks last Redis touch to throttle activity-triggered touches
 
@@ -68,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  // ── Touch session (heartbeat) ─────────────────────────────────────────────
+  // ── Touch session after real user activity ────────────────────────────────
   const touchSession = useCallback(async (isInit = false) => {
     if (!userRef.current && !isInit) return
 
@@ -76,7 +74,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!token) return
 
     try {
-      // Heartbeat touch
       const response = await apiClient.post(
         API_ENDPOINTS.AUTH.SESSION_TOUCH,
         {}
@@ -97,6 +94,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  const clearLocalSession = useCallback(() => {
+    if (inactivityTimerRef.current) {
+      clearTimeout(inactivityTimerRef.current)
+      inactivityTimerRef.current = null
+    }
+
+    setUser(null)
+    userRef.current = null
+
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("accessToken")
+      localStorage.removeItem("refreshToken")
+      localStorage.removeItem("user")
+      window.location.href = "/"
+    }
+  }, [])
+
+  const hasIdleSessionExpired = useCallback(() => {
+    return Date.now() - lastActivityRef.current >= SESSION_IDLE_TIMEOUT_MS
+  }, [])
+
   // ── Reset inactivity timer ────────────────────────────────────────────────
   // NOTE: We must NOT call logout() inside a stale setTimeout closure;
   // instead we clean up directly and redirect – logout() will be called
@@ -108,37 +126,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     if (inactivityTimerRef.current) clearTimeout(inactivityTimerRef.current)
     inactivityTimerRef.current = setTimeout(() => {
-      // Clear timers before any async work
-      if (heartbeatTimerRef.current) {
-        clearInterval(heartbeatTimerRef.current)
-        heartbeatTimerRef.current = null
-      }
-      // Clear local storage directly (avoids stale closure issues with setUser)
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("accessToken")
-        localStorage.removeItem("refreshToken")
-        localStorage.removeItem("user")
-        // Redirect to login – AuthProvider will re-hydrate with no user
-        window.location.href = "/"
-      }
-    }, INACTIVITY_TIMEOUT_MS)
-  }, [])
+      clearLocalSession()
+    }, SESSION_IDLE_TIMEOUT_MS)
+  }, [clearLocalSession])
 
-  // ── Start heartbeat ───────────────────────────────────────────────────────
-  const startHeartbeat = useCallback(() => {
-    if (heartbeatTimerRef.current) clearInterval(heartbeatTimerRef.current)
-    heartbeatTimerRef.current = setInterval(async () => {
-      if (!userRef.current) return
-      await touchSession()
-    }, HEARTBEAT_INTERVAL_MS)
-  }, [touchSession])
-
-  // ── Stop heartbeat ────────────────────────────────────────────────────────
-  const stopHeartbeat = useCallback(() => {
-    if (heartbeatTimerRef.current) {
-      clearInterval(heartbeatTimerRef.current)
-      heartbeatTimerRef.current = null
-    }
+  // ── Stop session timers ───────────────────────────────────────────────────
+  const stopSessionTimers = useCallback(() => {
     if (inactivityTimerRef.current) {
       clearTimeout(inactivityTimerRef.current)
       inactivityTimerRef.current = null
@@ -148,6 +141,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // ── handleActivity: stable reference needed for add/remove listener symmetry
   // Also throttles a Redis session touch to once every 2 minutes on activity.
   const handleActivity = useCallback(() => {
+    if (hasIdleSessionExpired()) {
+      clearLocalSession()
+      return
+    }
+
     resetInactivityTimer()
     // Throttled touch: keeps Redis TTL alive on user activity without spamming
     const now = Date.now()
@@ -155,37 +153,55 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       lastTouchRef.current = now
       touchSession()
     }
-  }, [resetInactivityTimer, touchSession])
+  }, [clearLocalSession, hasIdleSessionExpired, resetInactivityTimer, touchSession])
+
+  const handleResume = useCallback(() => {
+    if (!userRef.current) return
+    if (typeof document !== "undefined" && document.hidden) return
+    if (hasIdleSessionExpired()) {
+      clearLocalSession()
+      return
+    }
+    resetInactivityTimer()
+  }, [clearLocalSession, hasIdleSessionExpired, resetInactivityTimer])
 
   // ── Set up activity listeners when user is logged in ─────────────────────
   useEffect(() => {
     if (!user) {
-      stopHeartbeat()
+      stopSessionTimers()
       ACTIVITY_EVENTS.forEach((e) => {
         if (typeof handleActivity === "function") {
           window.removeEventListener(e, handleActivity)
         }
       })
+      window.removeEventListener("focus", handleResume)
+      window.removeEventListener("pageshow", handleResume)
+      document.removeEventListener("visibilitychange", handleResume)
       return
     }
 
     resetInactivityTimer()
-    startHeartbeat()
     // Immediately touch on login
     touchSession()
 
     ACTIVITY_EVENTS.forEach((e) =>
       window.addEventListener(e, handleActivity),
     )
+    window.addEventListener("focus", handleResume)
+    window.addEventListener("pageshow", handleResume)
+    document.addEventListener("visibilitychange", handleResume)
 
     return () => {
       ACTIVITY_EVENTS.forEach((e) =>
         window.removeEventListener(e, handleActivity),
       )
-      stopHeartbeat()
+      window.removeEventListener("focus", handleResume)
+      window.removeEventListener("pageshow", handleResume)
+      document.removeEventListener("visibilitychange", handleResume)
+      stopSessionTimers()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, handleActivity, stopHeartbeat, resetInactivityTimer, startHeartbeat, touchSession])
+  }, [user, handleActivity, handleResume, stopSessionTimers, resetInactivityTimer, touchSession])
 
   // ── Initial auth hydration ────────────────────────────────────────────────
   useEffect(() => {
@@ -256,7 +272,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // ── Logout ────────────────────────────────────────────────────────────────
   const logout = async () => {
-    stopHeartbeat()
+    stopSessionTimers()
     try {
       const { authService } = require("@/lib/services/auth-service")
       await authService.logout()
