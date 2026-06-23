@@ -215,19 +215,20 @@ class AuthService {
     const value = identifier.trim();
     const isEmail = value.includes("@");
     const response = await apiClient.post<
-      ServiceResponse<{ resetToken: string; deliveryChannel?: "SMS" | "EMAIL" | "BOTH" }>
+      ServiceResponse<{ resetToken?: string; token?: string; deliveryChannel?: "SMS" | "EMAIL" | "BOTH" }>
     >(
       API_ENDPOINTS.AUTH.USER_PASSWORD_RESET_REQUEST,
       isEmail ? { email: value.toLowerCase() } : { phoneNumber: value }
     );
 
-    if (!response.data.success || !response.data.data?.resetToken) {
+    const token = response.data.data?.resetToken || response.data.data?.token;
+    if (!response.data.success || !token) {
       throw new Error(response.data.message || "Failed to request password reset");
     }
 
     return {
-      resetToken: response.data.data.resetToken,
-      deliveryChannel: response.data.data.deliveryChannel,
+      resetToken: token,
+      deliveryChannel: response.data.data?.deliveryChannel,
     };
   }
 

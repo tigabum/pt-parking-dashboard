@@ -12,14 +12,14 @@ import { AlertCircle, ArrowLeft } from "lucide-react";
 import { authService } from "@/lib/services/auth-service";
 import { LoginStep } from "@/components/types";
 
-const SET_PASSWORD_TOKEN_KEY = "pendingSetPasswordToken";
+const RESET_TOKEN_KEY = "pendingSetPasswordResetToken";
 
 export function LoginForm() {
   const [step, setStep] = useState<LoginStep>("identifier");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [setPasswordToken, setSetPasswordToken] = useState<string | undefined>(undefined);
+  const [resetToken, setResetToken] = useState<string | undefined>(undefined);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [error, setError] = useState("");
@@ -55,11 +55,11 @@ export function LoginForm() {
       setPassword("");
       setConfirmPassword("");
       if (nextStep === "password") {
-        sessionStorage.removeItem(SET_PASSWORD_TOKEN_KEY);
+        sessionStorage.removeItem(RESET_TOKEN_KEY);
         setStep("password");
       } else {
-        setSetPasswordToken(token);
-        sessionStorage.setItem(SET_PASSWORD_TOKEN_KEY, token);
+        setResetToken(token);
+        sessionStorage.setItem(RESET_TOKEN_KEY, token);
         setStep("set-password");
       }
     } catch (err: any) {
@@ -110,14 +110,14 @@ export function LoginForm() {
     setLoading(true);
 
     try {
-      const token = setPasswordToken || sessionStorage.getItem(SET_PASSWORD_TOKEN_KEY) || undefined;
+      const token = resetToken || sessionStorage.getItem(RESET_TOKEN_KEY) || undefined;
       if (!token) {
-        throw new Error("Missing set password token");
+        throw new Error("Missing reset token. Please go back and continue again.");
       }
 
       const { user: userData } = await authService.setPassword(token, password);
 
-      sessionStorage.removeItem(SET_PASSWORD_TOKEN_KEY);
+      sessionStorage.removeItem(RESET_TOKEN_KEY);
       loginWithData(userData);
       // Redirect immediately — no need to wait for useEffect
       router.replace("/dashboard");
@@ -194,6 +194,14 @@ export function LoginForm() {
           >
             {loading ? "Checking..." : "Continue"}
           </Button>
+          <div className="text-center">
+            <Link
+              href="/forgot-password"
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              Forgot password?
+            </Link>
+          </div>
         </form>
       )}
 
@@ -247,8 +255,8 @@ export function LoginForm() {
               variant="outline"
               className="w-full h-12"
               onClick={() => {
-                sessionStorage.removeItem(SET_PASSWORD_TOKEN_KEY);
-                setSetPasswordToken(undefined);
+                sessionStorage.removeItem(RESET_TOKEN_KEY);
+                setResetToken(undefined);
                 setStep("identifier");
               }}
               disabled={loading}
@@ -305,8 +313,8 @@ export function LoginForm() {
               variant="outline"
               className="w-full h-12"
               onClick={() => {
-                sessionStorage.removeItem(SET_PASSWORD_TOKEN_KEY);
-                setSetPasswordToken(undefined);
+                sessionStorage.removeItem(RESET_TOKEN_KEY);
+                setResetToken(undefined);
                 setStep("identifier");
               }}
               disabled={loading}
