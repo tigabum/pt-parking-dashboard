@@ -63,11 +63,6 @@ export function ForgotPasswordForm() {
 
   const handleConfirmSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const token = resetToken || sessionStorage.getItem(RESET_TOKEN_KEY) || undefined;
-    if (!token) {
-      setError("Missing reset token. Please request a new OTP.");
-      return;
-    }
     if (!otpCode.trim()) {
       setErrors({ otpCode: "OTP code is required" });
       return;
@@ -77,6 +72,18 @@ export function ForgotPasswordForm() {
     setError("");
     setLoading(true);
     try {
+      let token = resetToken || sessionStorage.getItem(RESET_TOKEN_KEY) || undefined;
+      if (!token) {
+        if (!identifier.trim()) {
+          throw new Error("Please enter your email or phone number again.");
+        }
+        const result = await authService.requestPasswordReset(identifier);
+        token = result.resetToken;
+        setResetToken(token);
+        sessionStorage.setItem(RESET_TOKEN_KEY, token);
+        setDeliveryChannel(result.deliveryChannel);
+      }
+
       const response = await authService.confirmPasswordReset(
         token,
         otpCode.trim(),

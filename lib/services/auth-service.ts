@@ -93,7 +93,7 @@ class AuthService {
   ): Promise<{ user: User; accessToken: string; refreshToken: string }> {
     const response = await apiClient.post<ServiceResponse<LoginResponse>>(
       API_ENDPOINTS.AUTH.USER_SET_PASSWORD,
-      { password },
+      { password, resetToken: token, token },
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -258,7 +258,7 @@ class AuthService {
   async confirmPasswordReset(resetToken: string, otpCode: string, newPassword: string): Promise<ServiceResponse<any>> {
     const response = await apiClient.post<ServiceResponse<any>>(
       API_ENDPOINTS.AUTH.USER_PASSWORD_RESET_CONFIRM,
-      { otpCode, newPassword },
+      { otpCode, newPassword, resetToken, token: resetToken },
       {
         headers: {
           Authorization: `Bearer ${resetToken}`,
