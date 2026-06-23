@@ -1,7 +1,6 @@
 "use client";
 
-import type React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AuthLayout } from "@/components/layouts/auth-layout";
@@ -24,6 +23,17 @@ export function ForgotPasswordForm() {
   const [step, setStep] = useState<"request" | "verify" | "set-password" | "success">("request");
   const [error, setError] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [countdown, setCountdown] = useState(0);
+
+  useEffect(() => {
+    if (step !== "verify" || countdown <= 0) return;
+
+    const timerId = setTimeout(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearTimeout(timerId);
+  }, [step, countdown]);
 
   const validatePassword = () => {
     if (newPassword !== confirmPassword) {
@@ -41,8 +51,8 @@ export function ForgotPasswordForm() {
     return true;
   };
 
-  const handleRequestSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleRequestSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!identifier.trim()) {
       setErrors({ identifier: "Email or phone is required" });
       return;
@@ -56,6 +66,7 @@ export function ForgotPasswordForm() {
       sessionStorage.setItem(RESET_TOKEN_KEY, result.resetToken);
       setDeliveryChannel(result.deliveryChannel);
       setStep("verify");
+      setCountdown(60);
     } catch (err: any) {
       setError(err?.response?.data?.message || err?.message || "Failed to send reset OTP");
     } finally {
@@ -83,6 +94,7 @@ export function ForgotPasswordForm() {
         setResetToken(token);
         sessionStorage.setItem(RESET_TOKEN_KEY, token);
         setDeliveryChannel(result.deliveryChannel);
+        setCountdown(60);
         throw new Error("We sent a new OTP. Please enter the latest code.");
       }
 
@@ -215,9 +227,25 @@ export function ForgotPasswordForm() {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="otpCode" className="text-sm font-semibold text-foreground">
-              OTP Code
-            </label>
+            <div className="flex justify-between items-center">
+              <label htmlFor="otpCode" className="text-sm font-semibold text-foreground">
+                OTP Code
+              </label>
+              {countdown > 0 ? (
+                <span className="text-xs text-muted-foreground">
+                  Resend code in {Math.floor(countdown / 60)}:{(countdown % 60).toString().padStart(2, "0")}
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  className="text-xs font-semibold text-primary hover:underline bg-none border-none p-0 cursor-pointer disabled:opacity-50"
+                  onClick={() => handleRequestSubmit()}
+                  disabled={loading}
+                >
+                  Resend OTP
+                </button>
+              )}
+            </div>
             <Input
               id="otpCode"
               type="text"
