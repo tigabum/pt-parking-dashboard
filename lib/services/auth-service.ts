@@ -268,6 +268,31 @@ class AuthService {
 
     return response.data;
   }
+
+  async verifyPasswordResetOtp(resetToken: string, otpCode: string): Promise<string> {
+    const response = await apiClient.post<
+      ServiceResponse<{ token?: string; resetToken?: string; setPasswordToken?: string }>
+    >(
+      API_ENDPOINTS.AUTH.USER_PASSWORD_RESET_VERIFY,
+      { otpCode, resetToken, token: resetToken },
+      {
+        headers: {
+          Authorization: `Bearer ${resetToken}`,
+        },
+      }
+    );
+
+    const token =
+      response.data.data?.setPasswordToken ||
+      response.data.data?.resetToken ||
+      response.data.data?.token;
+
+    if (!response.data.success || !token) {
+      throw new Error(response.data.message || "Failed to verify OTP");
+    }
+
+    return token;
+  }
 }
 
 export const authService = new AuthService();

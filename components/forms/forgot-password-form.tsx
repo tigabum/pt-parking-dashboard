@@ -10,6 +10,7 @@ import Link from "next/link";
 import { authService } from "@/lib/services/auth-service";
 
 const RESET_TOKEN_KEY = "pendingPasswordResetToken";
+const SET_PASSWORD_TOKEN_KEY = "pendingForgotSetPasswordToken";
 
 export function ForgotPasswordForm() {
   const [identifier, setIdentifier] = useState("");
@@ -17,9 +18,10 @@ export function ForgotPasswordForm() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [resetToken, setResetToken] = useState<string | undefined>();
+  const [setPasswordToken, setSetPasswordToken] = useState<string | undefined>();
   const [deliveryChannel, setDeliveryChannel] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
-  const [step, setStep] = useState<"request" | "confirm" | "success">("request");
+  const [step, setStep] = useState<"request" | "verify" | "set-password" | "success">("request");
   const [error, setError] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -53,7 +55,7 @@ export function ForgotPasswordForm() {
       setResetToken(result.resetToken);
       sessionStorage.setItem(RESET_TOKEN_KEY, result.resetToken);
       setDeliveryChannel(result.deliveryChannel);
-      setStep("confirm");
+      setStep("verify");
     } catch (err: any) {
       setError(err?.response?.data?.message || err?.message || "Failed to send reset OTP");
     } finally {
@@ -61,13 +63,12 @@ export function ForgotPasswordForm() {
     }
   };
 
-  const handleConfirmSubmit = async (e: React.FormEvent) => {
+  const handleVerifyOtpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!otpCode.trim()) {
       setErrors({ otpCode: "OTP code is required" });
       return;
     }
-    if (!validatePassword()) return;
 
     setError("");
     setLoading(true);
@@ -82,20 +83,42 @@ export function ForgotPasswordForm() {
         setResetToken(token);
         sessionStorage.setItem(RESET_TOKEN_KEY, token);
         setDeliveryChannel(result.deliveryChannel);
+        throw new Error("We sent a new OTP. Please enter the latest code.");
       }
 
-      const response = await authService.confirmPasswordReset(
+      const nextToken = await authService.verifyPasswordResetOtp(
         token,
         otpCode.trim(),
-        newPassword
       );
-      if (!response.success) {
-        throw new Error(response.message || "Failed to reset password");
-      }
+
+      setSetPasswordToken(nextToken);
+      sessionStorage.setItem(SET_PASSWORD_TOKEN_KEY, nextToken);
       sessionStorage.removeItem(RESET_TOKEN_KEY);
+      setStep("set-password");
+    } catch (err: any) {
+      setError(err?.response?.data?.message || err?.message || "Failed to verify OTP");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSetPasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validatePassword()) return;
+
+    setError("");
+    setLoading(true);
+    try {
+      const token = setPasswordToken || sessionStorage.getItem(SET_PASSWORD_TOKEN_KEY);
+      if (!token) {
+        throw new Error("Please verify the OTP again.");
+      }
+
+      await authService.setPassword(token, newPassword);
+      sessionStorage.removeItem(SET_PASSWORD_TOKEN_KEY);
       setStep("success");
     } catch (err: any) {
-      setError(err?.response?.data?.message || err?.message || "Failed to reset password");
+      setError(err?.response?.data?.message || err?.message || "Failed to set password");
     } finally {
       setLoading(false);
     }
@@ -107,7 +130,8 @@ export function ForgotPasswordForm() {
         <h2 className="text-2xl font-bold text-foreground">Reset Password</h2>
         <p className="text-sm text-muted-foreground mt-2">
           {step === "request" && "Enter your email or phone to receive an OTP"}
-          {step === "confirm" && "Enter the OTP and choose a new password"}
+          {step === "verify" && "Enter the OTP we sent you"}
+          {step === "set-password" && "Choose a new password"}
           {step === "success" && "Your password has been updated"}
         </p>
       </div>
@@ -184,8 +208,8 @@ export function ForgotPasswordForm() {
             </Link>
           </div>
         </form>
-      ) : (
-        <form onSubmit={handleConfirmSubmit} className="space-y-6">
+      ) : step === "verify" ? (
+        <form onSubmit={handleVerifyOtpSubmit} className="space-y-6">
           <div className="rounded-md bg-primary/5 border border-primary/10 p-3 text-sm text-muted-foreground">
             OTP sent by {deliveryChannel || "SMS"}.
           </div>
@@ -215,6 +239,33 @@ export function ForgotPasswordForm() {
             )}
           </div>
 
+          <Button
+            type="submit"
+            className="w-full h-12 text-base font-semibold bg-primary text-white transition-all rounded shadow-none border-none"
+            disabled={loading}
+          >
+            {loading ? "Verifying..." : "Verify OTP"}
+          </Button>
+
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            disabled={loading}
+            onClick={() => {
+              sessionStorage.removeItem(RESET_TOKEN_KEY);
+              sessionStorage.removeItem(SET_PASSWORD_TOKEN_KEY);
+              setResetToken(undefined);
+              setSetPasswordToken(undefined);
+              setStep("request");
+            }}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Use different account
+          </Button>
+        </form>
+      ) : (
+        <form onSubmit={handleSetPasswordSubmit} className="space-y-6">
           <div className="space-y-2">
             <label htmlFor="newPassword" className="text-sm font-semibold text-foreground">
               New Password
@@ -252,7 +303,7 @@ export function ForgotPasswordForm() {
             className="w-full h-12 text-base font-semibold bg-primary text-white transition-all rounded shadow-none border-none"
             disabled={loading}
           >
-            {loading ? "Resetting..." : "Reset Password"}
+            {loading ? "Setting Password..." : "Set New Password"}
           </Button>
 
           <Button
@@ -260,14 +311,10 @@ export function ForgotPasswordForm() {
             variant="outline"
             className="w-full"
             disabled={loading}
-            onClick={() => {
-              sessionStorage.removeItem(RESET_TOKEN_KEY);
-              setResetToken(undefined);
-              setStep("request");
-            }}
+            onClick={() => setStep("verify")}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Use different account
+            Back to OTP
           </Button>
         </form>
       )}

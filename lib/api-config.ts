@@ -16,6 +16,7 @@ export const API_ENDPOINTS = {
         USER_VERIFY: '/auth/user/verify',
         USER_SET_PASSWORD: '/auth/user/set-password',
         USER_PASSWORD_RESET_REQUEST: '/auth/user/password-reset/request',
+        USER_PASSWORD_RESET_VERIFY: '/auth/user/password-reset/verify',
         USER_PASSWORD_RESET_CONFIRM: '/auth/user/password-reset/confirm',
         USER_PASSWORD_CHANGE: '/auth/user/password/change',
         USER_REFRESH: '/auth/user/refresh',
